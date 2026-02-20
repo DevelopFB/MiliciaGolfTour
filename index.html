@@ -1855,7 +1855,7 @@ function adminLoadFecha() {
 
 function adminBuildMedalRows() {
   const cont = document.getElementById('adm-medal-rows');
-  cont.innerHTML = PLAYERS.map(p=>`
+  const oficialRows = PLAYERS.map(p=>`
     <div style="display:grid;grid-template-columns:1fr 60px 70px 70px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03)">
       <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem">
         <div class="dot ${p.team}"></div>
@@ -1869,6 +1869,27 @@ function adminBuildMedalRows() {
       <input type="number" id="adm-gross-${p.id}" placeholder="Gross" min="60" max="140"
         style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
     </div>`).join('');
+
+  // Fila separada para Gatto Alejandro (suplente oficial especial)
+  const supEsp = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
+  const supEspRow = supEsp ? `
+    <div style="border-top:1px dashed rgba(201,168,76,0.3);margin-top:6px;padding-top:6px">
+      <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;color:var(--gold);margin-bottom:4px">★ SUPLENTE OFICIAL — solo completar si jugó</div>
+      <div style="display:grid;grid-template-columns:1fr 60px 70px 70px;gap:6px;align-items:center;padding:5px 0">
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem">
+          <div class="dot" style="background:var(--gold)"></div>
+          <span style="color:var(--gold)">${supEsp.name}</span>
+        </div>
+        <input type="number" id="adm-hdcp-${supEsp.id}" placeholder="HDC" step="0.1" min="0" max="54"
+          style="background:var(--navy-mid);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
+        <input type="number" id="adm-neto-${supEsp.id}" placeholder="Neto" min="55" max="120"
+          style="background:var(--navy-mid);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
+        <input type="number" id="adm-gross-${supEsp.id}" placeholder="Gross" min="60" max="140"
+          style="background:var(--navy-mid);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
+      </div>
+    </div>` : '';
+
+  cont.innerHTML = oficialRows + supEspRow;
 }
 
 function adminBuildMatchBlocks(fechaNum) {
@@ -1884,8 +1905,10 @@ function adminBuildMatchBlocks(fechaNum) {
 
   // Si es fb, hay 4 matchs de 2v2; si es ind, hay 8 de 1v1
   // Armar selectores de jugadores Gris y Rojo
-  const grisOpts = PLAYERS.filter(p=>p.team==='g').map(p=>`<option value="${p.id}">${p.name.split(',')[0]}</option>`).join('');
-  const rojoOpts = PLAYERS.filter(p=>p.team==='r').map(p=>`<option value="${p.id}">${p.name.split(',')[0]}</option>`).join('');
+  const grisOpts = PLAYERS.filter(p=>p.team==='g').map(p=>`<option value="${p.id}">${p.name.split(',')[0]}</option>`).join('')
+    + SUPLENTES_CONOCIDOS.map(s=>`<option value="${s.id}" style="color:var(--gold)">★ ${s.name.split(',')[0]}</option>`).join('');
+  const rojoOpts = PLAYERS.filter(p=>p.team==='r').map(p=>`<option value="${p.id}">${p.name.split(',')[0]}</option>`).join('')
+    + SUPLENTES_CONOCIDOS.map(s=>`<option value="${s.id}" style="color:var(--gold)">★ ${s.name.split(',')[0]}</option>`).join('');
 
   const blocks = [];
   for(let i=0;i<numMatchs;i++) {
@@ -1951,7 +1974,7 @@ function adminGenerate() {
   const ausentes = ausText ? ausText.split(',').map(s=>s.trim()).filter(Boolean) : [];
   const comentario = document.getElementById('adm-comentario').value.trim();
 
-  // Medal
+  // Medal — oficiales + suplente especial si jugó
   const medal = PLAYERS.map(p=>{
     const hdcp  = parseFloat(document.getElementById(`adm-hdcp-${p.id}`)?.value||'');
     const neto  = parseInt(document.getElementById(`adm-neto-${p.id}`)?.value||'');
@@ -1959,6 +1982,13 @@ function adminGenerate() {
     if(isNaN(neto)||isNaN(gross)) return null;
     return {id:p.id, hdcp:isNaN(hdcp)?null:hdcp, neto, gross};
   }).filter(Boolean);
+  // Agregar suplente oficial especial si completó score
+  SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial).forEach(s=>{
+    const hdcp  = parseFloat(document.getElementById(`adm-hdcp-${s.id}`)?.value||'');
+    const neto  = parseInt(document.getElementById(`adm-neto-${s.id}`)?.value||'');
+    const gross = parseInt(document.getElementById(`adm-gross-${s.id}`)?.value||'');
+    if(!isNaN(neto)&&!isNaN(gross)) medal.push({id:s.id, hdcp:isNaN(hdcp)?null:hdcp, neto, gross});
+  });
 
   // Stats
   const stats = {
