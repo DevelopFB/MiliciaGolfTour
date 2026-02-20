@@ -402,22 +402,22 @@ header{
 // ╚═══════════════════════════════════════════════════════════╝
 
 const PLAYERS = [
-  {id:'agus_g',  name:'Gonzalez, Agus', team:'g', hdc:7.7},
-  {id:'gonza',   name:'Tarasido, Gonzalo', team:'g', hdc:10.3},
-  {id:'javi',    name:'Zunino, Javi', team:'g', hdc:14.2},
-  {id:'nacho',   name:'Basaldua, Ignacio', team:'g', hdc:16.1},
-  {id:'tincho',  name:'Pannullo, Tincho', team:'g', hdc:17.7},
-  {id:'pancho',  name:'Benegas, Pancho', team:'g', hdc:21.2},
-  {id:'franky',  name:'Guevara, Franki', team:'g', hdc:22.2},
-  {id:'dipa',    name:'Dipaola, Martin', team:'g', hdc:26.0},
+  {id:'gonzalez',  name:'Gonzalez, Agus', team:'g', hdc:7.7},
+  {id:'tarasido',   name:'Tarasido, Gonzalo', team:'g', hdc:10.3},
+  {id:'zunino',    name:'Zunino, Javi', team:'g', hdc:14.2},
+  {id:'basaldua',   name:'Basaldua, Ignacio', team:'g', hdc:16.1},
+  {id:'pannullo',  name:'Pannullo, Tincho', team:'g', hdc:17.7},
+  {id:'benegas',  name:'Benegas, Pancho', team:'g', hdc:21.2},
+  {id:'guevara',  name:'Guevara, Franki', team:'g', hdc:22.2},
+  {id:'dipaola',    name:'Dipaola, Martin', team:'g', hdc:26.0},
   {id:'gatto',   name:'Gatto, Mariano', team:'r', hdc:9.1},
-  {id:'juancho', name:'Elizalde, Juancho', team:'r', hdc:12.5},
-  {id:'agus_c',  name:'Canónico, Agus', team:'r', hdc:15.7},
-  {id:'nico_v',  name:'Vogelius, Nico', team:'r', hdc:17.7},
-  {id:'pato',    name:'Mendez, Pato', team:'r', hdc:18.7},
-  {id:'andy',    name:'Molinario, Andy', team:'r', hdc:20.2},
-  {id:'scappa',  name:'Scapparone, Nico', team:'r', hdc:22.4},
-  {id:'lule',    name:'Fernandez, Lucas', team:'r', hdc:24.7},
+  {id:'elizalde', name:'Elizalde, Juancho', team:'r', hdc:12.5},
+  {id:'canonico',  name:'Canónico, Agus', team:'r', hdc:15.7},
+  {id:'vogelius',  name:'Vogelius, Nico', team:'r', hdc:17.7},
+  {id:'mendez',    name:'Mendez, Pato', team:'r', hdc:18.7},
+  {id:'molinario',    name:'Molinario, Andy', team:'r', hdc:20.2},
+  {id:'scapparone',  name:'Scapparone, Nico', team:'r', hdc:22.4},
+  {id:'fernandez',    name:'Fernandez, Lucas', team:'r', hdc:24.7},
 ];
 
 // FECHAS: array de objetos por fecha jugada
@@ -429,28 +429,28 @@ const FECHAS = [
     cancha: 'CUBA Fátima',
     organizadores: 'Gatto + Zunino',
     ausentes: [],
-    // suplentes: [{id:"gatto_ale", equipo:"g", reemplaza:"pancho"}]  ← ejemplo
+    // suplentes: [{id:"gatto_ale", equipo:"g", reemplaza:"benegas"}]  ← ejemplo
     suplentes: [],
 
     // — MEDAL: score neto y gross de cada jugador
     // Si no jugó: omitir o poner null
     medal: [
-      {id:'agus_g',  hdcp:8,  neto:68, gross:76},
-      {id:'gonza',   hdcp:10, neto:69, gross:79},
-      {id:'javi',    hdcp:14, neto:70, gross:84},
-      {id:'nacho',   hdcp:16, neto:71, gross:87},
-      {id:'tincho',  hdcp:18, neto:71, gross:89},
-      {id:'pancho',  hdcp:21, neto:72, gross:93},
-      {id:'franky',  hdcp:22, neto:73, gross:95},
-      {id:'dipa',    hdcp:26, neto:74, gross:100},
+      {id:'gonzalez',  hdcp:8,  neto:68, gross:76},
+      {id:'tarasido',   hdcp:10, neto:69, gross:79},
+      {id:'zunino',    hdcp:14, neto:70, gross:84},
+      {id:'basaldua',   hdcp:16, neto:71, gross:87},
+      {id:'pannullo',  hdcp:18, neto:71, gross:89},
+      {id:'benegas',  hdcp:21, neto:72, gross:93},
+      {id:'guevara',  hdcp:22, neto:73, gross:95},
+      {id:'dipaola',    hdcp:26, neto:74, gross:100},
       {id:'gatto',   hdcp:9,  neto:69, gross:78},
-      {id:'juancho', hdcp:13, neto:70, gross:82},
-      {id:'agus_c',  hdcp:16, neto:72, gross:88},
-      {id:'nico_v',  hdcp:18, neto:68, gross:86},
-      {id:'pato',    hdcp:19, neto:75, gross:94},
-      {id:'andy',    hdcp:20, neto:76, gross:96},
-      {id:'scappa',  hdcp:22, neto:73, gross:95},
-      {id:'lule',    hdcp:25, neto:77, gross:102},
+      {id:'elizalde', hdcp:13, neto:70, gross:82},
+      {id:'canonico',  hdcp:16, neto:72, gross:88},
+      {id:'vogelius',  hdcp:18, neto:68, gross:86},
+      {id:'mendez',    hdcp:19, neto:75, gross:94},
+      {id:'molinario',    hdcp:20, neto:76, gross:96},
+      {id:'scapparone',  hdcp:22, neto:73, gross:95},
+      {id:'fernandez',    hdcp:25, neto:77, gross:102},
     ],
 
     // — ESTADÍSTICAS DE HOYO (promedio del grupo por hoyo, par de cada hoyo)
@@ -478,25 +478,25 @@ const FECHAS = [
     matchs: [
       {
         tipo:'fb',
-        gris:['agus_g','gonza'], rojo:['gatto','juancho'],
+        gris:['gonzalez','tarasido'], rojo:['gatto','elizalde'],
         ganador:'r', difHoyos:-2,
         pts_g:{agus_g:0, gonza:0}, pts_r:{gatto:0.5, juancho:0.5}
       },
       {
         tipo:'fb',
-        gris:['javi','nacho'], rojo:['agus_c','nico_v'],
+        gris:['zunino','basaldua'], rojo:['canonico','vogelius'],
         ganador:'g', difHoyos:3,
         pts_g:{javi:0.5, nacho:0.5}, pts_r:{agus_c:0, nico_v:0}
       },
       {
         tipo:'fb',
-        gris:['tincho','pancho'], rojo:['pato','andy'],
+        gris:['pannullo','benegas'], rojo:['mendez','molinario'],
         ganador:'r', difHoyos:-1,
         pts_g:{tincho:0, pancho:0}, pts_r:{pato:0.5, andy:0.5}
       },
       {
         tipo:'fb',
-        gris:['franky','dipa'], rojo:['scappa','lule'],
+        gris:['guevara','dipaola'], rojo:['scapparone','fernandez'],
         ganador:'g', difHoyos:2,
         pts_g:{franky:0.5, dipa:0.5}, pts_r:{scappa:0, lule:0}
       },
@@ -1009,9 +1009,14 @@ function buildAccum() {
               <option value="">— Seleccionar —</option>
             </select>
           </div>
-          <div class="admin-field">
-            <label>Ausentes (coma entre nombres)</label>
-            <input type="text" id="adm-ausentes" placeholder="Ej: Dipa, Scappa">
+          <div class="admin-field" style="grid-column:1/-1">
+            <label>Ausentes — marcá quién faltó</label>
+            <div id="adm-ausentes-checks" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-top:8px;padding:12px;background:var(--navy-mid);border:1px solid var(--border);border-radius:8px"></div>
+          </div>
+          <div class="admin-field" style="grid-column:1/-1">
+            <label>Suplentes</label>
+            <div id="adm-suplentes-list" style="display:flex;flex-direction:column;gap:8px;margin-top:6px"></div>
+            <button type="button" onclick="adminAddSuplente()" style="margin-top:8px;background:none;border:1px dashed rgba(201,168,76,0.4);color:var(--gold);padding:7px 14px;border-radius:7px;font-size:0.78rem;cursor:pointer">+ Agregar Suplente</button>
           </div>
           <div class="admin-field" style="grid-column:1/-1">
             <label>Comentario / Highlight del día</label>
@@ -1737,6 +1742,8 @@ function openAdmin() {
   document.body.style.overflow='hidden';
   adminBuildMedalRows();
   adminBuildMatchBlocks(null);
+  adminBuildAusentesChecks();
+  adminBuildSuplentesList([]);
 }
 
 function closeAdmin() {
@@ -1786,8 +1793,34 @@ function adminPastePreview() {
   selNum.value = obj.num;
   adminBuildMatchBlocks(obj.num);
 
-  // Ausentes
-  document.getElementById('adm-ausentes').value = (obj.ausentes||[]).join(', ');
+  // Ausentes — tick checkboxes for absent players
+  adminBuildAusentesChecks();
+  (obj.ausentes||[]).forEach(name => {
+    const p = PLAYERS.find(x => x.name === name);
+    if(p) {
+      const chk = document.getElementById(`aus-${p.id}`);
+      if(chk) { chk.checked = true; }
+    }
+  });
+  adminAusenteChanged();
+
+  // Suplentes
+  adminBuildSuplentesList(obj.suplentes||[]);
+  // Populate reemplaza selects from JSON
+  const supRows = document.getElementById('adm-suplentes-list')?.querySelectorAll('[id^="sup-row-"]') || [];
+  const supData = obj.suplentes||[];
+  // Match gatto_ale first
+  supRows.forEach(row => {
+    const idx = row.dataset.idx;
+    const isGatto = row.dataset.isGatto === '1';
+    const matchData = isGatto ? supData.find(s=>s.id==='gatto_ale') : supData[parseInt(idx)];
+    if(matchData) {
+      const reemplazaEl = document.getElementById(`sup-reemplaza-${idx}`);
+      const equipoEl = document.getElementById(`sup-equipo-${idx}`);
+      if(reemplazaEl && matchData.reemplaza) reemplazaEl.value = matchData.reemplaza;
+      if(equipoEl && matchData.equipo) equipoEl.value = matchData.equipo;
+    }
+  });
 
   // Comentario
   document.getElementById('adm-comentario').value = obj.comentario||'';
@@ -1863,10 +1896,201 @@ function adminLoadFecha() {
   adminBuildMatchBlocks(num);
 }
 
+
+// ─── AUSENTES CHECKBOXES ───
+function adminBuildAusentesChecks() {
+  const cont = document.getElementById('adm-ausentes-checks');
+  if(!cont) return;
+  // All 16 official players as checkboxes
+  cont.innerHTML = PLAYERS.map(p => `
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,0.02);transition:background 0.15s"
+      onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+      <input type="checkbox" id="aus-${p.id}" value="${p.id}"
+        style="width:15px;height:15px;cursor:pointer;accent-color:var(--gold)"
+        onchange="adminAusenteChanged()">
+      <div class="dot ${p.team}" style="width:7px;height:7px;flex-shrink:0"></div>
+      <span style="font-size:0.82rem">${p.name.split(',')[0]}</span>
+    </label>`).join('');
+}
+
+function adminAusenteChanged() {
+  // When a player is marked absent, add a suplente row for them if not already there
+  // Also sync medal row opacity
+  PLAYERS.forEach(p => {
+    const chk = document.getElementById(`aus-${p.id}`);
+    const medalRow = document.getElementById(`medal-row-${p.id}`);
+    if(medalRow) {
+      medalRow.style.opacity = chk?.checked ? '0.35' : '1';
+    }
+  });
+}
+
+function adminGetAusentes() {
+  return PLAYERS.filter(p => {
+    const chk = document.getElementById(`aus-${p.id}`);
+    return chk?.checked;
+  }).map(p => p.name);
+}
+
+// ─── SUPLENTES DINÁMICOS ───
+let suplanteCounter = 0;
+
+function adminBuildSuplentesList(suplentesData) {
+  // suplentesData: array of {id, equipo, reemplaza} or empty
+  const cont = document.getElementById('adm-suplentes-list');
+  if(!cont) return;
+  cont.innerHTML = '';
+  suplanteCounter = 0;
+
+  // Always add Gatto Alejandro row first (pre-checked as ausente by default logic)
+  adminAddSuplente({id:'gatto_ale', equipo:'r', reemplaza:'', esGatto: true});
+
+  // Add any other suplentes from data
+  if(suplentesData) {
+    suplentesData.forEach(s => {
+      if(s.id !== 'gatto_ale') adminAddSuplente(s);
+    });
+  }
+}
+
+function adminAddSuplente(data) {
+  const cont = document.getElementById('adm-suplentes-list');
+  if(!cont) return;
+  const idx = suplanteCounter++;
+  const isGatto = data?.esGatto || data?.id === 'gatto_ale';
+  const selReemplaza = data?.reemplaza || '';
+  const selEquipo = data?.equipo || (isGatto ? 'r' : 'g');
+
+  const row = document.createElement('div');
+  row.id = 'sup-row-' + idx;
+  row.dataset.isGatto = isGatto ? '1' : '0';
+  row.dataset.idx = idx;
+  row.style.cssText = [
+    'display:grid',
+    'grid-template-columns:28px 1fr 160px 100px' + (isGatto ? '' : ' 36px'),
+    'gap:8px',
+    'align-items:center',
+    'padding:10px 12px',
+    'background:var(--navy-mid)',
+    'border:1px solid ' + (isGatto ? 'rgba(201,168,76,0.35)' : 'var(--border)'),
+    'border-radius:8px'
+  ].join(';');
+
+  // Col 1: dot + star
+  const col1 = document.createElement('div');
+  col1.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px';
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.style.background = isGatto ? 'var(--gold)' : 'var(--muted-light)';
+  col1.appendChild(dot);
+  if(isGatto) {
+    const star = document.createElement('span');
+    star.textContent = '★';
+    star.style.cssText = 'font-size:0.55rem;color:var(--gold);letter-spacing:1px';
+    col1.appendChild(star);
+  }
+
+  // Col 2: name + subtitle
+  const col2 = document.createElement('div');
+  col2.style.cssText = 'display:flex;flex-direction:column;gap:4px;min-width:0';
+  const nameEl = document.createElement(isGatto ? 'span' : 'input');
+  if(isGatto) {
+    nameEl.textContent = 'Gatto, Alejandro';
+    nameEl.style.cssText = 'font-size:0.82rem;font-weight:600;color:var(--gold)';
+  } else {
+    nameEl.type = 'text';
+    nameEl.id = 'sup-nombre-' + idx;
+    nameEl.placeholder = 'Nombre del suplente';
+    nameEl.value = data?.nombre || '';
+    nameEl.style.cssText = 'background:none;border:none;border-bottom:1px solid var(--border);color:var(--white);font-size:0.82rem;padding:2px 4px;outline:none;width:100%';
+  }
+  const subEl = document.createElement('span');
+  subEl.style.cssText = 'font-size:0.68rem;color:var(--muted)';
+  subEl.textContent = isGatto ? 'ID: gatto_ale — Suplente oficial especial' : 'Suplente externo — no acumula puntos al torneo';
+  col2.appendChild(nameEl);
+  col2.appendChild(subEl);
+
+  // Col 3: reemplaza select
+  const col3 = document.createElement('div');
+  col3.style.cssText = 'display:flex;flex-direction:column;gap:3px';
+  const lbl3 = document.createElement('span');
+  lbl3.style.cssText = 'font-size:0.6rem;color:var(--muted);letter-spacing:1px';
+  lbl3.textContent = 'REEMPLAZA';
+  const sel3 = document.createElement('select');
+  sel3.id = 'sup-reemplaza-' + idx;
+  sel3.style.cssText = 'background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:5px 8px;border-radius:6px;font-size:0.75rem';
+  const emptyOpt = document.createElement('option');
+  emptyOpt.value = '';
+  emptyOpt.textContent = '— Seleccionar —';
+  sel3.appendChild(emptyOpt);
+  PLAYERS.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.name;
+    opt.textContent = p.name.split(',')[0] + ' (' + (p.team==='g' ? 'Gris' : 'Rojo') + ')';
+    if(selReemplaza === p.name) opt.selected = true;
+    sel3.appendChild(opt);
+  });
+  col3.appendChild(lbl3);
+  col3.appendChild(sel3);
+
+  // Col 4: equipo select
+  const col4 = document.createElement('div');
+  col4.style.cssText = 'display:flex;flex-direction:column;gap:3px';
+  const lbl4 = document.createElement('span');
+  lbl4.style.cssText = 'font-size:0.6rem;color:var(--muted);letter-spacing:1px';
+  lbl4.textContent = 'EQUIPO';
+  const sel4 = document.createElement('select');
+  sel4.id = 'sup-equipo-' + idx;
+  sel4.style.cssText = 'background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:5px 8px;border-radius:6px;font-size:0.75rem';
+  [['g','⬜ GRIS'],['r','🟥 ROJO']].forEach(([val, label]) => {
+    const opt = document.createElement('option');
+    opt.value = val;
+    opt.textContent = label;
+    if(selEquipo === val) opt.selected = true;
+    sel4.appendChild(opt);
+  });
+  col4.appendChild(lbl4);
+  col4.appendChild(sel4);
+
+  row.appendChild(col1);
+  row.appendChild(col2);
+  row.appendChild(col3);
+  row.appendChild(col4);
+
+  // Col 5: remove button (only for non-Gatto)
+  if(!isGatto) {
+    const btn = document.createElement('button');
+    btn.textContent = '✕';
+    btn.style.cssText = 'background:none;border:1px solid rgba(224,48,48,0.3);color:var(--rojo-light);padding:5px 9px;border-radius:6px;cursor:pointer;font-size:0.75rem;align-self:center';
+    btn.onclick = () => row.remove();
+    row.appendChild(btn);
+  }
+
+  cont.appendChild(row);
+}
+
+function adminGetSuplentes() {
+  const cont = document.getElementById('adm-suplentes-list');
+  if(!cont) return [];
+  const rows = cont.querySelectorAll('[id^="sup-row-"]');
+  const result = [];
+  rows.forEach(row => {
+    const idx = row.dataset.idx;
+    const isGatto = row.dataset.isGatto === '1';
+    const reemplaza = document.getElementById(`sup-reemplaza-${idx}`)?.value || '';
+    const equipo = document.getElementById(`sup-equipo-${idx}`)?.value || 'r';
+    if(!reemplaza) return; // skip rows without a player selected
+    const id = isGatto ? 'gatto_ale' : (`sup-ext-${idx}`);
+    const nombre = isGatto ? 'Gatto, Alejandro' : (document.getElementById(`sup-nombre-${idx}`)?.value || '');
+    result.push({id, equipo, reemplaza, nombre: isGatto ? undefined : nombre});
+  });
+  return result;
+}
+
 function adminBuildMedalRows() {
   const cont = document.getElementById('adm-medal-rows');
   const oficialRows = PLAYERS.map(p=>`
-    <div style="display:grid;grid-template-columns:1fr 60px 70px 70px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03)">
+    <div id="medal-row-${p.id}" style="display:grid;grid-template-columns:1fr 60px 70px 70px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);transition:opacity 0.2s">
       <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem">
         <div class="dot ${p.team}"></div>
         <span>${p.name}</span>
@@ -1980,8 +2204,7 @@ function adminGenerate() {
   const f = FECHAS.find(x=>x.num===num);
   if(!f) return;
 
-  const ausText = document.getElementById('adm-ausentes').value.trim();
-  const ausentes = ausText ? ausText.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  const ausentes = adminGetAusentes();
   const comentario = document.getElementById('adm-comentario').value.trim();
 
   // Medal — oficiales + suplente especial si jugó
@@ -2036,10 +2259,12 @@ function adminGenerate() {
     }
   }
 
+  const suplentes = adminGetSuplentes();
+
   const newFecha = {
     num, fecha:f.fecha, cancha:f.cancha||'CUBA Fátima',
     organizadores:f.organizadores||'',
-    ausentes, suplentes:[],
+    ausentes, suplentes,
     medal, stats, matchs,
     comentario: comentario||''
   };
