@@ -793,7 +793,42 @@ function buildAccum() {
     }
   });
 
-  return {medal, match, teamMatch, matchSupEspecial};
+  // ── Gross acumulado ──
+  const gross = {};
+  PLAYERS.forEach(p => { gross[p.id] = {scores:[]}; });
+  if(matchSupEspecial) gross['gatto_ale'] = {scores:[], isSupEspecial:true};
+
+  FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f => {
+    f.medal.forEach(m => {
+      if(gross[m.id] && m.gross) gross[m.id].scores.push(m.gross);
+    });
+  });
+
+  const grossRankData = {};
+  Object.entries(gross).forEach(([id,v]) => {
+    if(!v.scores.length) return;
+    const sorted = [...v.scores].sort((a,b)=>a-b);
+    const best7 = sorted.slice(0,7);
+    const avg = (best7.reduce((a,b)=>a+b,0)/best7.length).toFixed(1);
+    grossRankData[id] = {avg: parseFloat(avg), count: v.scores.length, isSupEspecial: v.isSupEspecial||false};
+  });
+
+  // ── Fechas jugadas por jugador ──
+  FECHAS.filter(f=>!f.pendiente).forEach(f => {
+    const mpts = calcMedalPts(f);
+    mpts.forEach(m => {
+      if(!m.esSuplente && medal[m.id]) {
+        if(!medal[m.id].fechas) medal[m.id].fechas = 0;
+        medal[m.id].fechas++;
+      }
+      if(match[m.id] && !m.esSuplente) {
+        if(!match[m.id].fechas) match[m.id].fechas = 0;
+        match[m.id].fechas++;
+      }
+    });
+  });
+
+  return {medal, match, gross: grossRankData, teamMatch, matchSupEspecial};
 }
 </script>
 
@@ -2489,20 +2524,125 @@ function exportFechaPDF() {
   if(f.comentario) {
     const clean = f.comentario.replace(/<[^>]+>/g,'');
     setFont(7,'italic', muted);
-    const cLines = doc.splitTextToSize('★  ' + clean, col);
-    const cHeight = cLines.length * 5 + 8;
+    const maxWidth = col - 10;
+    const cLines = doc.splitTextToSize('★  ' + clean, maxWidth);
+    const cHeight = cLines.length * 5.5 + 10;
     if(y + cHeight > 270) { doc.addPage(); fillRect(0,0,W,10,navy); y=16; }
     fillRect(margin, y, col, cHeight, [12,20,34]);
+    doc.setDrawColor(...gold); doc.setLineWidth(0.4);
+    doc.line(margin, y, margin, y + cHeight);
+    y += 6;
+    cLines.forEach(l => { doc.text(l, margin + 6, y); y += 5.5; });
     y += 5;
-    cLines.forEach(l => { doc.text(l, margin+4, y); y += 5; });
-    y += 4;
   }
 
-  // ── FOOTER ──
-  doc.setPage(doc.getNumberOfPages());
-  fillRect(0, 291, W, 6, navy);
-  setFont(6,'normal',[40,60,80]);
-  doc.text('Milicia Golf Tour 2026 · Generado automáticamente', W/2, 295, {align:'center'});
+  // ── RANKINGS HASTA ESTA FECHA ──
+  const accF = buildAccum();
+
+  // helper local
+  function rankSection(title, yy) {
+    if(yy + 12 > 270) { doc.addPage(); fillRect(0,0,W,10,navy); yy=16; }
+    fillRect(margin, yy, col, 8, [20,35,55]);
+    setFont(7,'bold',gold); doc.text(title, margin+4, yy+5.5);
+    return yy + 10;
+  }
+  function rankRow(i, name, team, val1, val1Label, val2, val2Label, yy) {
+    if(yy + 7 > 278) { doc.addPage(); fillRect(0,0,W,10,navy); yy=16; }
+    fillRect(margin, yy, col, 7, i%2===0?[11,20,32]:[14,24,38]);
+    const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:[90,106,125];
+    setFont(5.5,'bold',posC);      doc.text(String(i+1), margin+3, yy+5);
+    setFont(6.5,'normal',white);   doc.text(name, margin+13, yy+5);
+    const tc = team==='g'?[180,185,195]:[224,48,48];
+    setFont(5.5,'bold',tc);        doc.text(team==='g'?'GRIS':'ROJO', margin+90, yy+5);
+    setFont(5.5,'normal',[90,106,125]); doc.text(val1Label, margin+115, yy+5, {align:'right'});
+    setFont(6.5,'bold',gold);      doc.text(String(val1), W-margin-2, yy+5, {align:'right'});
+    return yy + 7;
+  }
+
+  // MEDAL ranking
+  y = rankSection('RANKING MEDAL — ACUMULADO AL F' + f.num, y);
+  const mRank = Object.entries(accF.medal)
+    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
+    .sort((a,b)=>b.pts-a.pts);
+  mRank.forEach((m,i) => {
+    y = rankRow(i, m.p?.name||m.id, m.p?.team, m.pts, 'pts', null, null, y);
+  });
+  if(accF.matchSupEspecial?.medalPts > 0) {
+    if(y+7>278){doc.addPage();fillRect(0,0,W,10,navy);y=16;}
+    fillRect(margin, y, col, 7, [20,17,5]);
+    setFont(5.5,'bold',gold); doc.text('★ SUP', margin+3, y+5);
+    setFont(6.5,'normal',gold); doc.text(accF.matchSupEspecial.name, margin+13, y+5);
+    setFont(6.5,'bold',gold); doc.text('('+accF.matchSupEspecial.medalPts+')', W-margin-2, y+5, {align:'right'});
+    y+=8;
+  }
+
+  y += 4;
+
+  // MATCH ranking (Gris | Rojo en columnas)
+  y = rankSection('RANKING MATCH — ACUMULADO AL F' + f.num, y);
+  const gMatch = Object.entries(accF.match)
+    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
+    .filter(m=>m.p?.team==='g').sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
+  const rMatch = Object.entries(accF.match)
+    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
+    .filter(m=>m.p?.team==='r').sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
+  const maxRows = Math.max(gMatch.length, rMatch.length);
+  const hw = (col-4)/2;
+  // team headers
+  if(y+7>270){doc.addPage();fillRect(0,0,W,10,navy);y=16;}
+  fillRect(margin, y, hw, 7, [22,35,50]);
+  fillRect(margin+hw+4, y, hw, 7, [40,15,15]);
+  setFont(6,'bold',[180,185,195]); doc.text('GRIS', margin+hw/2, y+5, {align:'center'});
+  setFont(6,'bold',[255,100,100]); doc.text('ROJO', margin+hw+4+hw/2, y+5, {align:'center'});
+  y += 7;
+  for(let i=0;i<maxRows;i++){
+    if(y+6>278){doc.addPage();fillRect(0,0,W,10,navy);y=16;}
+    const bg = i%2===0?[11,20,32]:[14,24,38];
+    fillRect(margin, y, hw, 6, bg);
+    fillRect(margin+hw+4, y, hw, 6, bg);
+    const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:[90,106,125];
+    if(gMatch[i]) {
+      setFont(5,'bold',posC); doc.text(String(i+1), margin+2, y+4.5);
+      setFont(6,'normal',white); doc.text(gMatch[i].p?.name?.split(',')[0]||'', margin+9, y+4.5);
+      const dg = gMatch[i].difHoyos;
+      setFont(6,'bold',gold); doc.text(String(gMatch[i].pts), margin+hw-16, y+4.5, {align:'right'});
+      setFont(5.5,'normal',dg>=0?[74,200,110]:[255,100,100]);
+      doc.text((dg>=0?'+':'')+dg, margin+hw-2, y+4.5, {align:'right'});
+    }
+    if(rMatch[i]) {
+      const xr = margin+hw+4;
+      setFont(5,'bold',posC); doc.text(String(i+1), xr+2, y+4.5);
+      setFont(6,'normal',white); doc.text(rMatch[i].p?.name?.split(',')[0]||'', xr+9, y+4.5);
+      const dr = rMatch[i].difHoyos;
+      setFont(6,'bold',gold); doc.text(String(rMatch[i].pts), xr+hw-16, y+4.5, {align:'right'});
+      setFont(5.5,'normal',dr>=0?[74,200,110]:[255,100,100]);
+      doc.text((dr>=0?'+':'')+dr, xr+hw-2, y+4.5, {align:'right'});
+    }
+    y += 6;
+  }
+
+  y += 4;
+
+  // GROSS ranking
+  const grossEntries = Object.entries(accF.gross||{})
+    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
+    .filter(x=>x.count>=1).sort((a,b)=>a.avg-b.avg);
+  if(grossEntries.length) {
+    y = rankSection('RANKING GROSS — PROMEDIO AL F' + f.num, y);
+    grossEntries.forEach((m,i) => {
+      y = rankRow(i, m.p?.name||m.id, m.p?.team, m.avg, m.count+' tar.', null, null, y);
+    });
+  }
+
+  // ── FOOTER (todas las páginas) ──
+  const totalPages = doc.getNumberOfPages();
+  for(let pg=1; pg<=totalPages; pg++) {
+    doc.setPage(pg);
+    fillRect(0, 291, W, 6, navy);
+    setFont(6,'normal',[40,60,80]);
+    doc.text('Milicia Golf Tour 2026 · F'+f.num+' · '+f.fecha, margin, 295);
+    doc.text('Pág. '+pg+' / '+totalPages, W-margin, 295, {align:'right'});
+  }
 
   doc.save(`MGT2026_F${f.num}_${f.fecha.replace(/ /g,'_')}.pdf`);
 }
@@ -2622,7 +2762,7 @@ function exportConsolidadoPDF() {
     .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
     .sort((a,b)=>b.pts-a.pts||(a.p?.name||'').localeCompare(b.p?.name||''));
 
-  const grossRank = Object.entries(acc.gross)
+  const grossRank = Object.entries(acc.gross||{})
     .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
     .filter(x=>x.count>=1)
     .sort((a,b)=>a.avg-b.avg);
