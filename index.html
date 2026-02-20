@@ -429,6 +429,7 @@ const FECHAS = [
     cancha: 'CUBA Fátima',
     organizadores: 'Gatto + Zunino',
     ausentes: [],
+    // suplentes: [{id:"gatto_ale", equipo:"g", reemplaza:"pancho"}]  ← ejemplo
     suplentes: [],
 
     // — MEDAL: score neto y gross de cada jugador
@@ -526,45 +527,158 @@ const MEDAL_PTS = {
 const F9_MULT = 1.5, F10_MULT = 2;
 
 // ════════════════════════════════════════════════════════════
+// SUPLENTES
+// esOficialEspecial: true  → acumula pts match para el equipo que representa,
+//                            aparece siempre en última línea de tablas acumuladas
+// esOficialEspecial: false → no acumula nada en el torneo; en fecha aparece con score
+//
+// En MATCHS, para indicar que un jugador es suplente en ese match específico:
+//   suplente_en: {id: 'juani', equipo: 'g'/'r'}   (en el objeto match)
+//
+// Reglas de puntos con suplente en match:
+//  1vs1:
+//    suplente gana  → nadie suma
+//    suplente empata → oficial rival suma 0.5 (mitad del 1pt)
+//    suplente pierde → oficial rival suma 1pt normal
+//  2vs2 (suplente en equipo X):
+//    equipo con suplente gana  → oficial del mismo equipo suma 0.5, rival no suma
+//    empate                    → oficial mismo equipo 0.25, rival 0.25
+//    equipo con suplente pierde → rival oficial suma 0.5 normal
+//
+// El suplente NUNCA acumula pts de match en el torneo (excepto esOficialEspecial).
+// El suplente especial (Gatto Alejandro) sí acumula match para el equipo que le toca.
+
+const SUPLENTE_ESPECIAL_ID = 'gatto_ale'; // Alejandro Gatto — suplente oficial especial
+
+// Registro de suplentes conocidos — se pueden agregar más
+const SUPLENTES_CONOCIDOS = [
+  {id:'gatto_ale', name:'Gatto, Alejandro', esOficialEspecial:true},
+  // Ejemplo: {id:'juani', name:'Juani Reemplazo', esOficialEspecial:false},
+];
+
+// Helper: lookup jugador (oficial o suplente)
+function findPlayerOrSuplente(id) {
+  const oficial = PLAYERS.find(p=>p.id===id);
+  if(oficial) return oficial;
+  const sup = SUPLENTES_CONOCIDOS.find(s=>s.id===id);
+  if(sup) return {...sup, team: null}; // team se asigna dinámicamente
+  return null;
+}
+
+// Helper: determinar si un id es suplente en una fecha concreta
+function getSustitutoInfo(id, fecha) {
+  if(!fecha.suplentes) return null;
+  return fecha.suplentes.find(s=>s.id===id) || null;
+}
+
+// ════════════════════════════════════════════════════════════
 // CÁLCULOS
 
 function calcMedalPts(fecha) {
   if(fecha.pendiente || !fecha.medal) return [];
   const mult = fecha.num === 9 ? F9_MULT : fecha.num === 10 ? F10_MULT : 1;
-  // Ordenar por neto
-  const sorted = [...fecha.medal].sort((a,b) => a.neto - b.neto);
+
+  // Separar oficiales y suplentes
+  const oficiales = fecha.medal.filter(m => {
+    const sup = getSustitutoInfo(m.id, fecha);
+    if(sup) return false; // es suplente en esta fecha
+    return PLAYERS.find(p=>p.id===m.id); // solo oficiales
+  });
+  const suplentesEnFecha = fecha.medal.filter(m => {
+    const sup = getSustitutoInfo(m.id, fecha);
+    return !!sup;
+  });
+
+  // Ordenar SOLO oficiales para asignar puntos reales
+  const sorted = [...oficiales].sort((a,b) => a.neto - b.neto);
   const result = [];
   let i = 0;
   while(i < sorted.length) {
     let j = i;
     while(j < sorted.length - 1 && sorted[j].neto === sorted[j+1].neto) j++;
-    // empate entre i..j
     let totalPts = 0;
     for(let k=i;k<=j;k++) totalPts += (MEDAL_PTS[k+1]||0);
     const pts = Math.round((totalPts/(j-i+1)) * mult);
-    for(let k=i;k<=j;k++) result.push({id:sorted[k].id, neto:sorted[k].neto, gross:sorted[k].gross, pos:i+1, pts});
+    for(let k=i;k<=j;k++) result.push({
+      id:sorted[k].id, hdcp:sorted[k].hdcp, neto:sorted[k].neto, gross:sorted[k].gross,
+      pos:i+1, pts, esSuplente:false
+    });
     i = j+1;
   }
-  return result;
+
+  // Ahora insertar suplentes en la tabla de fecha (pos visual, pero pts=0 para acumulado)
+  // Su posición visual se calcula mezclando con oficiales
+  const allSorted = [...fecha.medal].sort((a,b) => a.neto - b.neto);
+  const resultConSup = [];
+  const posMap = {}; // id -> pos visual real
+  let posIdx = 0;
+  let pos = 1;
+  while(posIdx < allSorted.length) {
+    let j = posIdx;
+    while(j < allSorted.length - 1 && allSorted[j].neto === allSorted[j+1].neto) j++;
+    for(let k=posIdx; k<=j; k++) posMap[allSorted[k].id] = pos;
+    posIdx = j+1;
+    pos = posIdx+1;
+  }
+
+  // Reconstruir resultado final para tabla de fecha
+  const finalResult = [];
+  allSorted.forEach(m => {
+    const sup = getSustitutoInfo(m.id, fecha);
+    if(sup) {
+      // suplente: pts visuales calculados sobre toda la tabla, pero pts acumulados = 0
+      // Calcular pts visuales (lo que "habría ganado")
+      const posVisual = posMap[m.id];
+      const ptsVisuales = Math.round((MEDAL_PTS[posVisual]||0) * mult);
+      const esEspecial = SUPLENTES_CONOCIDOS.find(s=>s.id===m.id)?.esOficialEspecial || false;
+      finalResult.push({
+        id:m.id, hdcp:m.hdcp, neto:m.neto, gross:m.gross,
+        pos:posVisual, pts:ptsVisuales,
+        esSuplente:true, esOficialEspecial:esEspecial,
+        equipoRepresenta: sup.equipo || null
+      });
+    } else {
+      // oficial — usar pts ya calculados
+      const found = result.find(r=>r.id===m.id);
+      if(found) finalResult.push(found);
+    }
+  });
+
+  return finalResult;
 }
 
 function buildAccum() {
-  // medal acumulado
-  const medal = {}; // id -> {pts, fechas:[]}
-  const match = {}; // id -> {pts, difHoyos}
+  // medal acumulado — solo oficiales
+  const medal = {};
+  const match = {};
   PLAYERS.forEach(p => {
     medal[p.id] = {pts:0, positions:[]};
     match[p.id] = {pts:0, difHoyos:0};
   });
+
+  // Suplente especial también acumula match
+  const supEspecial = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
+  let matchSupEspecial = null;
+  if(supEspecial) {
+    matchSupEspecial = {id: supEspecial.id, name: supEspecial.name, pts:0, difHoyos:0, medalPts:0, medalPos:[]};
+  }
 
   const teamMatch = {g:{pts:0,dif:0}, r:{pts:0,dif:0}};
 
   FECHAS.forEach(f => {
     if(f.pendiente) return;
 
-    // Medal
+    // Medal — solo acumular para jugadores oficiales
     const mpts = calcMedalPts(f);
     mpts.forEach(m => {
+      if(m.esSuplente) {
+        // Suplente especial acumula medal también
+        if(m.esOficialEspecial && matchSupEspecial) {
+          matchSupEspecial.medalPts += m.pts;
+          matchSupEspecial.medalPos.push(m.pos);
+        }
+        return; // no acumula al torneo
+      }
       if(medal[m.id]) {
         medal[m.id].pts += m.pts;
         medal[m.id].positions.push(m.pos);
@@ -574,26 +688,112 @@ function buildAccum() {
     // Match
     if(f.matchs) {
       f.matchs.forEach(m => {
-        const allPts = {...(m.pts_g||{}), ...(m.pts_r||{})};
-        Object.entries(allPts).forEach(([id,pts]) => {
-          if(match[id]) match[id].pts += pts;
-        });
-        // dif hoyos por jugador y equipo
         const dif = m.difHoyos || 0;
-        [...(m.gris||[])].forEach(id => { if(match[id]) match[id].difHoyos += dif; });
-        [...(m.rojo||[])].forEach(id => { if(match[id]) match[id].difHoyos -= dif; });
-        // equipo
-        const g_won = m.ganador==='g'?1:m.ganador==='empate'?0.5:0;
-        const r_won = m.ganador==='r'?1:m.ganador==='empate'?0.5:0;
-        teamMatch.g.pts += g_won;
-        teamMatch.r.pts += r_won;
+        const ganador = m.ganador; // 'g','r','empate'
+
+        // Detectar si hay suplente en este match
+        const supEnGris = (m.gris||[]).find(id => getSustitutoInfo(id, f));
+        const supEnRojo  = (m.rojo||[]).find(id => getSustitutoInfo(id, f));
+        const haySupEnMatch = supEnGris || supEnRojo;
+
+        if(!haySupEnMatch) {
+          // — Match normal sin suplentes —
+          const allPts = {...(m.pts_g||{}), ...(m.pts_r||{})};
+          Object.entries(allPts).forEach(([id,pts]) => {
+            if(match[id]) match[id].pts += pts;
+          });
+          [...(m.gris||[])].forEach(id => { if(match[id]) match[id].difHoyos += dif; });
+          [...(m.rojo||[])].forEach(id => { if(match[id]) match[id].difHoyos -= dif; });
+          const g_won = ganador==='g'?1:ganador==='empate'?0.5:0;
+          const r_won = ganador==='r'?1:ganador==='empate'?0.5:0;
+          teamMatch.g.pts += g_won;
+          teamMatch.r.pts += r_won;
+
+        } else {
+          // — Match con suplente —
+          const tipo = m.tipo; // 'fb'=2v2, 'ind'=1v1
+
+          // Equipo del suplente
+          const supId = supEnGris || supEnRojo;
+          const supEquipo = supEnGris ? 'g' : 'r';
+          const rivEquipo = supEquipo === 'g' ? 'r' : 'g';
+
+          // ¿Es el suplente especial?
+          const supInfo = SUPLENTES_CONOCIDOS.find(s=>s.id===supId);
+          const esEspecial = supInfo?.esOficialEspecial || false;
+
+          if(tipo==='ind') {
+            // 1vs1: el suplente juega solo en su lado
+            // - suplente gana → nadie suma
+            // - suplente empata → rival oficial suma 0.5
+            // - suplente pierde → rival oficial suma 1
+            const rivId = [...(supEquipo==='g' ? (m.rojo||[]) : (m.gris||[]))].find(id=>!getSustitutoInfo(id,f));
+            if(ganador==='empate') {
+              if(match[rivId]) match[rivId].pts += 0.5;
+            } else if(ganador===rivEquipo) {
+              if(match[rivId]) match[rivId].pts += 1;
+            }
+            // dif hoyos al rival también
+            if(match[rivId]) {
+              match[rivId].difHoyos += (supEquipo==='g' ? -dif : dif);
+            }
+            // suplente especial acumula su propio pts
+            if(esEspecial && matchSupEspecial) {
+              const supPts = ganador===supEquipo?1:ganador==='empate'?0.5:0;
+              matchSupEspecial.pts += supPts;
+              matchSupEspecial.difHoyos += (supEquipo==='g' ? dif : -dif);
+            }
+          } else {
+            // 2vs2: suplente está en un equipo con un oficial
+            const supTeamIds = supEquipo==='g' ? (m.gris||[]) : (m.rojo||[]);
+            const rivTeamIds = supEquipo==='g' ? (m.rojo||[]) : (m.gris||[]);
+            const oficialSameTeam = supTeamIds.find(id=>id!==supId && PLAYERS.find(p=>p.id===id));
+            const oficialRiv1 = rivTeamIds[0];
+            const oficialRiv2 = rivTeamIds[1];
+
+            if(ganador===supEquipo) {
+              // equipo con suplente gana → oficial mismo equipo 0.5, rivales 0
+              if(match[oficialSameTeam]) match[oficialSameTeam].pts += 0.5;
+              // rivales no cobran
+            } else if(ganador==='empate') {
+              // empate → oficial mismo equipo 0.25, rivales 0.25 cada uno
+              if(match[oficialSameTeam]) match[oficialSameTeam].pts += 0.25;
+              if(match[oficialRiv1]) match[oficialRiv1].pts += 0.25;
+              if(match[oficialRiv2]) match[oficialRiv2].pts += 0.25;
+            } else {
+              // equipo con suplente pierde → rivales cobran normal 0.5
+              if(match[oficialRiv1]) match[oficialRiv1].pts += 0.5;
+              if(match[oficialRiv2]) match[oficialRiv2].pts += 0.5;
+            }
+            // dif hoyos para todos los involucrados
+            [...supTeamIds].forEach(id => {
+              if(id!==supId && match[id]) match[id].difHoyos += (supEquipo==='g' ? dif : -dif);
+            });
+            [...rivTeamIds].forEach(id => {
+              if(match[id]) match[id].difHoyos += (supEquipo==='g' ? -dif : dif);
+            });
+            // suplente especial acumula
+            if(esEspecial && matchSupEspecial) {
+              const supPts = ganador===supEquipo?0.5:ganador==='empate'?0.25:0;
+              matchSupEspecial.pts += supPts;
+              matchSupEspecial.difHoyos += (supEquipo==='g' ? dif : -dif);
+            }
+          }
+
+          // Puntos de equipo (siempre suman independiente del suplente)
+          const g_won = ganador==='g'?1:ganador==='empate'?0.5:0;
+          const r_won = ganador==='r'?1:ganador==='empate'?0.5:0;
+          teamMatch.g.pts += g_won;
+          teamMatch.r.pts += r_won;
+        }
+
         teamMatch.g.dif += dif;
         teamMatch.r.dif -= dif;
       });
     }
   });
 
-  return {medal, match, teamMatch};
+  return {medal, match, teamMatch, matchSupEspecial};
 }
 </script>
 
@@ -1068,7 +1268,7 @@ function renderMedal(acc) {
     const ptsPerF = {};
     fechasJugadas.forEach(f=>{
       const pts_data = calcMedalPts(f);
-      const found = pts_data.find(x=>x.id===id);
+      const found = pts_data.find(x=>x.id===id && !x.esSuplente);
       ptsPerF['F'+f.num] = found ? found.pts : '—';
     });
     return {id, name:p?.name, team:p?.team, pts:v.pts, positions:v.positions, ptsPerF};
@@ -1085,7 +1285,25 @@ function renderMedal(acc) {
     </tr>`;
   }).join('');
 
-  byId('tbl-medal-full').innerHTML = `<thead><tr><th>#</th><th>Jugador</th>${fCols}<th>Total</th></tr></thead><tbody>${rows}</tbody>`;
+  // Suplente especial al final
+  let supEspRow = '';
+  if(acc.matchSupEspecial && acc.matchSupEspecial.medalPts > 0) {
+    const se = acc.matchSupEspecial;
+    const ptsPerFCells = fechasJugadas.map(f=>{
+      const pts_data = calcMedalPts(f);
+      const found = pts_data.find(x=>x.id===se.id && x.esSuplente);
+      const v = found ? `(${found.pts})` : '—';
+      return `<td class="num" style="color:var(--muted-light)">${v}</td>`;
+    }).join('');
+    supEspRow = `<tr style="border-top:1px dashed rgba(201,168,76,0.3);opacity:0.8">
+      <td><span style="color:var(--gold);font-size:0.7rem;font-family:'DM Mono',monospace">SUP</span></td>
+      <td><div class="player-name-cell"><div class="dot" style="background:var(--gold)"></div><span style="color:var(--gold)">${se.name} ★</span></div></td>
+      ${ptsPerFCells}
+      <td class="num"><span style="color:var(--gold);font-family:'DM Mono',monospace">(${se.medalPts})</span></td>
+    </tr>`;
+  }
+
+  byId('tbl-medal-full').innerHTML = `<thead><tr><th>#</th><th>Jugador</th>${fCols}<th>Total</th></tr></thead><tbody>${rows}${supEspRow}</tbody>`;
 
   destroyChart('medal-bar');
   charts['medal-bar'] = new Chart(byId('chart-medal-bar'),{
@@ -1113,6 +1331,16 @@ function renderMatch(acc) {
   };
 
   const tHead = `<thead><tr><th>#</th><th>Jugador</th><th>Pts Match</th><th>Dif. Hoyos</th></tr></thead>`;
+
+  // Suplente especial — fila al final de ambas tablas
+  const supEspRow = acc.matchSupEspecial
+    ? `<tr style="border-top:1px dashed rgba(201,168,76,0.3);opacity:0.8">
+        <td><span style="color:var(--gold);font-size:0.65rem;font-family:'DM Mono',monospace">★</span></td>
+        <td><div class="player-name-cell"><div class="dot" style="background:var(--gold)"></div><span style="color:var(--gold)">${acc.matchSupEspecial.name}</span><span style="font-size:0.6rem;color:var(--muted);margin-left:6px">suplente oficial</span></div></td>
+        <td class="num"><span style="color:var(--gold);font-family:'DM Mono',monospace">${acc.matchSupEspecial.pts}</span></td>
+        <td class="num" style="color:var(--muted-light)">${fmtDif(acc.matchSupEspecial.difHoyos)}</td>
+      </tr>` : '';
+
   ['g','r'].forEach(team=>{
     const rank = byTeam(team);
     const rows = rank.map((m,i)=>{
@@ -1124,7 +1352,7 @@ function renderMatch(acc) {
         <td class="num">${fmtDif(m.difHoyos)}</td>
       </tr>`;
     }).join('');
-    byId(`tbl-match-${team}`).innerHTML = tHead+`<tbody>${rows}</tbody>`;
+    byId(`tbl-match-${team}`).innerHTML = tHead+`<tbody>${rows}${supEspRow}</tbody>`;
   });
 
   const allRank = Object.entries(acc.match).map(([id,v])=>({id,...v})).sort((a,b)=>b.pts-a.pts);
@@ -1254,21 +1482,31 @@ function renderFechaDetail(num) {
       </div>`;
   }
 
-  // Matchs
+  // Matchs — con soporte de suplentes
   let matchHTML = '';
   if(f.matchs) {
     let gPts=0, rPts=0, gDif=0;
     matchHTML = f.matchs.map((m,i)=>{
       const gw = m.ganador==='g', rw=m.ganador==='r', tie=m.ganador==='empate';
       gPts += gw?1:tie?0.5:0; rPts += rw?1:tie?0.5:0; gDif+=m.difHoyos||0;
-      const gNames = m.gris.map(id=>PLAYERS.find(p=>p.id===id)?.name.split(',')[0]||id).join(' + ');
-      const rNames = m.rojo.map(id=>PLAYERS.find(p=>p.id===id)?.name.split(',')[0]||id).join(' + ');
+      const nameOf = id => {
+        const oficial = PLAYERS.find(p=>p.id===id);
+        if(oficial) return oficial.name.split(',')[0];
+        const sup = SUPLENTES_CONOCIDOS.find(s=>s.id===id);
+        if(sup) return `<span style="color:var(--gold);font-weight:600">${sup.name.split(',')[0]}*</span>`;
+        return id;
+      };
+      const gNames = (m.gris||[]).map(nameOf).join(' + ');
+      const rNames = (m.rojo||[]).map(nameOf).join(' + ');
+      const supEnMatch = [...(m.gris||[]),...(m.rojo||[])].find(id=>getSustitutoInfo(id,f));
+      const supNota = supEnMatch ? `<span style="font-size:0.6rem;color:var(--gold);margin-left:6px;font-family:'DM Mono',monospace">* suplente</span>` : '';
       return `<div class="match-row">
         <span class="match-type ${m.tipo}">${m.tipo==='fb'?'2vs2':'1vs1'}</span>
         <div class="match-players" style="flex:1">
           <span class="team-g">${gNames}</span>
           <span style="color:var(--muted);margin:0 8px">vs</span>
           <span class="team-r">${rNames}</span>
+          ${supNota}
         </div>
         <span class="match-winner ${gw?'gw':rw?'rw':'tie'}">${gw?'GRIS':rw?'ROJO':'EMPATE'}</span>
         <span class="match-dif">${fmtDif(m.difHoyos||0)} hoyos</span>
@@ -1282,11 +1520,30 @@ function renderFechaDetail(num) {
     </div>`;
   }
 
+  // Suplentes presentes esta fecha (para nota)
+  const supNotaFecha = (f.suplentes||[]).length > 0
+    ? `<div class="card" style="border-color:rgba(201,168,76,0.3);margin-bottom:0">
+        <div class="kpi-label" style="color:var(--gold)">⭐ Suplentes esta fecha</div>
+        <div style="margin-top:6px;font-size:0.85rem">
+          ${(f.suplentes||[]).map(s=>{
+            const info = SUPLENTES_CONOCIDOS.find(x=>x.id===s.id);
+            const nombre = info?.name || s.id;
+            const esEsp = info?.esOficialEspecial;
+            return `<span style="color:var(--gold)">${nombre}</span>
+              <span style="color:var(--muted-light);font-size:0.75rem"> → equipo ${s.equipo==='g'?'GRIS':'ROJO'}${s.reemplaza?' · reemplaza a '+s.reemplaza:''}${esEsp?' <span style="color:var(--gold);font-size:0.65rem">SUPLENTE OFICIAL</span>':''}</span>`;
+          }).join('<br>')}
+        </div>
+        ${(f.suplentes||[]).some(s=>!SUPLENTES_CONOCIDOS.find(x=>x.id===s.id)?.esOficialEspecial)
+          ? `<div style="margin-top:6px;font-size:0.7rem;color:var(--muted)">* Suplentes genéricos: sus puntos medal y match no se acumulan al torneo · Gatto acumula en su fila especial ★</div>` : ''}
+      </div>` : '';
+
   byId('fecha-detail').innerHTML = `
     <div class="g3" style="margin-bottom:16px">
       <div class="card"><div class="kpi-label">Fecha</div><div style="font-size:1.1rem;font-weight:600;cursor:default;user-select:none" onclick="adminTripleClick()" title="">F${f.num} · ${f.fecha}</div><div style="font-size:0.78rem;color:var(--muted-light);margin-top:4px">${f.cancha||''}</div></div>
       <div class="card"><div class="kpi-label">Organizadores</div><div style="font-size:0.95rem;font-weight:500">${f.organizadores||'—'}</div></div>
-      <div class="card"><div class="kpi-label">Ausentes</div><div style="font-size:0.9rem">${(f.ausentes||[]).length===0?'<span style="color:var(--muted)">Todos presentes 💪</span>':f.ausentes.join(', ')}</div></div>
+      <div class="card"><div class="kpi-label">Ausentes</div><div style="font-size:0.9rem">${(f.ausentes||[]).length===0?'<span style="color:var(--muted)">Todos presentes 💪</span>':f.ausentes.join(', ')}</div>
+        ${supNotaFecha}
+      </div>
     </div>
 
     ${f.comentario?`<div class="comment-card"><div class="comment-tag">★ Momento del día</div><div class="comment-text">${f.comentario}</div></div>`:''}
@@ -1300,19 +1557,29 @@ function renderFechaDetail(num) {
           <thead><tr><th>#</th><th>Jugador</th><th>Equipo</th><th>HDCP</th><th>Neto</th><th>Gross</th><th>Pts</th></tr></thead>
           <tbody>
             ${medalSorted.map(m=>{
-              const p=PLAYERS.find(x=>x.id===m.id);
-              return `<tr>
-                <td><span class="rank-num ${m.pos<=3?'r'+m.pos:''}">${m.pos}</span></td>
-                <td>${p?.name}</td>
-                <td>${teamLabel(p?.team||'g')}</td>
+              const p = PLAYERS.find(x=>x.id===m.id);
+              const sup = SUPLENTES_CONOCIDOS.find(s=>s.id===m.id);
+              const nombre = p?.name || sup?.name || m.id;
+              const equipoDisplay = m.esSuplente
+                ? `<span style="color:var(--gold);font-size:0.7rem">${m.equipoRepresenta==='g'?'GRIS*':'ROJO*'}</span>`
+                : teamLabel(p?.team||'g');
+              const ptsDisplay = m.esSuplente
+                ? `<span style="color:var(--muted-light);font-size:0.75rem">(${m.pts})</span>`
+                : `<span class="pts-badge">${m.pts}</span>`;
+              const trStyle = m.esSuplente ? 'opacity:0.75;border-top:1px dashed rgba(201,168,76,0.2)' : '';
+              return `<tr style="${trStyle}">
+                <td><span class="rank-num ${!m.esSuplente&&m.pos<=3?'r'+m.pos:''}">${m.pos}</span></td>
+                <td><span style="${m.esSuplente?'color:var(--gold)':''}">${nombre}${m.esSuplente?'*':''}</span></td>
+                <td>${equipoDisplay}</td>
                 <td class="num" style="color:var(--muted-light)">${m.hdcp??'—'}</td>
                 <td class="num" style="color:var(--gold)">${m.neto}</td>
                 <td class="num" style="color:var(--muted-light)">${m.gross}</td>
-                <td class="num"><span class="pts-badge">${m.pts}</span></td>
+                <td class="num">${ptsDisplay}</td>
               </tr>`;
             }).join('')}
           </tbody>
         </table>
+        ${(f.suplentes||[]).length>0?'<div style="font-size:0.68rem;color:var(--muted);margin-top:6px">* Suplente — puntos en paréntesis no se acumulan al torneo</div>':''}
       </div>
       <div class="card">
         <div class="kpi-label">⚔️ Matchs — F${f.num}</div>
@@ -1350,7 +1617,34 @@ function renderGross(acc) {
     </tr>`;
   }).join('');
 
-  byId('tbl-gross').innerHTML = `<thead><tr><th>#</th><th>Jugador</th><th>Avg Gross</th><th>Mejor</th><th>Tarjetas</th><th>Premio</th></tr></thead><tbody>${rows}</tbody>`;
+  // Fila especial Gatto al final
+  const supEspG = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
+  let gattoGross = {scores:[], dates:[]};
+  if(supEspG) {
+    FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
+      f.medal.forEach(m=>{
+        if(m.id === SUPLENTE_ESPECIAL_ID && getSustitutoInfo(m.id, f) && m.gross) {
+          gattoGross.scores.push(m.gross);
+          gattoGross.dates.push('F'+f.num);
+        }
+      });
+    });
+  }
+  let gattoGrossRow = '';
+  if(supEspG && gattoGross.scores.length > 0) {
+    const avg = (gattoGross.scores.reduce((a,b)=>a+b,0)/gattoGross.scores.length).toFixed(1);
+    const best = Math.min(...gattoGross.scores);
+    gattoGrossRow = `<tr style="border-top:1px dashed rgba(201,168,76,0.3);opacity:0.85">
+      <td><span style="color:var(--gold);font-size:0.65rem;font-family:'DM Mono',monospace">★</span></td>
+      <td><div class="player-name-cell"><div class="dot" style="background:var(--gold)"></div><span style="color:var(--gold)">${supEspG.name}</span><span style="font-size:0.6rem;color:var(--muted);margin-left:6px">suplente oficial</span></div></td>
+      <td class="num" style="color:var(--gold)">${avg}</td>
+      <td class="num" style="color:var(--muted-light)">${best}</td>
+      <td class="num" style="color:var(--muted-light)">${gattoGross.scores.length}</td>
+      <td><span style="color:var(--muted);font-size:0.7rem">no compite</span></td>
+    </tr>`;
+  }
+
+  byId('tbl-gross').innerHTML = `<thead><tr><th>#</th><th>Jugador</th><th>Avg Gross</th><th>Mejor</th><th>Tarjetas</th><th>Premio</th></tr></thead><tbody>${rows}${gattoGrossRow}</tbody>`;
 
   destroyChart('gross-bar');
   charts['gross-bar'] = new Chart(byId('chart-gross-bar'),{
