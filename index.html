@@ -1037,7 +1037,7 @@ function buildAccum() {
     <div id="admin-tab-paste">
       <div class="admin-notice">
         📋 <strong>Flujo recomendado:</strong><br>
-        1. Mandá las fotos del scorecard al <a href="https://claude.ai/share/4e134cf4-f018-47b0-b4df-f0bed90f7fef" target="_blank" style="color:var(--gold);text-decoration:none;border-bottom:1px solid var(--border-gold)">chat de Claude · Milicia Golf Agent ↗</a><br>
+        1. Mandá las fotos del scorecard al <a href="https://claude.ai/project/01959e94-7ee9-7832-bbb9-20ad5b8034be" target="_blank" style="color:var(--gold);text-decoration:none;border-bottom:1px solid var(--border-gold)">chat de Claude · Milicia Golf Agent ↗</a><br>
         2. Claude procesa y te devuelve el JSON listo<br>
         3. Pegalo acá y presioná <strong>Previsualizar en Formulario</strong><br>
         4. Revisá y corregí lo que necesites en el formulario<br>
@@ -2412,6 +2412,84 @@ document.getElementById('admin-overlay').addEventListener('click', function(e){
 });
 
 // ─── EXPORT PDF FECHA ───
+
+// ─────────────────────────────────────────────────────────────
+// PDF helpers (wrap + theme colors)
+// ─────────────────────────────────────────────────────────────
+function hexToRgbArray(hex, fallback=[0,0,0]) {
+  if(!hex) return fallback;
+  const h = hex.trim().replace('#','');
+  if(!/^[0-9a-fA-F]{6}$/.test(h)) return fallback;
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function getThemeRGB() {
+  const cs = getComputedStyle(document.documentElement);
+  const pick = (v, fb) => hexToRgbArray(cs.getPropertyValue(v), fb);
+  return {
+    navyDeep: pick('--navy-deep',[13,27,46]),
+    navyDeepMid: pick('--navy-deep-mid',[21,35,56]),
+    navyDeepLight: pick('--navy-deep-light',[30,48,80]),
+    navyMid: pick('--navy-mid',[245,246,248]),
+    white: pick('--white',[17,24,39]),
+    onNavy: pick('--on-navy',[232,237,245]),
+    muted: pick('--muted',[107,122,153]),
+    mutedLight: pick('--muted-light',[138,152,184]),
+    gris: pick('--gris-color',[90,106,136]),
+    grisLight: pick('--gris-light',[138,154,184]),
+    rojo: pick('--rojo-color',[192,57,43]),
+    rojoLight: pick('--rojo-light',[224,64,64]),
+    gold: pick('--gold',[201,168,76]),
+    goldDark: pick('--gold-dark',[168,138,52]),
+    green: pick('--green',[22,163,74]),
+  };
+}
+function sanitizePdfText(s='') {
+  // remove html, normalize whitespace, remove odd control chars that break width calc
+  const noHtml = String(s).replace(/<[^>]+>/g,' ');
+  return noHtml
+    .replace(/\u00A0/g,' ')
+    .replace(/[\u200B-\u200D\uFEFF]/g,'')
+    .replace(/[\r\n\t]+/g,' ')
+    .replace(/[–—]/g,'-')
+    .replace(/[“”]/g,'"')
+    .replace(/[‘’]/g,"'")
+    .replace(/\s{2,}/g,' ')
+    .trim();
+}
+function wrapTextHard(doc, text, maxWidth) {
+  // Like splitTextToSize, but also breaks very long tokens (no spaces)
+  const words = String(text).split(' ');
+  const lines = [];
+  let line = '';
+  const addLine = l => { if(l !== '') lines.push(l); };
+
+  const pushWord = (w) => {
+    // if a single word is longer than maxWidth, split by characters
+    if(doc.getTextWidth(w) <= maxWidth) return [w];
+    const chunks = [];
+    let cur = '';
+    for(const ch of w) {
+      const test = cur + ch;
+      if(doc.getTextWidth(test) > maxWidth && cur) { chunks.push(cur); cur = ch; }
+      else { cur = test; }
+    }
+    if(cur) chunks.push(cur);
+    return chunks;
+  };
+
+  for(const w0 of words) {
+    if(!w0) continue;
+    const parts = pushWord(w0);
+    for(const w of parts) {
+      const test = line ? (line + ' ' + w) : w;
+      if(doc.getTextWidth(test) <= maxWidth) line = test;
+      else { addLine(line); line = w; }
+    }
+  }
+  addLine(line);
+  return lines.length ? lines : [''];
+}
+
 function exportFechaPDF() {
   const { jsPDF } = window.jspdf;
   // Find current fecha
@@ -2427,13 +2505,14 @@ function exportFechaPDF() {
   const col = W - margin*2;
 
   // ── helpers ──
-  const navy   = [8,13,24];
-  const gold   = [201,168,76];
-  const white  = [240,237,230];
-  const muted  = [90,106,125];
-  const green  = [74,222,128];
-  const red    = [224,48,48];
-  const grisC  = [180,185,195];
+  const T = getThemeRGB();
+  const navy   = T.navyDeep;
+  const gold   = T.gold;
+  const white  = T.onNavy; // text on navy blocks
+  const muted  = T.muted;
+  const green  = T.green;
+  const red    = T.rojoLight;
+  const grisC  = T.grisLight;
 
   function setFont(size, style='normal', color=white) {
     doc.setFontSize(size); doc.setFont('helvetica', style); doc.setTextColor(...color);
@@ -2576,17 +2655,22 @@ function exportFechaPDF() {
 
   // ── COMENTARIO ──
   if(f.comentario) {
-    const clean = f.comentario.replace(/<[^>]+>/g,'');
+    const clean = sanitizePdfText(f.comentario);
     setFont(7,'italic', muted);
-    const maxWidth = col - 10;
-    const cLines = doc.splitTextToSize('★  ' + clean, maxWidth);
+
+    const maxWidth = col - 12; // inner padding for safe margins
+    const cLines = wrapTextHard(doc, '•  ' + clean, maxWidth);
     const cHeight = cLines.length * 5.5 + 10;
+
     if(y + cHeight > 270) { doc.addPage(); fillRect(0,0,W,10,navy); y=16; }
-    fillRect(margin, y, col, cHeight, [12,20,34]);
+
+    // card
+    fillRect(margin, y, col, cHeight, T.navyDeepMid);
     doc.setDrawColor(...gold); doc.setLineWidth(0.4);
     doc.line(margin, y, margin, y + cHeight);
+
     y += 6;
-    cLines.forEach(l => { doc.text(l, margin + 6, y); y += 5.5; });
+    cLines.forEach(l => { doc.text(l, margin + 6, y, {maxWidth}); y += 5.5; });
     y += 5;
   }
 
@@ -2718,20 +2802,21 @@ function exportConsolidadoPDF() {
   const W=210, M=14;
   const col = W - M*2;
 
-  // ── Color palette ──
-  const navy  = [8,13,24];
-  const navyM = [11,20,32];
-  const navyL = [14,24,38];
-  const navyH = [20,35,55];
-  const gold  = [201,168,76];
-  const goldD = [160,130,55];
-  const white = [240,237,230];
-  const muted = [90,106,125];
-  const mutedL= [130,148,165];
-  const grisC = [180,185,195];
-  const red   = [224,48,48];
-  const redL  = [255,100,100];
-  const green = [74,200,110];
+  // ── Color palette (from CSS vars) ──
+  const T = getThemeRGB();
+  const navy  = T.navyDeep;
+  const navyM = T.navyDeepMid;
+  const navyL = T.navyDeepLight || T.navyDeepMid;
+  const navyH = T.navyDeepLight || T.navyDeepMid;
+  const gold  = T.gold;
+  const goldD = T.goldDark;
+  const white = T.onNavy;
+  const muted = T.muted;
+  const mutedL= T.mutedLight;
+  const grisC = T.grisLight;
+  const red   = T.rojo;
+  const redL  = T.rojoLight;
+  const green = T.green;
 
   // ── Helpers ──
   function sf(sz, st, c) { doc.setFontSize(sz); doc.setFont('helvetica', st||'normal'); doc.setTextColor(...(c||white)); }
@@ -3101,15 +3186,19 @@ function exportConsolidadoPDF() {
 
     // Comentario
     if(f.comentario) {
-      const clean = f.comentario.replace(/<[^>]+>/g,'');
+      const clean = sanitizePdfText(f.comentario);
       sf(6,'italic',muted);
-      const cLines = doc.splitTextToSize('★  ' + clean, col-6);
+
+      const maxWidth = col - 8;
+      const cLines = wrapTextHard(doc, '•  ' + clean, maxWidth);
       const cH = Math.min(cLines.length, 3) * 4.5 + 5; // max 3 lines in summary
-      fr(M, y, col, cH, [10,17,28]);
+
+      fr(M, y, col, cH, T.navyDeepMid);
       let cy = y + 4;
-      cLines.slice(0,3).forEach(l => { doc.text(l, M+3, cy); cy += 4.5; });
-      if(cLines.length > 3) { sf(5,'italic',[60,80,100]); doc.text('...', M+3, cy); }
+      cLines.slice(0,3).forEach(l => { doc.text(l, M+3, cy, {maxWidth}); cy += 4.5; });
+      if(cLines.length > 3) { sf(5,'italic',muted); doc.text('...', M+3, cy); }
       y += cH + 2;
+
     }
 
     y += 5;
