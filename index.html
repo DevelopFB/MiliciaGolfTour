@@ -549,14 +549,6 @@ const FECHAS = [
   {num:10,fecha:'Nov 2026', pendiente:true},
 ];
 
-
-// Normalización: soporte para 'jugada' (publicación) manteniendo compatibilidad con 'pendiente'
-// - Si no se define 'jugada', asumimos publicada salvo que sea pendiente.
-// - 'pendiente' se mantiene para fechas futuras (sin datos).
-FECHAS.forEach(f=>{
-  if(typeof f.jugada !== 'boolean') f.jugada = !(f.pendiente===true);
-});
-
 // ════════════════════════════════════════════════════════════
 // PUNTOS MEDAL POR POSICIÓN
 const MEDAL_PTS = {
@@ -614,7 +606,7 @@ function getSustitutoInfo(id, fecha) {
 // CÁLCULOS
 
 function calcMedalPts(fecha) {
-  if(!fecha.jugada || !fecha.medal) return [];
+  if(fecha.pendiente || !fecha.medal) return [];
   const mult = fecha.num === 9 ? F9_MULT : fecha.num === 10 ? F10_MULT : 1;
 
   // Separar oficiales y suplentes
@@ -705,7 +697,7 @@ function buildAccum() {
   const teamMatch = {g:{pts:0,dif:0}, r:{pts:0,dif:0}};
 
   FECHAS.forEach(f => {
-    if(!f.jugada) return;
+    if(f.pendiente) return;
 
     // Medal — solo acumular para jugadores oficiales
     const mpts = calcMedalPts(f);
@@ -837,7 +829,7 @@ function buildAccum() {
   PLAYERS.forEach(p => { gross[p.id] = {scores:[]}; });
   if(matchSupEspecial) gross['gatto_ale'] = {scores:[], isSupEspecial:true};
 
-  FECHAS.filter(f=>f.jugada&&f.medal).forEach(f => {
+  FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f => {
     f.medal.forEach(m => {
       if(gross[m.id] && m.gross) gross[m.id].scores.push(m.gross);
     });
@@ -853,7 +845,7 @@ function buildAccum() {
   });
 
   // ── Fechas jugadas por jugador ──
-  FECHAS.filter(f=>f.jugada).forEach(f => {
+  FECHAS.filter(f=>!f.pendiente).forEach(f => {
     const mpts = calcMedalPts(f);
     mpts.forEach(m => {
       if(!m.esSuplente && medal[m.id]) {
@@ -1083,16 +1075,15 @@ function buildAccum() {
               <option value="">— Seleccionar —</option>
             </select>
           </div>
-
           <div class="admin-field">
-            <label>Publicación</label>
-            <div style="display:flex;align-items:center;gap:10px;background:#f8fafc;border:1px solid #dde1ea;border-radius:8px;padding:9px 10px">
-              <input type="checkbox" id="adm-jugada" style="width:16px;height:16px;accent-color:#c9a84c" checked>
-              <span style="font-size:0.82rem;color:#1a2233">Fecha jugada (publicar)</span>
+            <label>Acciones</label>
+            <button id="adm-reset-btn" class="admin-btn danger" type="button" style="width:100%;padding:10px 14px;font-size:0.8rem;display:none" onclick="adminResetFechaPending()">
+              Dejar fecha como pendiente
+            </button>
+            <div id="adm-reset-help" style="margin-top:8px;font-size:0.75rem;line-height:1.35;color:var(--muted);display:none">
+              Al dejarla pendiente, la fecha se oculta del dashboard (no se publica) y queda lista para volver a cargar.
             </div>
-            <div style="margin-top:6px;font-size:0.72rem;color:var(--muted)">Si está desmarcada, la fecha queda en backlog: se guarda en Admin pero <strong>no se publica</strong>.</div>
           </div>
-
           <div class="admin-field" style="grid-column:1/-1">
             <label>Ausentes — marcá quién faltó</label>
             <div id="adm-ausentes-checks" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-top:8px;padding:12px;background:var(--navy-mid);border:1px solid var(--border);border-radius:8px"></div>
@@ -1214,7 +1205,7 @@ function renderSection(name) {
 
 // ─── OVERVIEW ───
 function renderOverview(acc) {
-  const played = FECHAS.filter(f=>f.jugada).length;
+  const played = FECHAS.filter(f=>!f.pendiente).length;
   byId('chip-fechas').textContent = `F${played} de 10 jugadas`;
 
   // KPIs
@@ -1271,7 +1262,7 @@ function renderOverview(acc) {
   // Top Gross
   const grossMap = {};
   PLAYERS.forEach(p=>{ grossMap[p.id]={scores:[]}; });
-  FECHAS.filter(f=>f.jugada&&f.medal).forEach(f=>{
+  FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
     f.medal.forEach(m=>{ if(grossMap[m.id]) grossMap[m.id].scores.push(m.gross); });
   });
   const grossRank = Object.entries(grossMap).map(([id,v])=>{
@@ -1291,7 +1282,7 @@ function renderOverview(acc) {
   }).join('');
 
   // Last comment
-  const lastPlayed = [...FECHAS].reverse().find(f=>f.jugada&&f.comentario);
+  const lastPlayed = [...FECHAS].reverse().find(f=>!f.pendiente&&f.comentario);
   byId('last-comment').innerHTML = lastPlayed ? `<div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">★ F${lastPlayed.num} — ${lastPlayed.fecha}</div>${lastPlayed.comentario}` : '<span style="color:var(--muted)">Aún no hay fechas jugadas.</span>';
 
   // Team VS block
@@ -1314,7 +1305,7 @@ function renderOverview(acc) {
     </div>`;
 
   // Charts team pts & dif
-  const fechasJugadas = FECHAS.filter(f=>f.jugada);
+  const fechasJugadas = FECHAS.filter(f=>!f.pendiente);
   const gPtsPerF=[], rPtsPerF=[], gDifPerF=[], rDifPerF=[];
   let gAcc=0,rAcc=0,gdAcc=0,rdAcc=0;
   fechasJugadas.forEach(f=>{
@@ -1354,7 +1345,7 @@ function renderOverview(acc) {
 
 // ─── MEDAL ───
 function renderMedal(acc) {
-  const fechasJugadas = FECHAS.filter(f=>f.jugada);
+  const fechasJugadas = FECHAS.filter(f=>!f.pendiente);
   const rank = Object.entries(acc.medal).map(([id,v])=>{
     const p=PLAYERS.find(x=>x.id===id);
     const ptsPerF = {};
@@ -1470,7 +1461,7 @@ function renderMatch(acc) {
     .sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos)[0];
   const pgris = PLAYERS.find(p=>p.id===topG?.id);
   const projo = PLAYERS.find(p=>p.id===topR?.id);
-  const played = FECHAS.filter(f=>f.jugada).length;
+  const played = FECHAS.filter(f=>!f.pendiente).length;
   const isF9done = played >= 9;
 
   byId('finalistas-content').innerHTML = `
@@ -1697,7 +1688,7 @@ function renderFechaDetail(num) {
 function renderGross(acc) {
   const grossMap = {};
   PLAYERS.forEach(p=>{ grossMap[p.id]={scores:[],dates:[]}; });
-  FECHAS.filter(f=>f.jugada&&f.medal).forEach(f=>{
+  FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
     f.medal.forEach(m=>{ if(grossMap[m.id]){ grossMap[m.id].scores.push(m.gross); grossMap[m.id].dates.push('F'+f.num); }});
   });
   const rank = Object.entries(grossMap).map(([id,v])=>{
@@ -1723,7 +1714,7 @@ function renderGross(acc) {
   const supEspG = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
   let gattoGross = {scores:[], dates:[]};
   if(supEspG) {
-    FECHAS.filter(f=>f.jugada&&f.medal).forEach(f=>{
+    FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
       f.medal.forEach(m=>{
         if(m.id === SUPLENTE_ESPECIAL_ID && getSustitutoInfo(m.id, f) && m.gross) {
           gattoGross.scores.push(m.gross);
@@ -1762,7 +1753,7 @@ function renderGross(acc) {
 // ─── FIXTURE ───
 function renderFixture() {
   const formatMatch = (f) => {
-    if(f.pendiente || !f.jugada){
+    if(f.pendiente){
       const info = [
         [1,'Fourball 2v2','Por HDC (1y2)(3y4)(5y6)(7y8)','Gatto + Zunino'],
         [2,'Fourball 2v2','100% aleatorio','Gonzalez + Tarasido'],
@@ -1979,8 +1970,28 @@ function adminCopyViewJson() {
 
 function adminLoadFecha() {
   const num = parseInt(document.getElementById('adm-num').value);
-  if(!num) return;
+  const btn = document.getElementById('adm-reset-btn');
+  const help = document.getElementById('adm-reset-help');
+  if(!num){
+    if(btn) btn.style.display='none';
+    if(help) help.style.display='none';
+    return;
+  }
+
+  // Toggle reset-to-pending action only when the fecha already has data (i.e., not pendiente)
+  const f = FECHAS.find(x=>x.num===num);
+  const hasData = !!(f && !f.pendiente);
+  if(btn) btn.style.display = hasData ? 'inline-flex' : 'none';
+  if(help) help.style.display = hasData ? 'block' : 'none';
+
   adminBuildMatchBlocks(num);
+
+  // If there are saved data for this fecha, prefill the form (so you can edit)
+  if(hasData){
+    adminFillFromFecha(f);
+  } else {
+    adminClearFormKeepNum(num);
+  }
 }
 
 
@@ -2302,6 +2313,122 @@ function adminBuildMatchBlocks(fechaNum) {
   cont.innerHTML = blocks.join('') || '<div style="color:var(--muted);font-size:0.82rem">Seleccioná primero una fecha para ver los matchs.</div>';
 }
 
+
+function adminClearFormKeepNum(num){
+  // comentario
+  const c = document.getElementById('adm-comentario'); if(c) c.value='';
+  // stats
+  const map = ['adm-avgGross','adm-avgNeto','adm-eagles','adm-birdies','adm-pares','adm-bogeys','adm-dobles'];
+  map.forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    // keep 0 for counters, blank for avgs
+    if(id==='adm-avgGross' || id==='adm-avgNeto') el.value='';
+    else el.value='0';
+  });
+
+  // ausentes
+  PLAYERS.forEach(p=>{
+    const cb = document.getElementById(`aus-${p.id}`);
+    if(cb) cb.checked=false;
+  });
+
+  // suplentes
+  adminBuildSuplentesList([]);
+
+  // medal inputs (oficiales + suplente especial)
+  PLAYERS.forEach(p=>{
+    const hd = document.getElementById(`adm-hdcp-${p.id}`); if(hd) hd.value='';
+    const ne = document.getElementById(`adm-neto-${p.id}`); if(ne) ne.value='';
+    const gr = document.getElementById(`adm-gross-${p.id}`); if(gr) gr.value='';
+  });
+  SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial).forEach(s=>{
+    const hd = document.getElementById(`adm-hdcp-${s.id}`); if(hd) hd.value='';
+    const ne = document.getElementById(`adm-neto-${s.id}`); if(ne) ne.value='';
+    const gr = document.getElementById(`adm-gross-${s.id}`); if(gr) gr.value='';
+  });
+
+  // match blocks (set defaults)
+  const cont = document.getElementById('adm-match-blocks');
+  if(cont){
+    const selects = cont.querySelectorAll('select[id^="adm-m"]');
+    selects.forEach(sel=>{
+      // winner defaults to g, others first option
+      if(sel.id.endsWith('-gan')) sel.value='g';
+      else if(sel.options && sel.options.length) sel.selectedIndex=0;
+    });
+    const difs = cont.querySelectorAll('input[id^="adm-m"][id$="-dif"]');
+    difs.forEach(inp=>inp.value='');
+  }
+
+  const banner = document.getElementById('adm-form-banner');
+  if(banner) banner.style.display='none';
+}
+
+function adminFillFromFecha(f){
+  if(!f) return;
+
+  // comentario
+  const c = document.getElementById('adm-comentario'); 
+  if(c) c.value = (f.comentario || '').toString();
+
+  // stats
+  const s = f.stats || {};
+  const setNum = (id, val, fallback='')=>{
+    const el = document.getElementById(id); if(!el) return;
+    if(val===undefined || val===null || Number.isNaN(val)) el.value=fallback;
+    else el.value=val;
+  };
+  setNum('adm-avgGross', s.avgGross ?? '', '');
+  setNum('adm-avgNeto',  s.avgNeto  ?? '', '');
+  setNum('adm-eagles',   s.eagles   ?? 0, '0');
+  setNum('adm-birdies',  s.birdies  ?? 0, '0');
+  setNum('adm-pares',    s.pares    ?? 0, '0');
+  setNum('adm-bogeys',   s.bogeys   ?? 0, '0');
+  setNum('adm-dobles',   s.dobles   ?? 0, '0');
+
+  // ausentes
+  PLAYERS.forEach(p=>{
+    const cb = document.getElementById(`aus-${p.id}`);
+    if(cb) cb.checked = (f.ausentes||[]).includes(p.id);
+  });
+
+  // suplentes
+  adminBuildSuplentesList(f.suplentes||[]);
+
+  // medal
+  const medal = Array.isArray(f.medal) ? f.medal : [];
+  const medalById = Object.fromEntries(medal.map(x=>[x.id,x]));
+  [...PLAYERS, ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial)].forEach(p=>{
+    const id = p.id;
+    const row = medalById[id];
+    const hd = document.getElementById(`adm-hdcp-${id}`); if(hd) hd.value = row && row.hdcp!=null ? row.hdcp : '';
+    const ne = document.getElementById(`adm-neto-${id}`); if(ne) ne.value = row && row.neto!=null ? row.neto : '';
+    const gr = document.getElementById(`adm-gross-${id}`); if(gr) gr.value = row && row.gross!=null ? row.gross : '';
+  });
+
+  // matchs
+  const matchs = Array.isArray(f.matchs) ? f.matchs : [];
+  matchs.forEach((m,i)=>{
+    // gris / rojo arrays
+    const g = m.gris || [];
+    const r = m.rojo || [];
+    const g1 = document.getElementById(`adm-m${i}-g1`); if(g1 && g[0]) g1.value=g[0];
+    const g2 = document.getElementById(`adm-m${i}-g2`); if(g2 && g[1]) g2.value=g[1];
+    const r1 = document.getElementById(`adm-m${i}-r1`); if(r1 && r[0]) r1.value=r[0];
+    const r2 = document.getElementById(`adm-m${i}-r2`); if(r2 && r[1]) r2.value=r[1];
+    const gan = document.getElementById(`adm-m${i}-gan`); if(gan && m.ganador) gan.value=m.ganador;
+    const dif = document.getElementById(`adm-m${i}-dif`); if(dif && m.difHoyos!==undefined) dif.value=m.difHoyos;
+  });
+
+  const banner = document.getElementById('adm-form-banner');
+  if(banner){
+    banner.style.display='';
+    banner.innerHTML = '✓ Esta fecha ya tiene datos cargados. Podés editar y volver a guardar — o dejarla pendiente para rehacerla.';
+  }
+}
+
+
 function adminGenerate() {
   const num = parseInt(document.getElementById('adm-num').value);
   if(!num) { 
@@ -2313,8 +2440,6 @@ function adminGenerate() {
 
   const ausentes = adminGetAusentes();
   const comentario = document.getElementById('adm-comentario').value.trim();
-
-  const jugada = !!document.getElementById('adm-jugada')?.checked;
 
   // Medal — oficiales + suplente especial si jugó
   const medal = PLAYERS.map(p=>{
@@ -2374,7 +2499,6 @@ function adminGenerate() {
     num, fecha:f.fecha, cancha:f.cancha||'CUBA Fátima',
     organizadores:f.organizadores||'',
     ausentes, suplentes,
-    jugada, pendiente:false,
     medal, stats, matchs,
     comentario: comentario||''
   };
@@ -2384,6 +2508,52 @@ function adminGenerate() {
   return newFecha;
 }
 
+
+function downloadJsonFile(obj, filename) {
+  try {
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'fecha.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 500);
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function adminResetFechaPending() {
+  const num = parseInt(document.getElementById('adm-num').value);
+  if(!num) return;
+  const f = FECHAS.find(x=>x.num===num);
+  if(!f || f.pendiente) return;
+
+  const ok = confirm(`Vas a dejar la Fecha ${num} como PENDIENTE (se oculta del dashboard).
+
+¿Querés descargar el JSON actual antes de vaciarla?`);
+  if(ok) downloadJsonFile(f, `milicia_fecha_${num}.json`);
+
+  // Reset to a clean pending shell (keep date label)
+  const idx = FECHAS.findIndex(x=>x.num===num);
+  if(idx>=0){
+    FECHAS[idx] = { num: f.num, fecha: f.fecha, pendiente: true };
+  }
+
+  // Reset UI
+  rendered = {};
+  renderFechasNav();
+  renderSection('overview');
+  renderSection('fixture');
+
+  // Clear form but keep selected num
+  adminClearFormKeepNum(num);
+
+  const st = document.getElementById('adm-form-status');
+  if(st) st.textContent = `✓ Fecha ${num} marcada como pendiente.`;
+}
 function adminCopy() {
   const json = window._lastAdminJson || JSON.stringify(adminGenerate()||{}, null, 2);
   if(!json || json==='{}') return;
@@ -2518,7 +2688,7 @@ function exportFechaPDF() {
   if(!activeBtn) { alert('Seleccioná una fecha primero.'); return; }
   const num = parseInt(activeBtn.dataset.num);
   const f = FECHAS.find(x=>x.num===num);
-  if(!f||!f.jugada) { alert('Esta fecha no está publicada (jugada).'); return; }
+  if(!f||f.pendiente) { alert('Esta fecha no tiene datos aún.'); return; }
 
   const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
   const W = 210, margin = 16;
@@ -2527,12 +2697,10 @@ function exportFechaPDF() {
 
   // ── helpers ──
   const T = getThemeRGB();
-  // Reporte en modo claro (cards blancas)
-  const navy   = [255,255,255];
+  const navy   = T.navyDeep;
   const gold   = T.gold;
-  const white  = [17,24,39]; // texto principal
-  const muted  = [107,114,128];
-
+  const white  = T.onNavy; // text on navy blocks
+  const muted  = T.muted;
   const green  = T.green;
   const red    = T.rojoLight;
   const grisC  = T.grisLight;
