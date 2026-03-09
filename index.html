@@ -462,9 +462,9 @@ const PLAYERS = [
   {id:'fernandez',    name:'Fernandez, Lucas', team:'r', hdc:24.7},
 ];
 
-// FECHAS: array de objetos por fecha jugada
+// Fechas: array de objetos por fecha jugada
 // Agregar un objeto por cada fecha que se juegue
-const FECHAS = [
+const Fechas = [
   {
     num: 1,
     fecha: '14 Mar 2026',
@@ -548,7 +548,7 @@ const FECHAS = [
     comentario: `<strong>Dipa</strong> protagonizó el momento del día: triple bogey en el hoyo 7, pero se redimió con un par salvador en el 18 cuando el partido estaba en juego. <strong>Nico Vogelius</strong> y <strong>Agus González</strong> empataron en el mejor neto del día con 68 — el desempate fue el cuadro de honor, pero el orgullo fue compartido. ROJO se lleva los puntos del equipo en una fecha muy pareja.`,
   },
 
-  // ── FECHAS PENDIENTES (sin datos aún) ──
+  // ── Fechas PENDIENTES (sin datos aún) ──
   {num:2, fecha:'11 Abr 2026', pendiente:true},
   {num:3, fecha:'09 May 2026', pendiente:true},
   {num:4, fecha:'06 Jun 2026', pendiente:true},
@@ -707,7 +707,7 @@ function buildAccum() {
 
   const teamMatch = {g:{pts:0,dif:0}, r:{pts:0,dif:0}};
 
-  FECHAS.forEach(f => {
+  Fechas.forEach(f => {
     if(f.pendiente) return;
 
     // Medal — solo acumular para jugadores oficiales
@@ -840,7 +840,7 @@ function buildAccum() {
   PLAYERS.forEach(p => { gross[p.id] = {scores:[]}; });
   if(matchSupEspecial) gross['gatto_ale'] = {scores:[], isSupEspecial:true};
 
-  FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f => {
+  Fechas.filter(f=>!f.pendiente&&f.medal).forEach(f => {
     f.medal.forEach(m => {
       if(gross[m.id] && m.gross) gross[m.id].scores.push(m.gross);
     });
@@ -856,16 +856,16 @@ function buildAccum() {
   });
 
   // ── Fechas jugadas por jugador ──
-  FECHAS.filter(f=>!f.pendiente).forEach(f => {
+  Fechas.filter(f=>!f.pendiente).forEach(f => {
     const mpts = calcMedalPts(f);
     mpts.forEach(m => {
       if(!m.esSuplente && medal[m.id]) {
-        if(!medal[m.id].fechas) medal[m.id].fechas = 0;
-        medal[m.id].fechas++;
+        if(!medal[m.id].Fechas) medal[m.id].Fechas = 0;
+        medal[m.id].Fechas++;
       }
       if(match[m.id] && !m.esSuplente) {
-        if(!match[m.id].fechas) match[m.id].fechas = 0;
-        match[m.id].fechas++;
+        if(!match[m.id].Fechas) match[m.id].Fechas = 0;
+        match[m.id].Fechas++;
       }
     });
   });
@@ -887,7 +887,7 @@ function buildAccum() {
         </div>
       </div>
       <div class="header-meta">
-        <div class="chip live" id="chip-fechas">F1 de 10 jugadas</div>
+        <div class="chip live" id="chip-Fechas">F1 de 10 jugadas</div>
         <div class="chip">CUBA Fátima + Gira Nov</div>
         <div class="chip">16 Jugadores</div>
       </div>
@@ -898,7 +898,7 @@ function buildAccum() {
     <button class="tab on" onclick="showTab('overview',this)">Overview</button>
     <button class="tab" onclick="showTab('medal',this)">🏅 Ranking Medal</button>
     <button class="tab" onclick="showTab('match',this)">⚔️ Ranking Match</button>
-    <button class="tab" onclick="showTab('fechas',this)">📋 Detalle Fechas</button>
+    <button class="tab" onclick="showTab('Fechas',this)">📋 Detalle Fechas</button>
     <button class="tab" onclick="showTab('gross',this)">🏌️ Gross</button>
     <button class="tab" onclick="showTab('fixture',this)">📅 Fixture</button>
   </nav>
@@ -993,8 +993,8 @@ function buildAccum() {
     </div>
   </div>
 
-  <!-- ══════════ DETALLE FECHAS ══════════ -->
-  <div id="sec-fechas" class="sec">
+  <!-- ══════════ DETALLE Fechas ══════════ -->
+  <div id="sec-Fechas" class="sec">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px">
       <div class="fecha-nav" id="fecha-nav" style="flex:1;margin-bottom:0"></div>
       <button onclick="exportFechaPDF()" style="
@@ -1195,7 +1195,7 @@ function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id]
 const SUPABASE_URL = 'https://ooeubxnaghdxpqxebtvg.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_PIjBeMva4U2be2bth_kZfg_Ozp54bYH';
 const ADMIN_PASSWORD = 'lacomision';
-const STORAGE_KEY = 'mgt2026_fechas_v2';
+const STORAGE_KEY = 'mgt2026_Fechas_v2';
 const ADMIN_SESSION_KEY = 'mgt2026_admin_ok';
 let supabaseClient = null;
 
@@ -1212,15 +1212,15 @@ function getSupabaseClient() {
 
 function mergeFechaIntoMemory(sf) {
   if(!sf || typeof sf.num !== 'number') return;
-  const idx = FECHAS.findIndex(f => f.num === sf.num);
+  const idx = Fechas.findIndex(f => f.num === sf.num);
   if(idx < 0) return;
-  FECHAS[idx] = {
-    ...FECHAS[idx],
+  Fechas[idx] = {
+    ...Fechas[idx],
     ...sf,
-    num: FECHAS[idx].num,
-    fecha: sf.fecha || FECHAS[idx].fecha,
-    cancha: sf.cancha || FECHAS[idx].cancha || 'CUBA Fátima',
-    organizadores: sf.organizadores || FECHAS[idx].organizadores || ''
+    num: Fechas[idx].num,
+    fecha: sf.fecha || Fechas[idx].fecha,
+    cancha: sf.cancha || Fechas[idx].cancha || 'CUBA Fátima',
+    organizadores: sf.organizadores || Fechas[idx].organizadores || ''
   };
 }
 
@@ -1242,7 +1242,7 @@ async function loadFechasFromSupabase() {
   if(!client) return false;
   try {
     const { data, error } = await client
-      .from('fechas')
+      .from('Fechas')
       .select('num,data')
       .order('num', { ascending: true });
     if(error) throw error;
@@ -1255,7 +1255,7 @@ async function loadFechasFromSupabase() {
     }
     return true;
   } catch (err) {
-    console.warn('No se pudieron cargar fechas desde Supabase.', err);
+    console.warn('No se pudieron cargar Fechas desde Supabase.', err);
     return false;
   }
 }
@@ -1266,7 +1266,7 @@ async function saveFechaToSupabase(fechaObj) {
   try {
     const payload = JSON.parse(JSON.stringify(fechaObj));
     const { error } = await client
-      .from('fechas')
+      .from('Fechas')
       .upsert({ num: fechaObj.num, data: payload }, { onConflict: 'num' });
     if(error) throw error;
     return true;
@@ -1281,7 +1281,7 @@ async function deleteFechaFromSupabase(num) {
   if(!client) return false;
   try {
     const { error } = await client
-      .from('fechas')
+      .from('Fechas')
       .delete()
       .eq('num', num);
     if(error) throw error;
@@ -1305,7 +1305,7 @@ function loadPersistedFechas() {
 }
 function persistFechas() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(FECHAS));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(Fechas));
   } catch (err) {
     console.warn('No se pudieron guardar los cambios en este navegador.', err);
   }
@@ -1362,15 +1362,15 @@ function renderSection(name) {
   if(name==='overview') renderOverview(acc);
   if(name==='medal') renderMedal(acc);
   if(name==='match') renderMatch(acc);
-  if(name==='fechas') renderFechasNav();
+  if(name==='Fechas') renderFechasNav();
   if(name==='gross') renderGross(acc);
   if(name==='fixture') renderFixture();
 }
 
 // ─── OVERVIEW ───
 function renderOverview(acc) {
-  const played = FECHAS.filter(f=>!f.pendiente).length;
-  byId('chip-fechas').textContent = `F${played} de 10 jugadas`;
+  const played = Fechas.filter(f=>!f.pendiente).length;
+  byId('chip-Fechas').textContent = `F${played} de 10 jugadas`;
 
   // KPIs
   const totalMatchPts_g = acc.teamMatch.g.pts;
@@ -1381,7 +1381,7 @@ function renderOverview(acc) {
     <div class="card"><div class="kpi-label">Fechas Jugadas</div><div class="kpi-val">${played}</div><div class="kpi-sub">de 10 en el año</div></div>
     <div class="card"><div class="kpi-label">Líder Medal</div><div class="kpi-name">${lp?.name.split(',')[1]?.trim()||lp?.name}</div><div class="kpi-sub">${leader_medal[1].pts} pts · ${teamLabel(lp?.team||'g')}</div></div>
     <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${totalMatchPts_g>=totalMatchPts_r?'var(--gris-color)':'var(--rojo-light)'}">${totalMatchPts_g>=totalMatchPts_r?'GRIS':'ROJO'}</div><div class="kpi-sub">${Math.max(totalMatchPts_g,totalMatchPts_r)} pts de equipo</div></div>
-    <div class="card"><div class="kpi-label">Próxima Fecha</div><div class="kpi-val" style="font-size:1.6rem">${FECHAS.find(f=>f.pendiente)?.fecha||'—'}</div><div class="kpi-sub">F${FECHAS.findIndex(f=>f.pendiente)+1}</div></div>
+    <div class="card"><div class="kpi-label">Próxima Fecha</div><div class="kpi-val" style="font-size:1.6rem">${Fechas.find(f=>f.pendiente)?.fecha||'—'}</div><div class="kpi-sub">F${Fechas.findIndex(f=>f.pendiente)+1}</div></div>
     <div class="card"><div class="kpi-label">Jugadores</div><div class="kpi-val">16</div><div class="kpi-sub">8 Gris · 8 Rojo</div></div>
   `;
 
@@ -1426,7 +1426,7 @@ function renderOverview(acc) {
   // Top Gross
   const grossMap = {};
   PLAYERS.forEach(p=>{ grossMap[p.id]={scores:[]}; });
-  FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
+  Fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
     f.medal.forEach(m=>{ if(grossMap[m.id]) grossMap[m.id].scores.push(m.gross); });
   });
   const grossRank = Object.entries(grossMap).map(([id,v])=>{
@@ -1446,8 +1446,8 @@ function renderOverview(acc) {
   }).join('');
 
   // Last comment
-  const lastPlayed = [...FECHAS].reverse().find(f=>!f.pendiente&&f.comentario);
-  byId('last-comment').innerHTML = lastPlayed ? `<div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">★ F${lastPlayed.num} — ${lastPlayed.fecha}</div>${lastPlayed.comentario}` : '<span style="color:var(--muted)">Aún no hay fechas jugadas.</span>';
+  const lastPlayed = [...Fechas].reverse().find(f=>!f.pendiente&&f.comentario);
+  byId('last-comment').innerHTML = lastPlayed ? `<div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">★ F${lastPlayed.num} — ${lastPlayed.fecha}</div>${lastPlayed.comentario}` : '<span style="color:var(--muted)">Aún no hay Fechas jugadas.</span>';
 
   // Team VS block
   const g=acc.teamMatch.g, r=acc.teamMatch.r;
@@ -1469,10 +1469,10 @@ function renderOverview(acc) {
     </div>`;
 
   // Charts team pts & dif
-  const fechasJugadas = FECHAS.filter(f=>!f.pendiente);
+  const FechasJugadas = Fechas.filter(f=>!f.pendiente);
   const gPtsPerF=[], rPtsPerF=[], gDifPerF=[], rDifPerF=[];
   let gAcc=0,rAcc=0,gdAcc=0,rdAcc=0;
-  fechasJugadas.forEach(f=>{
+  FechasJugadas.forEach(f=>{
     let gp=0,rp=0,gd=0,rd=0;
     (f.matchs||[]).forEach(m=>{
       gp += m.ganador==='g'?1:m.ganador==='empate'?0.5:0;
@@ -1484,7 +1484,7 @@ function renderOverview(acc) {
     gPtsPerF.push(gAcc);rPtsPerF.push(rAcc);
     gDifPerF.push(gdAcc);rDifPerF.push(rdAcc);
   });
-  const labels = fechasJugadas.map(f=>'F'+f.num);
+  const labels = FechasJugadas.map(f=>'F'+f.num);
 
   destroyChart('team-pts');
   charts['team-pts'] = new Chart(byId('chart-team-pts'),{
@@ -1509,19 +1509,19 @@ function renderOverview(acc) {
 
 // ─── MEDAL ───
 function renderMedal(acc) {
-  const fechasJugadas = FECHAS.filter(f=>!f.pendiente);
+  const FechasJugadas = Fechas.filter(f=>!f.pendiente);
   const rank = Object.entries(acc.medal).map(([id,v])=>{
     const p = PLAYERS.find(x=>x.id===id);
     const ptsPerF = {};
-    fechasJugadas.forEach(f=>{
+    FechasJugadas.forEach(f=>{
       ptsPerF['F'+f.num] = getMedalEntryForFecha(f, id, false);
     });
     return {id, name:p?.name, team:p?.team, pts:v.pts, positions:v.positions, ptsPerF};
   }).sort((a,b)=>b.pts-a.pts);
 
-  const fCols = fechasJugadas.map(f=>`<th class="cen">F${f.num}</th>`).join('');
+  const fCols = FechasJugadas.map(f=>`<th class="cen">F${f.num}</th>`).join('');
   const rows = rank.map((r,i)=>{
-    const pfCells = fechasJugadas.map(f=>{
+    const pfCells = FechasJugadas.map(f=>{
       const entry = r.ptsPerF['F'+f.num];
       return `<td class="cen">${medalDateBadge(entry)}</td>`;
     }).join('');
@@ -1536,22 +1536,22 @@ function renderMedal(acc) {
   let supEspRow = '';
   if(acc.matchSupEspecial) {
     const se = acc.matchSupEspecial;
-    const fechasJugoSup = fechasJugadas.filter(f=>{
+    const FechasJugoSup = FechasJugadas.filter(f=>{
       const ptsData = calcMedalPts(f);
       return ptsData.some(x=>x.id===se.id && x.esSuplente);
     });
-    const ptsPerFCells = fechasJugadas.map(f=>{
+    const ptsPerFCells = FechasJugadas.map(f=>{
       const found = getMedalEntryForFecha(f, se.id, true);
       const content = found ? `<span class="pts-badge date-badge${found.pos===1?' pos-1':(found.pos===2||found.pos===3)?' pos-2':''}" style="color:var(--gold)">(${fmtPts(found.pts)})</span>` : '<span style="color:var(--muted)">—</span>';
       return `<td class="cen">${content}</td>`;
     }).join('');
-    const fechasLabel = fechasJugoSup.length > 0
-      ? `<span style="font-size:0.62rem;color:var(--muted);margin-left:6px">${fechasJugoSup.length} fecha${fechasJugoSup.length>1?'s':''}</span>`
-      : `<span style="font-size:0.62rem;color:var(--muted);margin-left:6px">sin fechas</span>`;
+    const FechasLabel = FechasJugoSup.length > 0
+      ? `<span style="font-size:0.62rem;color:var(--muted);margin-left:6px">${FechasJugoSup.length} fecha${FechasJugoSup.length>1?'s':''}</span>`
+      : `<span style="font-size:0.62rem;color:var(--muted);margin-left:6px">sin Fechas</span>`;
     supEspRow = `<tr style="border-top:2px dashed rgba(201,168,76,0.35)">
       <td><span style="color:var(--gold);font-size:0.65rem;font-family:'DM Mono',monospace;letter-spacing:1px">SUP★</span></td>
       <td><div class="player-name-cell"><div class="dot" style="background:var(--gold)"></div>
-        <span style="color:var(--gold);font-weight:600">${se.name}</span>${fechasLabel}
+        <span style="color:var(--gold);font-weight:600">${se.name}</span>${FechasLabel}
       </div></td>
       ${ptsPerFCells}
       <td class="cen"><span style="color:var(--gold);font-family:'DM Mono',monospace;font-weight:600">(${se.medalPts})</span></td>
@@ -1624,7 +1624,7 @@ function renderMatch(acc) {
     .sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos)[0];
   const pgris = PLAYERS.find(p=>p.id===topG?.id);
   const projo = PLAYERS.find(p=>p.id===topR?.id);
-  const played = FECHAS.filter(f=>!f.pendiente).length;
+  const played = Fechas.filter(f=>!f.pendiente).length;
   const isF9done = played >= 9;
 
   byId('finalistas-content').innerHTML = `
@@ -1663,11 +1663,11 @@ function renderMatch(acc) {
   });
 }
 
-// ─── FECHAS NAV ───
+// ─── Fechas NAV ───
 let currentFecha = null;
 function renderFechasNav() {
   const nav = byId('fecha-nav');
-  nav.innerHTML = FECHAS.map(f=>`
+  nav.innerHTML = Fechas.map(f=>`
     <button class="fnav-btn${f.pendiente?' pending':''}" 
       ${f.pendiente?`onclick="adminTripleClick()" title="Triple-click para cargar datos"`:''}
       ${f.pendiente?'':''}
@@ -1684,11 +1684,11 @@ function renderFechasNav() {
   // Auto-select primera jugada
   const first = nav.querySelector('.fnav-btn:not(.pending)');
   if(first){ first.classList.add('on'); renderFechaDetail(parseInt(first.dataset.num)); }
-  else { byId('fecha-detail').innerHTML='<div class="empty"><div class="eicon">⏳</div><p>Aún no se han jugado fechas.</p></div>'; }
+  else { byId('fecha-detail').innerHTML='<div class="empty"><div class="eicon">⏳</div><p>Aún no se han jugado Fechas.</p></div>'; }
 }
 
 function renderFechaDetail(num) {
-  const f = FECHAS.find(x=>x.num===num);
+  const f = Fechas.find(x=>x.num===num);
   if(!f||f.pendiente) return;
 
   const medalPts = calcMedalPts(f);
@@ -1851,7 +1851,7 @@ function renderFechaDetail(num) {
 function renderGross(acc) {
   const grossMap = {};
   PLAYERS.forEach(p=>{ grossMap[p.id]={scores:[],dates:[]}; });
-  FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
+  Fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
     f.medal.forEach(m=>{ if(grossMap[m.id]){ grossMap[m.id].scores.push(m.gross); grossMap[m.id].dates.push('F'+f.num); }});
   });
   const rank = Object.entries(grossMap).map(([id,v])=>{
@@ -1877,7 +1877,7 @@ function renderGross(acc) {
   const supEspG = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
   let gattoGross = {scores:[], dates:[]};
   if(supEspG) {
-    FECHAS.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
+    Fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
       f.medal.forEach(m=>{
         if(m.id === SUPLENTE_ESPECIAL_ID && getSustitutoInfo(m.id, f) && m.gross) {
           gattoGross.scores.push(m.gross);
@@ -1934,7 +1934,7 @@ function renderFixture() {
     return null;
   };
 
-  const rows = FECHAS.map(f=>{
+  const rows = Fechas.map(f=>{
     const info = f.pendiente ? formatMatch(f) : null;
     const modalidad = info?info[1]:(f.matchs?.some(m=>m.tipo==='fb')?'Fourball 2v2':'Individual 1v1');
     const criterio = info?info[2]:'—';
@@ -1968,9 +1968,9 @@ function adminTripleClick() {
 }
 
 function openAdmin() {
-  // Populate selectors — TODAS las fechas (jugadas y pendientes)
-  const todasFechas = FECHAS;
-  const jugadas = FECHAS.filter(f=>!f.pendiente);
+  // Populate selectors — TODAS las Fechas (jugadas y pendientes)
+  const todasFechas = Fechas;
+  const jugadas = Fechas.filter(f=>!f.pendiente);
 
   const selNum = document.getElementById('adm-num');
   const selJson = document.getElementById('adm-json-num');
@@ -2142,7 +2142,7 @@ function adminLoadFecha() {
   }
 
   // Toggle reset-to-pending action only when the fecha already has data (i.e., not pendiente)
-  const f = FECHAS.find(x=>x.num===num);
+  const f = Fechas.find(x=>x.num===num);
   const hasData = !!(f && !f.pendiente);
   if(btn) btn.style.display = hasData ? 'inline-flex' : 'none';
   if(help) help.style.display = hasData ? 'block' : 'none';
@@ -2409,7 +2409,7 @@ function adminBuildMedalRows() {
 
 function adminBuildMatchBlocks(fechaNum) {
   const cont = document.getElementById('adm-match-blocks');
-  const f = FECHAS.find(x=>x.num===fechaNum);
+  const f = Fechas.find(x=>x.num===fechaNum);
   // Determinar tipo de match para esa fecha
   const matchInfo = [
     [1,'fb'],[2,'fb'],[3,'ind'],[4,'fb'],[5,'fb'],
@@ -2598,7 +2598,7 @@ function adminGenerate() {
     document.getElementById('adm-form-status').textContent='⚠ Seleccioná una fecha primero.';
     return; 
   }
-  const f = FECHAS.find(x=>x.num===num);
+  const f = Fechas.find(x=>x.num===num);
   if(!f) return;
 
   const ausentes = adminGetAusentes();
@@ -2692,7 +2692,7 @@ async function adminResetFechaPending() {
   if(!verifyAdmin()) return;
   const num = parseInt(document.getElementById('adm-num').value);
   if(!num) return;
-  const f = FECHAS.find(x=>x.num===num);
+  const f = Fechas.find(x=>x.num===num);
   if(!f || f.pendiente) return;
 
   const ok = confirm(`Vas a dejar la Fecha ${num} como PENDIENTE (se oculta del dashboard).
@@ -2700,10 +2700,10 @@ async function adminResetFechaPending() {
 ¿Querés descargar el JSON actual antes de vaciarla?`);
   if(ok) downloadJsonFile(f, `milicia_fecha_${num}.json`);
 
-  const idx = FECHAS.findIndex(x=>x.num===num);
+  const idx = Fechas.findIndex(x=>x.num===num);
   let remoteOk = true;
   if(idx>=0){
-    FECHAS[idx] = { num: f.num, fecha: f.fecha, pendiente: true };
+    Fechas[idx] = { num: f.num, fecha: f.fecha, pendiente: true };
     persistFechas();
     remoteOk = await deleteFechaFromSupabase(num);
   }
@@ -2736,16 +2736,16 @@ async function adminApply() {
     document.getElementById('adm-form-status').textContent='⚠ Completá la fecha primero.';
     return;
   }
-  const idx = FECHAS.findIndex(x=>x.num===newFecha.num);
+  const idx = Fechas.findIndex(x=>x.num===newFecha.num);
   if(idx<0) return;
-  FECHAS[idx] = newFecha;
+  Fechas[idx] = newFecha;
   persistFechas();
   const remoteOk = await saveFechaToSupabase(newFecha);
   rendered = {};
   closeAdmin();
   renderFechasNav();
   renderSection('overview');
-  document.querySelectorAll('.tab').forEach(b=>{ if(b.dataset?.sec==='fechas') b.click(); });
+  document.querySelectorAll('.tab').forEach(b=>{ if(b.dataset?.sec==='Fechas') b.click(); });
   setTimeout(()=>{
     const btn = document.querySelector(`.fnav-btn[data-num="${newFecha.num}"]`);
     if(btn && !btn.classList.contains('pending')) btn.click();
@@ -2759,7 +2759,7 @@ function adminShowJson() {
   const num = parseInt(document.getElementById('adm-json-num').value);
   const view = document.getElementById('admin-json-view');
   if(!num) { view.style.display='none'; return; }
-  const f = FECHAS.find(x=>x.num===num);
+  const f = Fechas.find(x=>x.num===num);
   if(!f) { view.style.display='none'; return; }
   view.style.display='block';
   view.textContent = JSON.stringify(f, null, 2);
@@ -2855,7 +2855,7 @@ function exportFechaPDF() {
   const activeBtn = document.querySelector('.fnav-btn.on');
   if(!activeBtn) { alert('Seleccioná una fecha primero.'); return; }
   const num = parseInt(activeBtn.dataset.num);
-  const f = FECHAS.find(x=>x.num===num);
+  const f = Fechas.find(x=>x.num===num);
   if(!f||f.pendiente) { alert('Esta fecha no tiene datos aún.'); return; }
 
   const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
@@ -3157,8 +3157,8 @@ function exportFechaPDF() {
 // ─── EXPORT PDF CONSOLIDADO ───
 function exportConsolidadoPDF() {
   const { jsPDF } = window.jspdf;
-  const jugadas = FECHAS.filter(f=>!f.pendiente);
-  if(!jugadas.length) { alert('No hay fechas jugadas aún.'); return; }
+  const jugadas = Fechas.filter(f=>!f.pendiente);
+  if(!jugadas.length) { alert('No hay Fechas jugadas aún.'); return; }
 
   const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
   const W=210, M=14;
@@ -3212,13 +3212,13 @@ function exportConsolidadoPDF() {
 
   // Summary boxes
   const played = jugadas.length;
-  const remaining = FECHAS.length - played;
+  const remaining = Fechas.length - played;
   const totalAusencias = jugadas.reduce((sum,f)=>(sum+(f.ausentes||[]).length),0);
   const allAvgGross = jugadas.filter(f=>f.stats?.avgGross).map(f=>f.stats.avgGross);
   const seasonAvgGross = allAvgGross.length ? (allAvgGross.reduce((a,b)=>a+b,0)/allAvgGross.length).toFixed(1) : '—';
 
   const boxes = [
-    ['Fechas jugadas', played + ' / ' + FECHAS.length],
+    ['Fechas jugadas', played + ' / ' + Fechas.length],
     ['Fechas restantes', remaining],
     ['Avg Gross temporada', seasonAvgGross],
     ['Ausencias acum.', totalAusencias],
@@ -3285,7 +3285,7 @@ function exportConsolidadoPDF() {
 
   y = sectionHeader('RANKING MEDAL — ACUMULADO', y);
   y = tableHead([
-    ['#', M+3], ['JUGADOR', M+13], ['EQUIPO', M+92], ['FECHAS', M+122, {align:'right'}], ['TOTAL', W-M-2, {align:'right'}]
+    ['#', M+3], ['JUGADOR', M+13], ['EQUIPO', M+92], ['Fechas', M+122, {align:'right'}], ['TOTAL', W-M-2, {align:'right'}]
   ], y);
 
   medalRank.forEach((m,i) => {
@@ -3296,7 +3296,7 @@ function exportConsolidadoPDF() {
     sf(6.5,'normal',white); doc.text(m.p?.name||m.id, M+13, y+5);
     const tc = m.p?.team==='g'?grisC:red;
     sf(6,'bold',tc);     doc.text(m.p?.team==='g'?'GRIS':'ROJO', M+92, y+5);
-    sf(6,'normal',mutedL); doc.text(String(m.fechas||0), M+122, y+5, {align:'right'});
+    sf(6,'normal',mutedL); doc.text(String(m.Fechas||0), M+122, y+5, {align:'right'});
     sf(6.5,'bold',gold); doc.text(String(m.pts), W-M-2, y+5, {align:'right'});
     y += 7;
   });
@@ -3363,7 +3363,7 @@ function exportConsolidadoPDF() {
     y += 7;
 
     y = tableHead([
-      ['#', M+3], ['JUGADOR', M+13], ['PTS', M+100, {align:'right'}], ['DIF.H', M+122, {align:'right'}], ['FECHAS', W-M-2, {align:'right'}]
+      ['#', M+3], ['JUGADOR', M+13], ['PTS', M+100, {align:'right'}], ['DIF.H', M+122, {align:'right'}], ['Fechas', W-M-2, {align:'right'}]
     ], y);
 
     teamRank.forEach((m,i) => {
@@ -3376,7 +3376,7 @@ function exportConsolidadoPDF() {
       const difC = m.difHoyos>0?green:m.difHoyos<0?redL:mutedL;
       sf(6,'bold',difC);
       doc.text((m.difHoyos>=0?'+':'')+m.difHoyos, M+122, y+5, {align:'right'});
-      sf(6,'normal',mutedL); doc.text(String(m.fechas||0), W-M-2, y+5, {align:'right'});
+      sf(6,'normal',mutedL); doc.text(String(m.Fechas||0), W-M-2, y+5, {align:'right'});
       y += 7;
     });
 
@@ -3417,7 +3417,7 @@ function exportConsolidadoPDF() {
     .sort((a,b)=>b.aus-a.aus||a.name.localeCompare(b.name));
 
   y = tableHead([
-    ['JUGADOR', M+13], ['EQUIPO', M+92], ['FECHAS JUGADAS', M+140, {align:'right'}], ['AUSENCIAS', W-M-2, {align:'right'}]
+    ['JUGADOR', M+13], ['EQUIPO', M+92], ['Fechas JUGADAS', M+140, {align:'right'}], ['AUSENCIAS', W-M-2, {align:'right'}]
   ], y);
 
   absSorted.forEach((p,i) => {
@@ -3496,7 +3496,7 @@ function exportConsolidadoPDF() {
   // PÁGINA 5 · RESUMEN POR FECHA
   // ══════════════════════════════════════════════
   y = newPage();
-  y = sectionHeader('RESUMEN DE FECHAS JUGADAS', y);
+  y = sectionHeader('RESUMEN DE Fechas JUGADAS', y);
 
   jugadas.forEach((f,fi) => {
     const need = 28 + (f.comentario ? 14 : 0);
@@ -3622,7 +3622,7 @@ function exportExcelBackup() {
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(teamData), 'Equipos');
 
   // ── Sheets por fecha ──
-  FECHAS.filter(f=>!f.pendiente).forEach(f=>{
+  Fechas.filter(f=>!f.pendiente).forEach(f=>{
     const mpts = calcMedalPts(f);
     const rows = [
       [`F${f.num} — ${f.fecha}`],
@@ -3661,7 +3661,7 @@ function exportExcelBackup() {
 
   // ── Sheet: Fixture ──
   const fixData = [['Fecha','Día','Formato','Organizadores','Estado']];
-  FECHAS.forEach(f=>{
+  Fechas.forEach(f=>{
     const fmtMap={1:'Fourball 2v2',2:'Fourball 2v2',3:'Individual 1v1',4:'Fourball 2v2',5:'Fourball 2v2',6:'Individual 1v1',7:'Fourball 2v2',8:'Individual 1v1',9:'Fourball 2v2',10:'Individual 1v1 FINAL'};
     fixData.push([`F${f.num}`, f.fecha, fmtMap[f.num]||'', f.organizadores||'—', f.pendiente?'Pendiente':'Jugada']);
   });
