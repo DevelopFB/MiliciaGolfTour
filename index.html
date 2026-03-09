@@ -8,6 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   /* Fondo blanco puro */
@@ -212,6 +213,16 @@ header{
   background:var(--navy-deep);color:var(--gold);
   letter-spacing:0.5px;
 }
+
+.pts-badge.total-badge{min-width:42px;text-align:center;}
+.pts-badge.date-badge{
+  min-width:42px;text-align:center;
+  background:transparent;color:var(--navy-deep);
+  border:1px solid transparent;
+}
+.pts-badge.date-badge.pos-1{border-color:rgba(22,163,74,0.55);}
+.pts-badge.date-badge.pos-2,.pts-badge.date-badge.pos-3{border-color:rgba(37,99,235,0.5);}
+.match-team-summary{margin-bottom:16px;}
 
 .diff-pos{color:#15803d;font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:600;}
 .diff-neg{color:var(--rojo-color);font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:600;}
@@ -959,6 +970,7 @@ function buildAccum() {
   <!-- ══════════ RANKING MATCH ══════════ -->
   <div id="sec-match" class="sec">
     <div class="sec-head">Ranking Match Play — Individual</div>
+    <div id="match-team-summary" class="match-team-summary"></div>
     <div class="g2" style="margin-bottom:16px">
       <div>
         <div class="kpi-label" style="margin-bottom:10px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);">⬜ Equipo GRIS</div>
@@ -1177,8 +1189,160 @@ const CHART_BASE = {
   }
 };
 
+
+const SUPABASE_URL = 'https://ooeubxnaghdxpqxebtvg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_PIjBeMva4U2be2bth_kZfg_Ozp54bYH';
+const SUPABASE_TABLE = 'fechas';
+const ADMIN_PASSWORD = 'lacomision';
+const ADMIN_SESSION_KEY = 'mgt2026_admin_ok';
+
+const supabase = window.supabase?.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
+
+async function verifyAdmin(forcePrompt=false) {
+  try {
+    if(!forcePrompt && sessionStorage.getItem(ADMIN_SESSION_KEY)==='1') return true;
+  } catch(_) {}
+
+  const pass = prompt('Clave de la comisión');
+  if(pass !== ADMIN_PASSWORD) {
+    alert('Clave incorrecta');
+    return false;
+  }
+
+  try { sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); } catch(_) {}
+  return true;
+}
+
+async function loadSupabaseFechas() {
+  if(!supabase) return false;
+  try {
+    const { data, error } = await supabase
+      .from(SUPABASE_TABLE)
+      .select('num,data,updated_at')
+      .order('num', { ascending: true });
+
+    if(error) throw error;
+    if(!Array.isArray(data)) return false;
+
+    data.forEach(row => {
+      if(!row || typeof row.num !== 'number' || !row.data) return;
+      const idx = FECHAS.findIndex(f => f.num === row.num);
+      if(idx < 0) return;
+      FECHAS[idx] = {
+        ...FECHAS[idx],
+        ...row.data,
+        num: FECHAS[idx].num,
+        fecha: row.data.fecha || FECHAS[idx].fecha,
+        cancha: row.data.cancha || FECHAS[idx].cancha || 'CUBA Fátima',
+        organizadores: row.data.organizadores || FECHAS[idx].organizadores || ''
+      };
+    });
+    return true;
+  } catch(err) {
+    console.warn('No se pudieron cargar datos desde Supabase.', err);
+    return false;
+  }
+}
+
+async function saveFechaToSupabase(fechaObj) {
+  if(!supabase) return false;
+  try {
+    const payload = JSON.parse(JSON.stringify(fechaObj));
+    const { error } = await supabase
+      .from(SUPABASE_TABLE)
+      .upsert({ num: fechaObj.num, data: payload }, { onConflict: 'num' });
+    if(error) throw error;
+    return true;
+  } catch(err) {
+    console.warn('No se pudo guardar la fecha en Supabase.', err);
+    return false;
+  }
+}
+
+async function deleteFechaFromSupabase(num) {
+  if(!supabase) return false;
+  try {
+    const { error } = await supabase
+      .from(SUPABASE_TABLE)
+      .delete()
+      .eq('num', num);
+    if(error) throw error;
+    return true;
+  } catch(err) {
+    console.warn('No se pudo borrar la fecha en Supabase.', err);
+    return false;
+  }
+}
+
 let charts = {};
 function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+const STORAGE_KEY = 'mgt2026_fechas_v2';
+function loadPersistedFechas() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    if(!Array.isArray(saved)) return;
+    saved.forEach(sf => {
+      if(!sf || typeof sf.num !== 'number') return;
+      const idx = FECHAS.findIndex(f => f.num === sf.num);
+      if(idx < 0) return;
+      FECHAS[idx] = {
+        ...FECHAS[idx],
+        ...sf,
+        num: FECHAS[idx].num,
+        fecha: sf.fecha || FECHAS[idx].fecha,
+        cancha: sf.cancha || FECHAS[idx].cancha || 'CUBA Fátima',
+        organizadores: sf.organizadores || FECHAS[idx].organizadores || ''
+      };
+    });
+  } catch (err) {
+    console.warn('No se pudieron cargar datos guardados localmente.', err);
+  }
+}
+function persistFechas() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(FECHAS));
+  } catch (err) {
+    console.warn('No se pudieron guardar los cambios en este navegador.', err);
+  }
+}
+function getMedalEntryForFecha(fecha, id, includeSuplente=false) {
+  const ptsData = calcMedalPts(fecha);
+  return ptsData.find(x => x.id === id && (includeSuplente || !x.esSuplente)) || null;
+}
+function medalDateBadge(entry) {
+  if(!entry) return '<span style="color:var(--muted)">—</span>';
+  const extra = entry.pos===1 ? ' pos-1' : entry.pos===2 ? ' pos-2' : entry.pos===3 ? ' pos-3' : '';
+  return `<span class="pts-badge date-badge${extra}">${fmtPts(entry.pts)}</span>`;
+}
+function renderMatchTeamSummary(acc) {
+  const g = acc.teamMatch.g, r = acc.teamMatch.r;
+  const leader = g.pts===r.pts ? 'EMPATE' : (g.pts > r.pts ? 'GRIS' : 'ROJO');
+  const leaderColor = g.pts===r.pts ? 'var(--gold)' : (g.pts > r.pts ? 'var(--gris-color)' : 'var(--rojo-light)');
+  byId('match-team-summary').innerHTML = `
+    <div class="team-vs">
+      <div class="team-box gris">
+        <div class="tlabel">⬜ GRIS</div>
+        <div class="tpts">${fmtPts(g.pts)}</div>
+        <div class="tsub">puntos acumulados de equipo</div>
+        <div class="tdif">Dif. Hoyos: ${g.dif>0?'+':''}${g.dif}</div>
+      </div>
+      <div class="vs-mid">VS</div>
+      <div class="team-box rojo">
+        <div class="tlabel">🟥 ROJO</div>
+        <div class="tpts">${fmtPts(r.pts)}</div>
+        <div class="tsub">puntos acumulados de equipo</div>
+        <div class="tdif">Dif. Hoyos: ${r.dif>0?'+':''}${r.dif}</div>
+      </div>
+    </div>
+    <div style="margin-top:-4px;text-align:center;font-size:0.78rem;color:var(--muted-light)">
+      Estado acumulado: <span style="color:${leaderColor};font-weight:700">${leader}</span>
+    </div>`;
+}
 
 // ─── TAB NAVIGATION ───
 function showTab(name, btn) {
@@ -1347,41 +1511,39 @@ function renderOverview(acc) {
 function renderMedal(acc) {
   const fechasJugadas = FECHAS.filter(f=>!f.pendiente);
   const rank = Object.entries(acc.medal).map(([id,v])=>{
-    const p=PLAYERS.find(x=>x.id===id);
+    const p = PLAYERS.find(x=>x.id===id);
     const ptsPerF = {};
     fechasJugadas.forEach(f=>{
-      const pts_data = calcMedalPts(f);
-      const found = pts_data.find(x=>x.id===id && !x.esSuplente);
-      ptsPerF['F'+f.num] = found ? found.pts : '—';
+      ptsPerF['F'+f.num] = getMedalEntryForFecha(f, id, false);
     });
     return {id, name:p?.name, team:p?.team, pts:v.pts, positions:v.positions, ptsPerF};
   }).sort((a,b)=>b.pts-a.pts);
 
-  const fCols = fechasJugadas.map(f=>`<th>F${f.num}</th>`).join('');
+  const fCols = fechasJugadas.map(f=>`<th class="cen">F${f.num}</th>`).join('');
   const rows = rank.map((r,i)=>{
-    const pfCells = fechasJugadas.map(f=>{ const v=r.ptsPerF['F'+f.num]; return `<td class="num">${v==='—'?'<span style="color:var(--muted)">—</span>':v}</td>`; }).join('');
+    const pfCells = fechasJugadas.map(f=>{
+      const entry = r.ptsPerF['F'+f.num];
+      return `<td class="cen">${medalDateBadge(entry)}</td>`;
+    }).join('');
     return `<tr>
       <td><span class="rank-num ${i<3?'r'+(i+1):''}">${i+1}</span></td>
       <td><div class="player-name-cell"><div class="dot ${r.team}"></div><span>${r.name}</span></div></td>
       ${pfCells}
-      <td class="num"><span class="pts-badge">${fmtPts(r.pts)}</span></td>
+      <td class="cen"><span class="pts-badge total-badge">${fmtPts(r.pts)}</span></td>
     </tr>`;
   }).join('');
 
-  // Suplente especial al final — siempre mostrar si existe, haya jugado o no
   let supEspRow = '';
   if(acc.matchSupEspecial) {
     const se = acc.matchSupEspecial;
-    // Verificar en cuántas fechas jugó (apareció como suplente con score)
     const fechasJugoSup = fechasJugadas.filter(f=>{
-      const pts_data = calcMedalPts(f);
-      return pts_data.some(x=>x.id===se.id && x.esSuplente);
+      const ptsData = calcMedalPts(f);
+      return ptsData.some(x=>x.id===se.id && x.esSuplente);
     });
     const ptsPerFCells = fechasJugadas.map(f=>{
-      const pts_data = calcMedalPts(f);
-      const found = pts_data.find(x=>x.id===se.id && x.esSuplente);
-      const v = found ? `(${found.pts})` : '<span style="color:var(--muted)">—</span>';
-      return `<td class="num" style="color:var(--muted-light)">${v}</td>`;
+      const found = getMedalEntryForFecha(f, se.id, true);
+      const content = found ? `<span class="pts-badge date-badge${found.pos===1?' pos-1':(found.pos===2||found.pos===3)?' pos-2':''}" style="color:var(--gold)">(${fmtPts(found.pts)})</span>` : '<span style="color:var(--muted)">—</span>';
+      return `<td class="cen">${content}</td>`;
     }).join('');
     const fechasLabel = fechasJugoSup.length > 0
       ? `<span style="font-size:0.62rem;color:var(--muted);margin-left:6px">${fechasJugoSup.length} fecha${fechasJugoSup.length>1?'s':''}</span>`
@@ -1392,11 +1554,11 @@ function renderMedal(acc) {
         <span style="color:var(--gold);font-weight:600">${se.name}</span>${fechasLabel}
       </div></td>
       ${ptsPerFCells}
-      <td class="num"><span style="color:var(--gold);font-family:'DM Mono',monospace;font-weight:600">(${se.medalPts})</span></td>
+      <td class="cen"><span style="color:var(--gold);font-family:'DM Mono',monospace;font-weight:600">(${se.medalPts})</span></td>
     </tr>`;
   }
 
-  byId('tbl-medal-full').innerHTML = `<thead><tr><th>#</th><th>Jugador</th>${fCols}<th>Total</th></tr></thead><tbody>${rows}${supEspRow}</tbody>`;
+  byId('tbl-medal-full').innerHTML = `<thead><tr><th>#</th><th>Jugador</th>${fCols}<th class="cen">Total</th></tr></thead><tbody>${rows}${supEspRow}</tbody>`;
 
   destroyChart('medal-bar');
   charts['medal-bar'] = new Chart(byId('chart-medal-bar'),{
@@ -1416,6 +1578,7 @@ function renderMedal(acc) {
 
 // ─── MATCH ───
 function renderMatch(acc) {
+  renderMatchTeamSummary(acc);
   const byTeam = (team) => {
     return Object.entries(acc.match)
       .map(([id,v])=>({id,...v}))
@@ -2525,9 +2688,10 @@ function downloadJsonFile(obj, filename) {
   }
 }
 
-function adminResetFechaPending() {
+async function adminResetFechaPending() {
   const num = parseInt(document.getElementById('adm-num').value);
   if(!num) return;
+  if(!await verifyAdmin()) return;
   const f = FECHAS.find(x=>x.num===num);
   if(!f || f.pendiente) return;
 
@@ -2540,6 +2704,9 @@ function adminResetFechaPending() {
   const idx = FECHAS.findIndex(x=>x.num===num);
   if(idx>=0){
     FECHAS[idx] = { num: f.num, fecha: f.fecha, pendiente: true };
+    const dbOk = await deleteFechaFromSupabase(num);
+    persistFechas();
+    if(!dbOk && supabase) console.warn('La fecha se marcó como pendiente en este navegador, pero no se pudo borrar en Supabase.');
   }
 
   // Reset UI
@@ -2564,7 +2731,8 @@ function adminCopy() {
   });
 }
 
-function adminApply() {
+async function adminApply() {
+  if(!await verifyAdmin()) return;
   // Build from form fields
   const newFecha = adminGenerate();
   if(!newFecha || !newFecha.num) {
@@ -2574,6 +2742,9 @@ function adminApply() {
   const idx = FECHAS.findIndex(x=>x.num===newFecha.num);
   if(idx<0) return;
   FECHAS[idx] = newFecha;
+  const dbOk = await saveFechaToSupabase(newFecha);
+  persistFechas();
+  if(!dbOk && supabase) alert('No se pudo guardar en Supabase. El cambio quedó sólo en este navegador.');
   // Reset render cache
   rendered = {};
   closeAdmin();
@@ -2700,12 +2871,15 @@ function exportFechaPDF() {
   const navy   = T.navyDeep;
   const gold   = T.gold;
   const white  = T.onNavy; // text on navy blocks
+  const text   = T.white;
   const muted  = T.muted;
   const green  = T.green;
   const red    = T.rojoLight;
-  const grisC  = T.grisLight;
+  const grisC  = T.gris;
+  const soft   = T.navyMid;
+  const soft2  = [238,240,245];
 
-  function setFont(size, style='normal', color=white) {
+  function setFont(size, style='normal', color=text) {
     doc.setFontSize(size); doc.setFont('helvetica', style); doc.setTextColor(...color);
   }
   function line(color=muted, lw=0.3) {
@@ -2737,7 +2911,7 @@ function exportFechaPDF() {
     const cw = col/statCols.length;
     statCols.forEach((st,i)=>{
       const x = margin + i*cw;
-      fillRect(x, y, cw-1, 14, [15,24,40]);
+      fillRect(x, y, cw-1, 14, soft);
       setFont(6,'normal', muted); doc.text(st[0].toUpperCase(), x+cw/2, y+4, {align:'center'});
       setFont(11,'bold', gold);   doc.text(String(st[1]), x+cw/2, y+11, {align:'center'});
     });
@@ -2753,7 +2927,7 @@ function exportFechaPDF() {
 
   // Header row — columnas: #(8) Jugador(72) Eq(16) HCP(12) Neto(14) Gross(16) Pts(rest)
   const cEq=margin+80, cHcp=margin+104, cNeto=margin+118, cGross=margin+133, cPts=W-margin-2;
-  fillRect(margin, y, col, 7, [20,35,55]);
+  fillRect(margin, y, col, 7, soft2);
   setFont(6,'bold', muted);
   doc.text('#',      margin+3,  y+5);
   doc.text('Jugador',margin+12, y+5);
@@ -2766,7 +2940,7 @@ function exportFechaPDF() {
 
   medalSorted.forEach((m,i)=>{
     const p = PLAYERS.find(x=>x.id===m.id) || SUPLENTES_CONOCIDOS.find(x=>x.id===m.id);
-    const bg = i%2===0?[11,20,32]:[14,24,38];
+    const bg = i%2===0?[255,255,255]:soft;
     fillRect(margin, y, col, 7, bg);
     const posColor = m.pos===1?gold:m.pos===2?[176,184,196]:m.pos===3?[160,112,80]:muted;
     setFont(6,'bold', posColor); doc.text(String(m.pos), margin+3, y+5);
@@ -2775,7 +2949,7 @@ function exportFechaPDF() {
     const isSup = m.esSuplente && !m.esOficialEspecial;
     const displayName = isSup ? rawName + ' *' : rawName;
     const nameStr = doc.splitTextToSize(displayName, 66)[0]; // max 1 line
-    setFont(7,'normal', m.esOficialEspecial?gold:isSup?[160,140,90]:white);
+    setFont(7,'normal', m.esOficialEspecial?gold:isSup?[160,140,90]:text);
     doc.text(nameStr, margin+12, y+5);
     const teamColor = (p?.team||m.team)==='g'?grisC:red;
     const teamLabel = (p?.team||m.team)==='g'?'GRIS':'ROJO';
@@ -2802,7 +2976,7 @@ function exportFechaPDF() {
       gPts += gw?1:m.ganador==='empate'?0.5:0;
       rPts += rw?1:m.ganador==='empate'?0.5:0;
       gDif += m.difHoyos||0;
-      const bg = i%2===0?[11,20,32]:[14,24,38];
+      const bg = i%2===0?[255,255,255]:soft;
       fillRect(margin, y, col, 8, bg);
 
       // Resolve names — include suplentes
@@ -2825,7 +2999,7 @@ function exportFechaPDF() {
       setFont(6.5,'normal', grisC); doc.text(gNamesT, xG, y+5);
       setFont(6,'normal', muted); doc.text('vs', xVs, y+5);
       const rNamesT = doc.splitTextToSize(rNames, 54)[0];
-      setFont(6.5,'normal', [255,100,100]); doc.text(rNamesT, xR, y+5);
+      setFont(6.5,'normal', red); doc.text(rNamesT, xR, y+5);
       const winColor = gw?grisC:rw?red:gold;
       const winText = gw?'GRIS':rw?'ROJO':'EMP';
       setFont(7,'bold', winColor); doc.text(winText, xWin, y+5, {align:'right'});
@@ -2837,9 +3011,9 @@ function exportFechaPDF() {
 
     // Resumen equipo
     y+=2;
-    fillRect(margin, y, col, 10, [20,35,55]);
+    fillRect(margin, y, col, 10, soft2);
     setFont(7,'bold', grisC); doc.text(`GRIS: ${gPts} pts`, margin+8, y+7);
-    setFont(7,'bold', [255,100,100]); doc.text(`ROJO: ${rPts} pts`, margin+60, y+7);
+    setFont(7,'bold', red); doc.text(`ROJO: ${rPts} pts`, margin+60, y+7);
     setFont(7,'normal', muted); doc.text(`Dif. Hoyos: ${gDif>0?'+':''}${gDif}`, margin+120, y+7);
     y += 14;
   }
@@ -2856,7 +3030,7 @@ function exportFechaPDF() {
     if(y + cHeight > 270) { doc.addPage(); fillRect(0,0,W,10,navy); y=16; }
 
     // card
-    fillRect(margin, y, col, cHeight, T.navyDeepMid);
+    fillRect(margin, y, col, cHeight, [255,253,248]);
     doc.setDrawColor(...gold); doc.setLineWidth(0.4);
     doc.line(margin, y, margin, y + cHeight);
 
@@ -2871,18 +3045,18 @@ function exportFechaPDF() {
   // helper local
   function rankSection(title, yy) {
     if(yy + 12 > 270) { doc.addPage(); fillRect(0,0,W,10,navy); yy=16; }
-    fillRect(margin, yy, col, 8, [20,35,55]);
+    fillRect(margin, yy, col, 8, soft2);
     setFont(7,'bold',gold); doc.text(title, margin+4, yy+5.5);
     return yy + 10;
   }
   function rankRow(i, name, team, val1, val1Label, val2, val2Label, yy) {
     if(yy + 7 > 278) { doc.addPage(); fillRect(0,0,W,10,navy); yy=16; }
-    fillRect(margin, yy, col, 7, i%2===0?[11,20,32]:[14,24,38]);
+    fillRect(margin, yy, col, 7, i%2===0?[255,255,255]:soft);
     const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:[90,106,125];
     setFont(5.5,'bold',posC);
     doc.text(String(i+1), margin+3, yy+5);
     const nameT = doc.splitTextToSize(name||'', 70)[0];
-    setFont(6.5,'normal',white);
+    setFont(6.5,'normal',text);
     doc.text(nameT, margin+13, yy+5);
     const tc = team==='g'?[180,185,195]:[224,48,48];
     setFont(5.5,'bold',tc);
@@ -2926,8 +3100,8 @@ function exportFechaPDF() {
   const hw = (col-4)/2;
   // team headers
   if(y+7>270){doc.addPage();fillRect(0,0,W,10,navy);y=16;}
-  fillRect(margin, y, hw, 7, [22,35,50]);
-  fillRect(margin+hw+4, y, hw, 7, [40,15,15]);
+  fillRect(margin, y, hw, 7, soft2);
+  fillRect(margin+hw+4, y, hw, 7, soft2);
   setFont(6,'bold',[180,185,195]); doc.text('GRIS', margin+hw/2, y+5, {align:'center'});
   setFont(6,'bold',[255,100,100]); doc.text('ROJO', margin+hw+4+hw/2, y+5, {align:'center'});
   y += 7;
@@ -3503,7 +3677,9 @@ function exportExcelBackup() {
 }
 
 // ─── INIT ───
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded', async ()=>{
+  loadPersistedFechas();
+  await loadSupabaseFechas();
   renderSection('overview');
 });
 </script>
