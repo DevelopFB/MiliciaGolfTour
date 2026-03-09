@@ -1189,116 +1189,116 @@ const CHART_BASE = {
   }
 };
 
+let charts = {};
+function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
 
 const SUPABASE_URL = 'https://ooeubxnaghdxpqxebtvg.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_PIjBeMva4U2be2bth_kZfg_Ozp54bYH';
-const SUPABASE_TABLE = 'fechas';
 const ADMIN_PASSWORD = 'lacomision';
+const STORAGE_KEY = 'mgt2026_fechas_v2';
 const ADMIN_SESSION_KEY = 'mgt2026_admin_ok';
+let supabaseClient = null;
 
-const supabase = window.supabase?.createClient
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-  : null;
-
-async function verifyAdmin(forcePrompt=false) {
+function getSupabaseClient() {
   try {
-    if(!forcePrompt && sessionStorage.getItem(ADMIN_SESSION_KEY)==='1') return true;
-  } catch(_) {}
+    if (!supabaseClient && window.supabase?.createClient) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+  } catch (err) {
+    console.warn('No se pudo inicializar Supabase.', err);
+  }
+  return supabaseClient;
+}
 
+function mergeFechaIntoMemory(sf) {
+  if(!sf || typeof sf.num !== 'number') return;
+  const idx = FECHAS.findIndex(f => f.num === sf.num);
+  if(idx < 0) return;
+  FECHAS[idx] = {
+    ...FECHAS[idx],
+    ...sf,
+    num: FECHAS[idx].num,
+    fecha: sf.fecha || FECHAS[idx].fecha,
+    cancha: sf.cancha || FECHAS[idx].cancha || 'CUBA Fátima',
+    organizadores: sf.organizadores || FECHAS[idx].organizadores || ''
+  };
+}
+
+function verifyAdmin() {
+  try {
+    if (sessionStorage.getItem(ADMIN_SESSION_KEY) === '1') return true;
+  } catch (err) {}
   const pass = prompt('Clave de la comisión');
-  if(pass !== ADMIN_PASSWORD) {
+  if (pass !== ADMIN_PASSWORD) {
     alert('Clave incorrecta');
     return false;
   }
-
-  try { sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); } catch(_) {}
+  try { sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); } catch (err) {}
   return true;
 }
 
-async function loadSupabaseFechas() {
-  if(!supabase) return false;
+async function loadFechasFromSupabase() {
+  const client = getSupabaseClient();
+  if(!client) return false;
   try {
-    const { data, error } = await supabase
-      .from(SUPABASE_TABLE)
-      .select('num,data,updated_at')
+    const { data, error } = await client
+      .from('fechas')
+      .select('num,data')
       .order('num', { ascending: true });
-
     if(error) throw error;
-    if(!Array.isArray(data)) return false;
-
-    data.forEach(row => {
-      if(!row || typeof row.num !== 'number' || !row.data) return;
-      const idx = FECHAS.findIndex(f => f.num === row.num);
-      if(idx < 0) return;
-      FECHAS[idx] = {
-        ...FECHAS[idx],
-        ...row.data,
-        num: FECHAS[idx].num,
-        fecha: row.data.fecha || FECHAS[idx].fecha,
-        cancha: row.data.cancha || FECHAS[idx].cancha || 'CUBA Fátima',
-        organizadores: row.data.organizadores || FECHAS[idx].organizadores || ''
-      };
-    });
+    if(Array.isArray(data)) {
+      data.forEach(row => {
+        const payload = row?.data && typeof row.data === 'object' ? { ...row.data, num: row.num ?? row.data.num } : null;
+        if(payload) mergeFechaIntoMemory(payload);
+      });
+      persistFechas();
+    }
     return true;
-  } catch(err) {
-    console.warn('No se pudieron cargar datos desde Supabase.', err);
+  } catch (err) {
+    console.warn('No se pudieron cargar fechas desde Supabase.', err);
     return false;
   }
 }
 
 async function saveFechaToSupabase(fechaObj) {
-  if(!supabase) return false;
+  const client = getSupabaseClient();
+  if(!client) return false;
   try {
     const payload = JSON.parse(JSON.stringify(fechaObj));
-    const { error } = await supabase
-      .from(SUPABASE_TABLE)
+    const { error } = await client
+      .from('fechas')
       .upsert({ num: fechaObj.num, data: payload }, { onConflict: 'num' });
     if(error) throw error;
     return true;
-  } catch(err) {
+  } catch (err) {
     console.warn('No se pudo guardar la fecha en Supabase.', err);
     return false;
   }
 }
 
 async function deleteFechaFromSupabase(num) {
-  if(!supabase) return false;
+  const client = getSupabaseClient();
+  if(!client) return false;
   try {
-    const { error } = await supabase
-      .from(SUPABASE_TABLE)
+    const { error } = await client
+      .from('fechas')
       .delete()
       .eq('num', num);
     if(error) throw error;
     return true;
-  } catch(err) {
+  } catch (err) {
     console.warn('No se pudo borrar la fecha en Supabase.', err);
     return false;
   }
 }
 
-let charts = {};
-function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
-
-const STORAGE_KEY = 'mgt2026_fechas_v2';
 function loadPersistedFechas() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return;
     const saved = JSON.parse(raw);
     if(!Array.isArray(saved)) return;
-    saved.forEach(sf => {
-      if(!sf || typeof sf.num !== 'number') return;
-      const idx = FECHAS.findIndex(f => f.num === sf.num);
-      if(idx < 0) return;
-      FECHAS[idx] = {
-        ...FECHAS[idx],
-        ...sf,
-        num: FECHAS[idx].num,
-        fecha: sf.fecha || FECHAS[idx].fecha,
-        cancha: sf.cancha || FECHAS[idx].cancha || 'CUBA Fátima',
-        organizadores: sf.organizadores || FECHAS[idx].organizadores || ''
-      };
-    });
+    saved.forEach(sf => mergeFechaIntoMemory(sf));
   } catch (err) {
     console.warn('No se pudieron cargar datos guardados localmente.', err);
   }
@@ -2689,9 +2689,9 @@ function downloadJsonFile(obj, filename) {
 }
 
 async function adminResetFechaPending() {
+  if(!verifyAdmin()) return;
   const num = parseInt(document.getElementById('adm-num').value);
   if(!num) return;
-  if(!await verifyAdmin()) return;
   const f = FECHAS.find(x=>x.num===num);
   if(!f || f.pendiente) return;
 
@@ -2700,26 +2700,24 @@ async function adminResetFechaPending() {
 ¿Querés descargar el JSON actual antes de vaciarla?`);
   if(ok) downloadJsonFile(f, `milicia_fecha_${num}.json`);
 
-  // Reset to a clean pending shell (keep date label)
   const idx = FECHAS.findIndex(x=>x.num===num);
+  let remoteOk = true;
   if(idx>=0){
     FECHAS[idx] = { num: f.num, fecha: f.fecha, pendiente: true };
-    const dbOk = await deleteFechaFromSupabase(num);
     persistFechas();
-    if(!dbOk && supabase) console.warn('La fecha se marcó como pendiente en este navegador, pero no se pudo borrar en Supabase.');
+    remoteOk = await deleteFechaFromSupabase(num);
   }
 
-  // Reset UI
   rendered = {};
   renderFechasNav();
   renderSection('overview');
   renderSection('fixture');
-
-  // Clear form but keep selected num
   adminClearFormKeepNum(num);
 
   const st = document.getElementById('adm-form-status');
-  if(st) st.textContent = `✓ Fecha ${num} marcada como pendiente.`;
+  if(st) st.textContent = remoteOk
+    ? `✓ Fecha ${num} marcada como pendiente.`
+    : `⚠ Fecha ${num} vaciada localmente, pero falló el borrado en Supabase.`;
 }
 function adminCopy() {
   const json = window._lastAdminJson || JSON.stringify(adminGenerate()||{}, null, 2);
@@ -2732,8 +2730,7 @@ function adminCopy() {
 }
 
 async function adminApply() {
-  if(!await verifyAdmin()) return;
-  // Build from form fields
+  if(!verifyAdmin()) return;
   const newFecha = adminGenerate();
   if(!newFecha || !newFecha.num) {
     document.getElementById('adm-form-status').textContent='⚠ Completá la fecha primero.';
@@ -2742,20 +2739,20 @@ async function adminApply() {
   const idx = FECHAS.findIndex(x=>x.num===newFecha.num);
   if(idx<0) return;
   FECHAS[idx] = newFecha;
-  const dbOk = await saveFechaToSupabase(newFecha);
   persistFechas();
-  if(!dbOk && supabase) alert('No se pudo guardar en Supabase. El cambio quedó sólo en este navegador.');
-  // Reset render cache
+  const remoteOk = await saveFechaToSupabase(newFecha);
   rendered = {};
   closeAdmin();
   renderFechasNav();
   renderSection('overview');
-  // Navigate to fecha detail
   document.querySelectorAll('.tab').forEach(b=>{ if(b.dataset?.sec==='fechas') b.click(); });
   setTimeout(()=>{
     const btn = document.querySelector(`.fnav-btn[data-num="${newFecha.num}"]`);
     if(btn && !btn.classList.contains('pending')) btn.click();
   }, 150);
+  if(!remoteOk) {
+    setTimeout(()=>alert(`La fecha ${newFecha.num} quedó guardada en este navegador, pero falló el guardado en Supabase.`), 100);
+  }
 }
 
 function adminShowJson() {
@@ -3679,7 +3676,7 @@ function exportExcelBackup() {
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', async ()=>{
   loadPersistedFechas();
-  await loadSupabaseFechas();
+  await loadFechasFromSupabase();
   renderSection('overview');
 });
 </script>
