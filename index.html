@@ -433,6 +433,75 @@ header{
   cursor:pointer;border:1px solid var(--border);color:var(--muted);background:none;transition:all 0.15s;
 }
 .admin-tab.on{background:var(--navy-deep);color:var(--gold);border-color:var(--border-gold);}
+
+/* ===== HISTORICOS ===== */
+.hist-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(280px,1fr));
+  gap:22px;
+  align-items:start;
+}
+.hist-card{
+  background:#f7f4ef;
+  border:1px solid #d6c6a5;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 10px 24px rgba(15,23,42,.06);
+}
+.hist-year{
+  background:#111827;
+  color:#fff;
+  text-align:center;
+  padding:14px 12px;
+  font-family:'DM Mono',monospace;
+  font-size:.9rem;
+  font-weight:700;
+  letter-spacing:2px;
+}
+.hist-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+.hist-table td{
+  border:1px solid #d7d3cb;
+  padding:10px 12px;
+  background:#fff;
+  font-size:.93rem;
+  line-height:1.2;
+  vertical-align:middle;
+}
+.hist-table td.cat{
+  width:23%;
+  text-align:center;
+  font-family:'DM Mono',monospace;
+  font-size:.78rem;
+  letter-spacing:1.4px;
+  color:#475569;
+  background:#faf8f4;
+  font-weight:700;
+}
+.hist-table td.pos{
+  width:14%;
+  text-align:center;
+  font-family:'DM Mono',monospace;
+  font-size:.8rem;
+  color:#64748b;
+  background:#fcfbf8;
+  font-weight:700;
+}
+.hist-table td.name{
+  width:63%;
+  font-weight:600;
+  color:#172033;
+}
+@media (max-width:1100px){
+  .hist-grid{grid-template-columns:repeat(2,minmax(260px,1fr));}
+}
+@media (max-width:760px){
+  .hist-grid{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -444,111 +513,28 @@ header{
 // ╚═══════════════════════════════════════════════════════════╝
 
 const PLAYERS = [
-  {id:'gonzalez',  name:'Gonzalez, Agus', team:'g', hdc:7.7},
+  {id:'gonzalez',   name:'Gonzalez, Agus', team:'g', hdc:7.7},
   {id:'tarasido',   name:'Tarasido, Gonzalo', team:'g', hdc:10.3},
-  {id:'zunino',    name:'Zunino, Javi', team:'g', hdc:14.2},
+  {id:'zunino',     name:'Zunino, Javi', team:'g', hdc:14.2},
   {id:'basaldua',   name:'Basaldua, Ignacio', team:'g', hdc:16.1},
-  {id:'pannullo',  name:'Pannullo, Tincho', team:'g', hdc:17.7},
-  {id:'benegas',  name:'Benegas, Pancho', team:'g', hdc:21.2},
-  {id:'guevara',  name:'Guevara, Franki', team:'g', hdc:22.2},
+  {id:'pannullo',   name:'Pannullo, Tincho', team:'g', hdc:17.7},
+  {id:'benegas',    name:'Benegas, Pancho', team:'g', hdc:21.2},
+  {id:'guevara',    name:'Guevara, Franki', team:'g', hdc:22.2},
   {id:'dipaola',    name:'Dipaola, Martin', team:'g', hdc:26.0},
-  {id:'gatto',   name:'Gatto, Mariano', team:'r', hdc:9.1},
-  {id:'elizalde', name:'Elizalde, Juancho', team:'r', hdc:12.5},
-  {id:'canonico',  name:'Canónico, Agus', team:'r', hdc:15.7},
-  {id:'vogelius',  name:'Vogelius, Nico', team:'r', hdc:17.7},
-  {id:'mendez',    name:'Mendez, Pato', team:'r', hdc:18.7},
-  {id:'molinario',    name:'Molinario, Andy', team:'r', hdc:20.2},
-  {id:'scapparone',  name:'Scapparone, Nico', team:'r', hdc:22.4},
-  {id:'fernandez',    name:'Fernandez, Lucas', team:'r', hdc:24.7},
+  {id:'gatto',      name:'Gatto, Mariano', team:'r', hdc:9.1},
+  {id:'elizalde',   name:'Elizalde, Juancho', team:'r', hdc:12.5},
+  {id:'canonico',   name:'Canónico, Agus', team:'r', hdc:15.7},
+  {id:'vogelius',   name:'Vogelius, Nico', team:'r', hdc:17.7},
+  {id:'mendez',     name:'Mendez, Pato', team:'r', hdc:18.7},
+  {id:'molinario',  name:'Molinario, Andy', team:'r', hdc:20.2},
+  {id:'fernandez',  name:'Fernandez, Lucas', team:'r', hdc:24.7},
+  {id:'gatto_ale',  name:'Gatto, Ale', team:'r', hdc:null},
 ];
 
 // fechas: array de objetos por fecha jugada
 // Agregar un objeto por cada fecha que se juegue
 const fechas = [
-  {
-    num: 1,
-    fecha: '14 Mar 2026',
-    cancha: 'CUBA Fátima',
-    organizadores: 'Gatto + Zunino',
-    ausentes: [],
-    // suplentes: [{id:"gatto_ale", equipo:"g", reemplaza:"benegas"}]  ← ejemplo
-    suplentes: [],
-
-    // — MEDAL: score neto y gross de cada jugador
-    // Si no jugó: omitir o poner null
-    medal: [
-      {id:'gonzalez',  hdcp:8,  neto:68, gross:76},
-      {id:'tarasido',   hdcp:10, neto:69, gross:79},
-      {id:'zunino',    hdcp:14, neto:70, gross:84},
-      {id:'basaldua',   hdcp:16, neto:71, gross:87},
-      {id:'pannullo',  hdcp:18, neto:71, gross:89},
-      {id:'benegas',  hdcp:21, neto:72, gross:93},
-      {id:'guevara',  hdcp:22, neto:73, gross:95},
-      {id:'dipaola',    hdcp:26, neto:74, gross:100},
-      {id:'gatto',   hdcp:9,  neto:69, gross:78},
-      {id:'elizalde', hdcp:13, neto:70, gross:82},
-      {id:'canonico',  hdcp:16, neto:72, gross:88},
-      {id:'vogelius',  hdcp:18, neto:68, gross:86},
-      {id:'mendez',    hdcp:19, neto:75, gross:94},
-      {id:'molinario',    hdcp:20, neto:76, gross:96},
-      {id:'scapparone',  hdcp:22, neto:73, gross:95},
-      {id:'fernandez',    hdcp:25, neto:77, gross:102},
-    ],
-
-    // — ESTADÍSTICAS DE HOYO (promedio del grupo por hoyo, par de cada hoyo)
-    hoyos: {
-      par:   [4,3,5,4,4,5,3,4,4, 4,4,5,3,4,4,5,3,4],
-      avgG:  [4.2,3.4,5.6,4.5,4.3,5.8,3.6,4.4,4.7, 4.3,4.5,5.9,3.5,4.6,4.4,5.7,3.8,4.5], // avg gross
-    },
-
-    // — RESUMEN DE LA RONDA
-    stats: {
-      avgGross: 88.5,
-      avgNeto: 71.8,
-      birdies: 4,
-      pares: 38,
-      bogeys: 62,
-      dobles: 18,
-      eagles: 0,
-    },
-
-    // — MATCHS
-    // tipo: 'fb' (fourball 2v2) o 'ind' (individual 1v1)
-    // ganador: 'g' (gris), 'r' (rojo), 'empate'
-    // difHoyos: desde perspectiva GRIS (+ favor gris, - favor rojo)
-    // pts_g / pts_r: puntos que sumó cada jugador (0.5 por cabeza en fb, 1 en ind)
-    matchs: [
-      {
-        tipo:'fb',
-        gris:['gonzalez','tarasido'], rojo:['gatto','elizalde'],
-        ganador:'r', difHoyos:-2,
-        pts_g:{agus_g:0, gonza:0}, pts_r:{gatto:0.5, juancho:0.5}
-      },
-      {
-        tipo:'fb',
-        gris:['zunino','basaldua'], rojo:['canonico','vogelius'],
-        ganador:'g', difHoyos:3,
-        pts_g:{javi:0.5, nacho:0.5}, pts_r:{agus_c:0, nico_v:0}
-      },
-      {
-        tipo:'fb',
-        gris:['pannullo','benegas'], rojo:['mendez','molinario'],
-        ganador:'r', difHoyos:-1,
-        pts_g:{tincho:0, pancho:0}, pts_r:{pato:0.5, andy:0.5}
-      },
-      {
-        tipo:'fb',
-        gris:['guevara','dipaola'], rojo:['scapparone','fernandez'],
-        ganador:'g', difHoyos:2,
-        pts_g:{franky:0.5, dipa:0.5}, pts_r:{scappa:0, lule:0}
-      },
-    ],
-
-    // — COMENTARIO / HIGHLIGHT
-    comentario: `<strong>Dipa</strong> protagonizó el momento del día: triple bogey en el hoyo 7, pero se redimió con un par salvador en el 18 cuando el partido estaba en juego. <strong>Nico Vogelius</strong> y <strong>Agus González</strong> empataron en el mejor neto del día con 68 — el desempate fue el cuadro de honor, pero el orgullo fue compartido. ROJO se lleva los puntos del equipo en una fecha muy pareja.`,
-  },
-
-  // ── fechas PENDIENTES (sin datos aún) ──
+  {num:1, fecha:'14 Mar 2026', pendiente:true},
   {num:2, fecha:'11 Abr 2026', pendiente:true},
   {num:3, fecha:'09 May 2026', pendiente:true},
   {num:4, fecha:'06 Jun 2026', pendiente:true},
@@ -588,13 +574,13 @@ const F9_MULT = 1.5, F10_MULT = 2;
 //    equipo con suplente pierde → rival oficial suma 0.5 normal
 //
 // El suplente NUNCA acumula pts de match en el torneo (excepto esOficialEspecial).
-// El suplente especial (Gatto Alejandro) sí acumula match para el equipo que le toca.
+// El suplente oficial especial (Scapparone) sí acumula match para el equipo que le toca.
 
-const SUPLENTE_ESPECIAL_ID = 'gatto_ale'; // Alejandro Gatto — suplente oficial especial
+const SUPLENTE_ESPECIAL_ID = 'scapparone'; // Nico Scapparone — suplente oficial especial
 
 // Registro de suplentes conocidos — se pueden agregar más
 const SUPLENTES_CONOCIDOS = [
-  {id:'gatto_ale', name:'Gatto, Alejandro', esOficialEspecial:true},
+  {id:'scapparone', name:'Scapparone, Nico', esOficialEspecial:true, hdc:22.4},
   // Ejemplo: {id:'juani', name:'Juani Reemplazo', esOficialEspecial:false},
 ];
 
@@ -616,8 +602,18 @@ function getSustitutoInfo(id, fecha) {
 // ════════════════════════════════════════════════════════════
 // CÁLCULOS
 
+function capHandicap(value) {
+  const n = Number(value);
+  if(!Number.isFinite(n)) return null;
+  return Math.min(Math.round(n), 26);
+}
+
 function calcMedalPts(fecha) {
   if(fecha.pendiente || !fecha.medal) return [];
+  fecha.medal = fecha.medal.map(m => ({
+    ...m,
+    hdcp: capHandicap(m.hdcp ?? m.hdc ?? m.hdcDia ?? m.handicap)
+  }));
   const mult = fecha.num === 9 ? F9_MULT : fecha.num === 10 ? F10_MULT : 1;
 
   // Separar oficiales y suplentes
@@ -838,7 +834,7 @@ function buildAccum() {
   // ── Gross acumulado ──
   const gross = {};
   PLAYERS.forEach(p => { gross[p.id] = {scores:[]}; });
-  if(matchSupEspecial) gross['gatto_ale'] = {scores:[], isSupEspecial:true};
+  if(matchSupEspecial) gross[SUPLENTE_ESPECIAL_ID] = {scores:[], isSupEspecial:true};
 
   fechas.filter(f=>!f.pendiente&&f.medal).forEach(f => {
     f.medal.forEach(m => {
@@ -889,7 +885,8 @@ function buildAccum() {
       <div class="header-meta">
         <div class="chip live" id="chip-fechas">F1 de 10 jugadas</div>
         <div class="chip">CUBA Fátima + Gira Nov</div>
-        <div class="chip">16 Jugadores</div>
+        <div class="chip">16 Jugadores · Ale titular</div>
+        <div class="chip">Scapparone = suplente oficial</div>
       </div>
     </div>
   </header>
@@ -901,6 +898,7 @@ function buildAccum() {
     <button class="tab" onclick="showTab('fechas',this)">📋 Detalle fechas</button>
     <button class="tab" onclick="showTab('gross',this)">🏌️ Gross</button>
     <button class="tab" onclick="showTab('fixture',this)">📅 Fixture</button>
+    <button class="tab" onclick="showTab('historicos',this)">🏆 Históricos</button>
   </nav>
 
   <!-- ══════════ OVERVIEW ══════════ -->
@@ -1026,6 +1024,16 @@ function buildAccum() {
     <div class="card" style="overflow-x:auto">
       <table class="tbl" id="tbl-fixture"></table>
     </div>
+  </div>
+
+  <!-- ══════════ HISTÓRICOS ══════════ -->
+  <div id="sec-historicos" class="sec">
+    <div class="sec-head">Ganadores históricos del torneo</div>
+    <div class="card gold-border" style="margin-bottom:16px">
+      <div class="kpi-label">Ediciones 2016 a 2025 integradas en la web</div>
+      <div style="margin-top:8px;font-size:0.84rem;color:var(--muted-light);line-height:1.7">Cada edición ahora aparece en una caja separada, con su podio de Medal, Match, Gross y el Team campeón cuando aplica.</div>
+    </div>
+    <div class="hist-grid" id="hist-grid"></div>
   </div>
 
 </div>
@@ -1365,6 +1373,7 @@ function renderSection(name) {
   if(name==='fechas') renderfechasNav();
   if(name==='gross') renderGross(acc);
   if(name==='fixture') renderFixture();
+  if(name==='historicos') renderHistoricos();
 }
 
 // ─── OVERVIEW ───
@@ -1913,6 +1922,44 @@ function renderGross(acc) {
   });
 }
 
+
+const HISTORICOS = [
+  {year:2016, medal:['Mariano Gatto','Ignacio Canónico','Juan Pedro Elizalde'], match:['Agustín Canónico','Juan Pedro Elizalde'], gross:['Juan Pedro Elizalde','Nicolas Vogelius','Agustín Canónico'], team:null},
+  {year:2017, medal:['Andres Molinario','Mariano Gatto','Santiago Copello'], match:['Santiago Copello','Agustín Canónico'], gross:['Mariano Gatto','Javier Zunino','Juan Pedro Elizalde'], team:null},
+  {year:2018, medal:['Gonzalo Tarasido','Martin Pannullo','Juan Pedro Elizalde'], match:['Francisco Benegas','Agustín Canónico'], gross:['Gonzalo Tarasido','Juan Pedro Elizalde','Mariano Gatto'], team:null},
+  {year:2019, medal:['Agustín Canónico','Juan Pedro Elizalde','Martin Pannullo'], match:['Agustín Canónico','Gastón Mendez'], gross:['Mariano Gatto','Gonzalo Tarasido','Juan Pedro Elizalde'], team:null},
+  {year:2021, medal:['Mariano Gatto','Juan Pedro Elizalde','Francisco Benegas'], match:['Juan Pedro Elizalde','Nicolas Vogelius'], gross:['Mariano Gatto','Juan Pedro Elizalde','Nicolas Vogelius'], team:null},
+  {year:2022, medal:['Nicolas Vogelius','Javier Zunino','Juan Pedro Elizalde'], match:['Nicolas Vogelius','Agustin Gonzalez'], gross:['Agustin Gonzalez','Javier Zunino','Juan Pedro Elizalde'], team:'Blanco (Cordoba)'},
+  {year:2023, medal:['Pannullo, Tincho','Elizalde, Juancho','Molinario, Andy'], match:['Gatto, Mariano','Guevara, Franki'], gross:['Elizalde, Juancho','Gatto, Mariano','Gonzalez, Agus'], team:'Blanco (Cordoba)'},
+  {year:2024, medal:['Tarasido, Gonzalo','Basaldua, Ignacio','Benegas, Pancho'], match:['Mendez, Pato','Gatto, Mariano'], gross:['Gatto, Mariano','Tarasido, Gonzalo','Zunino, Javi'], team:'Blanco (Mdq)'},
+  {year:2025, medal:['Vogelius, Nico','Zunino, Javi','Basaldua, Ignacio'], match:['Fernandez, Lucas','Basaldua, Ignacio'], gross:['Gatto, Mariano','Tarasido, Gonzalo','Zunino, Javi'], team:'Rojo (Mdq)'}
+];
+
+function renderHistoricos() {
+  const container = byId('hist-grid');
+  if(!container) return;
+  const rows = (cat, items) => items.map((name, i) => `
+    <tr>
+      ${i===0 ? `<td class="cat" rowspan="${items.length}">${cat}</td>` : ''}
+      <td class="pos">#${i+1}</td>
+      <td class="name">${name}</td>
+    </tr>
+  `).join('');
+  container.innerHTML = HISTORICOS.map(h => `
+    <div class="hist-card">
+      <div class="hist-year">EDICIÓN ${h.year}</div>
+      <table class="hist-table">
+        <tbody>
+          ${rows('MEDAL', h.medal)}
+          ${rows('MATCH', h.match)}
+          ${rows('GROSS', h.gross)}
+          ${h.team ? `<tr><td class="cat">TEAM</td><td class="pos">#1</td><td class="name">${h.team}</td></tr>` : ''}
+        </tbody>
+      </table>
+    </div>
+  `).join('');
+}
+
 // ─── FIXTURE ───
 function renderFixture() {
   const formatMatch = (f) => {
@@ -2054,7 +2101,7 @@ function adminPastePreview() {
   supRows.forEach(row => {
     const idx = row.dataset.idx;
     const isGatto = row.dataset.isGatto === '1';
-    const matchData = isGatto ? supData.find(s=>s.id==='gatto_ale') : supData[parseInt(idx)];
+    const matchData = isGatto ? supData.find(s=>s.id===SUPLENTE_ESPECIAL_ID) : supData[parseInt(idx)];
     if(matchData) {
       const reemplazaEl = document.getElementById(`sup-reemplaza-${idx}`);
       const equipoEl = document.getElementById(`sup-equipo-${idx}`);
@@ -2204,12 +2251,12 @@ function adminBuildSuplentesList(suplentesData) {
   suplanteCounter = 0;
 
   // Always add Gatto Alejandro row first (pre-checked as ausente by default logic)
-  adminAddSuplente({id:'gatto_ale', equipo:'r', reemplaza:'', esGatto: true});
+  adminAddSuplente({id:SUPLENTE_ESPECIAL_ID, equipo:'r', reemplaza:'', esGatto: true});
 
   // Add any other suplentes from data
   if(suplentesData) {
     suplentesData.forEach(s => {
-      if(s.id !== 'gatto_ale') adminAddSuplente(s);
+      if(s.id !== SUPLENTE_ESPECIAL_ID) adminAddSuplente(s);
     });
   }
 }
@@ -2218,7 +2265,7 @@ function adminAddSuplente(data) {
   const cont = document.getElementById('adm-suplentes-list');
   if(!cont) return;
   const idx = suplanteCounter++;
-  const isGatto = data?.esGatto || data?.id === 'gatto_ale';
+  const isGatto = data?.esGatto || data?.id === SUPLENTE_ESPECIAL_ID;
   const selReemplaza = data?.reemplaza || '';
   const selEquipo = data?.equipo || (isGatto ? 'r' : 'g');
 
@@ -2256,7 +2303,7 @@ function adminAddSuplente(data) {
   col2.style.cssText = 'display:flex;flex-direction:column;gap:4px;min-width:0';
   const nameEl = document.createElement(isGatto ? 'span' : 'input');
   if(isGatto) {
-    nameEl.textContent = 'Gatto, Alejandro';
+    nameEl.textContent = 'Scapparone, Nico';
     nameEl.style.cssText = 'font-size:0.82rem;font-weight:600;color:var(--gold)';
   } else {
     nameEl.type = 'text';
@@ -2267,7 +2314,7 @@ function adminAddSuplente(data) {
   }
   const subEl = document.createElement('span');
   subEl.style.cssText = 'font-size:0.68rem;color:var(--muted)';
-  subEl.textContent = isGatto ? 'ID: gatto_ale — Suplente oficial especial' : 'Suplente externo — no acumula puntos al torneo';
+  subEl.textContent = isGatto ? `ID: ${SUPLENTE_ESPECIAL_ID} — Suplente oficial especial` : 'Suplente externo — no acumula puntos al torneo';
   col2.appendChild(nameEl);
   col2.appendChild(subEl);
 
@@ -2361,8 +2408,8 @@ function adminGetSuplentes() {
     const reemplaza = document.getElementById(`sup-reemplaza-${idx}`)?.value || '';
     const equipo = document.getElementById(`sup-equipo-${idx}`)?.value || 'r';
     if(!reemplaza) return; // skip rows without a player selected
-    const id = isGatto ? 'gatto_ale' : (`sup-ext-${idx}`);
-    const nombre = isGatto ? 'Gatto, Alejandro' : (document.getElementById(`sup-nombre-${idx}`)?.value || '');
+    const id = isGatto ? SUPLENTE_ESPECIAL_ID : (`sup-ext-${idx}`);
+    const nombre = isGatto ? 'Scapparone, Nico' : (document.getElementById(`sup-nombre-${idx}`)?.value || '');
     result.push({id, equipo, reemplaza, nombre: isGatto ? undefined : nombre});
   });
   return result;
@@ -3441,7 +3488,7 @@ function exportConsolidadoPDF() {
   const supStats = {};
   jugadas.forEach(f => {
     (f.suplentes||[]).forEach(s => {
-      if(!s.id || s.id === 'gatto_ale') return; // gatto_ale tracked separately
+      if(!s.id || s.id === SUPLENTE_ESPECIAL_ID) return; // suplente oficial tracked separately
       if(!supStats[s.id]) supStats[s.id] = {nombre: s.nombre||s.id, count:0, grossSum:0, grossCount:0};
       supStats[s.id].count++;
       // Find gross from medal
@@ -3453,11 +3500,11 @@ function exportConsolidadoPDF() {
   const supArr = Object.values(supStats).sort((a,b)=>b.count-a.count);
 
   // Gatto Ale stats
-  const gattoParts = jugadas.filter(f=>(f.suplentes||[]).some(s=>s.id==='gatto_ale')).length;
+  const gattoParts = jugadas.filter(f=>(f.suplentes||[]).some(s=>s.id===SUPLENTE_ESPECIAL_ID)).length;
   const gattoGrossArr = jugadas.flatMap(f=>{
-    const sup = (f.suplentes||[]).find(s=>s.id==='gatto_ale');
+    const sup = (f.suplentes||[]).find(s=>s.id===SUPLENTE_ESPECIAL_ID);
     if(!sup) return [];
-    const m = (f.medal||[]).find(x=>x.id==='gatto_ale');
+    const m = (f.medal||[]).find(x=>x.id===SUPLENTE_ESPECIAL_ID);
     return m?.gross ? [m.gross] : [];
   });
   const gattoAvg = gattoGrossArr.length ? (gattoGrossArr.reduce((a,b)=>a+b,0)/gattoGrossArr.length).toFixed(1) : '—';
