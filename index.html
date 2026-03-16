@@ -1305,13 +1305,19 @@ function mergeFechaIntoMemory(sf) {
   if(!sf || typeof sf.num !== 'number') return;
   const idx = fechas.findIndex(f => f.num === sf.num);
   if(idx < 0) return;
+
+  // Auto-detect played fecha: if medal data exists with entries, it's not pendiente
+  const hasMedalData = Array.isArray(sf.medal) && sf.medal.length > 0;
+  const pendienteValue = ('pendiente' in sf) ? sf.pendiente : (hasMedalData ? false : fechas[idx].pendiente);
+
   fechas[idx] = {
     ...fechas[idx],
     ...sf,
     num: fechas[idx].num,
     fecha: sf.fecha || fechas[idx].fecha,
     cancha: sf.cancha || fechas[idx].cancha || 'CUBA Fátima',
-    organizadores: sf.organizadores || fechas[idx].organizadores || ''
+    organizadores: sf.organizadores || fechas[idx].organizadores || '',
+    pendiente: pendienteValue
   };
 }
 
@@ -2145,8 +2151,8 @@ function countShotTypes(scorecard, playersFilter, fechasFilter, par) {
       });
     });
 
-    // Fallback: use f.stats if no scorecard and all players selected
-    if (!f.scorecard && f.stats && playersFilter.length >= PLAYERS.length) {
+    // Fallback: use f.stats if no scorecard data available
+    if ((!f.scorecard || f.scorecard.length === 0) && f.stats) {
       const s = f.stats;
       byFecha[fkey] = {eagles:s.eagles||0, birdies:s.birdies||0, pares:s.pares||0, bogeys:s.bogeys||0, dobles:s.dobles||0};
     }
@@ -2209,7 +2215,8 @@ function updateStatsCharts() {
       });
     });
   });
-  const avgPerHole = holeAvgs.map((sum, i) => holeCounts[i] > 0 ? +(sum / holeCounts[i]).toFixed(2) : 0);
+  const hasHoleData = holeCounts.some(c => c > 0);
+  const avgPerHole = holeAvgs.map((sum, i) => holeCounts[i] > 0 ? +(sum / holeCounts[i]).toFixed(2) : null);
 
   destroyChart('stats-holes');
   charts['stats-holes'] = new Chart(byId('chart-stats-holes'), {
@@ -2220,7 +2227,7 @@ function updateStatsCharts() {
         label: 'Promedio gross',
         data: avgPerHole,
         backgroundColor: avgPerHole.map((v, i) => {
-          if (v === 0) return 'rgba(107,122,153,0.2)';
+          if (v === null || v === 0) return 'rgba(107,122,153,0.2)';
           const diff = v - par[i];
           if (diff < -0.5) return 'rgba(22,163,74,0.7)';
           if (diff < 0.5) return 'rgba(107,122,153,0.5)';
@@ -2230,13 +2237,16 @@ function updateStatsCharts() {
         borderRadius: 4
       }, {
         label: 'Par',
-        data: par,
+        data: par.slice(),
         type: 'line',
-        borderColor: 'rgba(201,168,76,0.6)',
-        borderWidth: 2,
-        borderDash: [5, 3],
-        pointRadius: 0,
-        fill: false
+        borderColor: '#C9A84C',
+        borderWidth: 2.5,
+        borderDash: [6, 3],
+        pointRadius: 3,
+        pointBackgroundColor: '#C9A84C',
+        pointBorderColor: '#C9A84C',
+        fill: false,
+        order: 0
       }]
     },
     options: {
@@ -2244,7 +2254,7 @@ function updateStatsCharts() {
       plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'DM Sans', size: 10 }, color: '#6b7a99', padding: 12 } } },
       scales: {
         x: { ticks: { color: '#6b7a99', font: { size: 9 } }, grid: { display: false } },
-        y: { ticks: { color: '#6b7a99', font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' }, suggestedMin: 2 }
+        y: { ticks: { color: '#6b7a99', font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' }, suggestedMin: 2, suggestedMax: 7 }
       }
     }
   });
@@ -3061,10 +3071,13 @@ function adminGenerate() {
   const newFecha = {
     num, fecha:f.fecha, cancha:f.cancha||'CUBA Fátima',
     organizadores:f.organizadores||'',
+    pendiente: false,
     ausentes, suplentes,
     medal, stats, matchs,
     comentario: comentario||''
   };
+  // Preserve scorecard if it was previously loaded (e.g. from Excel import)
+  if (f.scorecard && f.scorecard.length > 0) newFecha.scorecard = f.scorecard;
 
   window._lastAdminJson  = JSON.stringify(newFecha, null, 2);
   window._lastAdminFecha = newFecha;
