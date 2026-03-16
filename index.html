@@ -1149,6 +1149,7 @@ function buildAccum() {
       </div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="admin-btn primary" onclick="adminPastePreview()">→ Previsualizar en Formulario</button>
+        <button class="admin-btn secondary" onclick="adminPasteDirectApply()" style="background:var(--green);color:#fff;border-color:var(--green)">⚡ Aplicar JSON directo</button>
         <button class="admin-btn secondary" onclick="adminPasteValidate()">Validar JSON</button>
         <span id="adm-paste-status" style="font-size:0.78rem;color:var(--muted-light)"></span>
       </div>
@@ -2393,6 +2394,9 @@ function switchAdminTab(tab, btn) {
 }
 
 // ── PEGAR JSON ──
+// Temp storage for scorecard from pasted JSON (form has no holes fields)
+let _pastedScorecard = null;
+
 function adminPasteValidate() {
   const raw = document.getElementById('adm-paste-input').value.trim();
   const status = document.getElementById('adm-paste-status');
@@ -2415,6 +2419,9 @@ function adminPasteValidate() {
 function adminPastePreview() {
   const obj = adminPasteValidate();
   if(!obj) return;
+
+  // Preserve scorecard from pasted JSON (form can't hold hole-by-hole data)
+  _pastedScorecard = (Array.isArray(obj.scorecard) && obj.scorecard.length > 0) ? obj.scorecard : null;
 
   // Populate the form tab with the JSON data
   // Switch to form tab
@@ -2511,6 +2518,47 @@ function adminPastePreview() {
 function adminPasteApply() {
   // Legacy - now redirects to preview
   adminPastePreview();
+}
+
+async function adminPasteDirectApply() {
+  if(!verifyAdmin()) return;
+  const obj = adminPasteValidate();
+  if(!obj) return;
+  if(!obj.num) { alert('El JSON no tiene campo "num".'); return; }
+
+  const idx = fechas.findIndex(x => x.num === obj.num);
+  if(idx < 0) { alert(`Fecha ${obj.num} no encontrada.`); return; }
+
+  // Build complete fecha preserving all fields including scorecard
+  const existing = fechas[idx];
+  const newFecha = {
+    ...existing,
+    ...obj,
+    num: obj.num,
+    pendiente: false
+  };
+
+  // Recalc stats from scorecard if available
+  if (newFecha.scorecard && newFecha.scorecard.length > 0) {
+    const autoStats = calcStatsFromScorecard(newFecha);
+    if (autoStats) newFecha.stats = autoStats;
+  }
+
+  fechas[idx] = newFecha;
+  persistfechas();
+  const remoteOk = await saveFechaToSupabase(newFecha);
+
+  rendered = {};
+  closeAdmin();
+  renderfechasNav();
+  renderSection('overview');
+
+  const status = document.getElementById('adm-paste-status');
+  const hasScorecard = newFecha.scorecard && newFecha.scorecard.length > 0;
+  const msg = remoteOk
+    ? `✓ Fecha ${obj.num} guardada en dashboard + Supabase${hasScorecard ? ' (con scorecard: '+newFecha.scorecard.length+' jugadores)' : ''}`
+    : `⚠ Fecha ${obj.num} guardada localmente pero falló Supabase`;
+  alert(msg);
 }
 
 function adminCopyViewJson() {
@@ -3076,8 +3124,15 @@ function adminGenerate() {
     medal, stats, matchs,
     comentario: comentario||''
   };
-  // Preserve scorecard if it was previously loaded (e.g. from Excel import)
-  if (f.scorecard && f.scorecard.length > 0) newFecha.scorecard = f.scorecard;
+  // Include scorecard: from pasted JSON > from existing fecha in memory > nothing
+  const sc = _pastedScorecard || (f.scorecard && f.scorecard.length > 0 ? f.scorecard : null);
+  if (sc) {
+    newFecha.scorecard = sc;
+    // Recalc stats from scorecard for accuracy
+    const autoStats = calcStatsFromScorecard(newFecha);
+    if (autoStats) newFecha.stats = autoStats;
+  }
+  _pastedScorecard = null; // Clear after use
 
   window._lastAdminJson  = JSON.stringify(newFecha, null, 2);
   window._lastAdminFecha = newFecha;
@@ -4178,8 +4233,31 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   // Wait for Supabase CDN then load remote data
   const sbReady = await waitForSupabase(8000);
   if (sbReady) {
+    // Snapshot local data BEFORE Supabase merge (to detect richer local data)
+    const localSnapshot = {};
+    fechas.forEach(f => {
+      if (!f.pendiente && f.scorecard && f.scorecard.length > 0) {
+        localSnapshot[f.num] = f.scorecard;
+      }
+    });
+
     const loaded = await loadfechasFromSupabase();
     if (loaded) {
+      // Auto-sync: if localStorage had scorecard but Supabase didn't, re-upload
+      for (const [numStr, sc] of Object.entries(localSnapshot)) {
+        const num = parseInt(numStr);
+        const f = fechas.find(x => x.num === num);
+        if (f && (!f.scorecard || f.scorecard.length === 0)) {
+          f.scorecard = sc;
+          // Recalc stats from scorecard
+          const autoStats = calcStatsFromScorecard(f);
+          if (autoStats) f.stats = autoStats;
+          persistfechas();
+          saveFechaToSupabase(f);
+          console.log(`[Auto-sync] Fecha ${num}: scorecard re-subido a Supabase`);
+        }
+      }
+
       rendered = {};
       renderSection('overview');
       // Re-render active tab if not overview
