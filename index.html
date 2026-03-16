@@ -1096,19 +1096,17 @@ function buildAccum() {
         </div>
       </div>
     </div>
-    <div class="g2">
-      <div class="card">
-        <div class="kpi-label">Distribución de golpes vs Par</div>
-        <div class="ch ch-260"><canvas id="chart-stats-dist"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="kpi-label">Promedio de golpes por hoyo</div>
-        <div class="ch ch-260"><canvas id="chart-stats-holes"></canvas></div>
-      </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="kpi-label">Distribución por jugador (Eagle/Birdie/Par/Bogey/Doble+)</div>
+      <div class="ch" style="height:320px"><canvas id="chart-stats-dist"></canvas></div>
     </div>
-    <div class="card" style="margin-top:16px">
-      <div class="kpi-label">Detalle por fecha — golpes vs par (stacked)</div>
-      <div class="ch" style="height:320px"><canvas id="chart-stats-stacked"></canvas></div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="kpi-label">Promedio de golpes por hoyo vs Par</div>
+      <div class="ch" style="height:260px"><canvas id="chart-stats-holes"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="kpi-label">Evolución por fecha (golpes vs par — stacked)</div>
+      <div class="ch" style="height:280px"><canvas id="chart-stats-stacked"></canvas></div>
     </div>
   </div>
 
@@ -1292,6 +1290,15 @@ function getSupabaseClient() {
     console.warn('No se pudo inicializar Supabase.', err);
   }
   return supabaseClient;
+}
+
+async function waitForSupabase(maxWait) {
+  maxWait = maxWait || 8000;
+  const start = Date.now();
+  while (!window.supabase?.createClient && Date.now() - start < maxWait) {
+    await new Promise(r => setTimeout(r, 200));
+  }
+  return !!window.supabase?.createClient;
 }
 
 function mergeFechaIntoMemory(sf) {
@@ -2047,14 +2054,14 @@ function renderEstadisticas() {
   const fechaContainer = byId('stats-fecha-checks');
   if (!container || !fechaContainer) return;
 
-  // Build player checkboxes
-  const allPlayers = [...PLAYERS];
+  // Build player checkboxes (include suplente especial)
+  const allPlayers = [...PLAYERS, ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial)];
   container.innerHTML = allPlayers.map(p => {
     const dotColor = p.team === 'g' ? 'var(--gris-color)' : p.team === 'r' ? 'var(--rojo-color)' : 'var(--gold)';
     return `<label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;cursor:pointer">
       <input type="checkbox" class="stats-player-cb" data-id="${p.id}" checked onchange="updateStatsCharts()">
       <span style="width:8px;height:8px;border-radius:50%;background:${dotColor};flex-shrink:0"></span>
-      ${p.name.split(',')[0]}
+      ${p.name.split(',')[0]}${p.esOficialEspecial ? ' ★' : ''}
     </label>`;
   }).join('');
 
@@ -2081,79 +2088,92 @@ function getStatsFilters() {
   return { players, fechaNums };
 }
 
+function countShotTypes(scorecard, playersFilter, fechasFilter, par) {
+  // Returns per-player { id, name, eagles, birdies, pares, bogeys, dobles }
+  // and per-fecha { fnum, eagles, birdies, pares, bogeys, dobles }
+  const byPlayer = {};
+  const byFecha = {};
+
+  fechasFilter.forEach(f => {
+    const fkey = f.num;
+    if (!byFecha[fkey]) byFecha[fkey] = {eagles:0,birdies:0,pares:0,bogeys:0,dobles:0};
+
+    (f.scorecard || []).forEach(sc => {
+      if (!playersFilter.includes(sc.id)) return;
+      if (!byPlayer[sc.id]) byPlayer[sc.id] = {eagles:0,birdies:0,pares:0,bogeys:0,dobles:0};
+      (sc.holes || []).forEach((score, hi) => {
+        if (!score || score <= 0 || hi >= par.length) return;
+        const diff = score - par[hi];
+        const cat = diff <= -2 ? 'eagles' : diff === -1 ? 'birdies' : diff === 0 ? 'pares' : diff === 1 ? 'bogeys' : 'dobles';
+        byPlayer[sc.id][cat]++;
+        byFecha[fkey][cat]++;
+      });
+    });
+
+    // Fallback: use f.stats if no scorecard and all players selected
+    if (!f.scorecard && f.stats && playersFilter.length >= PLAYERS.length) {
+      const s = f.stats;
+      byFecha[fkey] = {eagles:s.eagles||0, birdies:s.birdies||0, pares:s.pares||0, bogeys:s.bogeys||0, dobles:s.dobles||0};
+    }
+  });
+
+  return { byPlayer, byFecha };
+}
+
 function updateStatsCharts() {
   const { players, fechaNums } = getStatsFilters();
   const par = PAR;
   const selectedFechas = fechas.filter(f => !f.pendiente && fechaNums.includes(f.num));
+  const { byPlayer, byFecha } = countShotTypes(selectedFechas, players, selectedFechas, par);
 
-  // ── 1. Distribution chart (stacked bar by fecha) ──
   const categories = ['Eagle-', 'Birdie', 'Par', 'Bogey', 'Doble+'];
+  const catKeys = ['eagles', 'birdies', 'pares', 'bogeys', 'dobles'];
   const colors = ['#d4a800', '#16a34a', '#6b7a99', '#e07020', '#c0392b'];
 
-  const distDatasets = categories.map((cat, ci) => ({
-    label: cat,
-    data: selectedFechas.map(f => {
-      let count = 0;
-      (f.scorecard || []).forEach(sc => {
-        if (!players.includes(sc.id)) return;
-        (sc.holes || []).forEach((score, hi) => {
-          if (score <= 0) return;
-          const diff = score - par[hi];
-          if (ci === 0 && diff <= -2) count++;
-          else if (ci === 1 && diff === -1) count++;
-          else if (ci === 2 && diff === 0) count++;
-          else if (ci === 3 && diff === 1) count++;
-          else if (ci === 4 && diff >= 2) count++;
-        });
-      });
-      // If no scorecard, try stats
-      if (!f.scorecard && f.stats && players.length === PLAYERS.length) {
-        const s = f.stats;
-        if (ci === 0) count = s.eagles || 0;
-        else if (ci === 1) count = s.birdies || 0;
-        else if (ci === 2) count = s.pares || 0;
-        else if (ci === 3) count = s.bogeys || 0;
-        else if (ci === 4) count = s.dobles || 0;
-      }
-      return count;
-    }),
-    backgroundColor: colors[ci],
-    borderRadius: 3
-  }));
+  // ── 1. Distribution PER PLAYER (horizontal stacked bar) ──
+  const playerIds = players.filter(id => byPlayer[id]);
+  const allP = [...PLAYERS, ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial)];
+  const playerLabels = playerIds.map(id => {
+    const p = allP.find(x=>x.id===id);
+    return p ? p.name.split(',')[0] : id;
+  });
 
   destroyChart('stats-dist');
-  charts['stats-dist'] = new Chart(byId('chart-stats-dist'), {
-    type: 'bar',
-    data: {
-      labels: selectedFechas.map(f => 'F' + f.num),
-      datasets: distDatasets
-    },
-    options: {
-      ...CHART_BASE,
-      plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'DM Sans', size: 10 }, color: '#6b7a99', padding: 12, usePointStyle: true, pointStyle: 'rectRounded' } } },
-      scales: {
-        x: { stacked: true, ticks: { color: '#6b7a99', font: { family: 'DM Sans', size: 10 } }, grid: { display: false } },
-        y: { stacked: true, ticks: { color: '#6b7a99', font: { family: 'DM Sans', size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+  if (playerLabels.length > 0) {
+    charts['stats-dist'] = new Chart(byId('chart-stats-dist'), {
+      type: 'bar',
+      data: {
+        labels: playerLabels,
+        datasets: categories.map((cat, ci) => ({
+          label: cat,
+          data: playerIds.map(id => byPlayer[id]?.[catKeys[ci]] || 0),
+          backgroundColor: colors[ci],
+          borderRadius: 2
+        }))
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'DM Sans', size: 10 }, color: '#6b7a99', padding: 10, usePointStyle: true, pointStyle: 'rectRounded' } } },
+        scales: {
+          x: { stacked: true, ticks: { color: '#6b7a99', font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          y: { stacked: true, ticks: { color: '#6b7a99', font: { family: 'DM Sans', size: 10 } }, grid: { display: false } }
+        }
       }
-    }
-  });
+    });
+  }
 
   // ── 2. Average strokes per hole ──
   const holeAvgs = Array(18).fill(0);
   const holeCounts = Array(18).fill(0);
-
   selectedFechas.forEach(f => {
     (f.scorecard || []).forEach(sc => {
       if (!players.includes(sc.id)) return;
       (sc.holes || []).forEach((score, hi) => {
-        if (score > 0) {
-          holeAvgs[hi] += score;
-          holeCounts[hi]++;
-        }
+        if (score > 0 && hi < 18) { holeAvgs[hi] += score; holeCounts[hi]++; }
       });
     });
   });
-
   const avgPerHole = holeAvgs.map((sum, i) => holeCounts[i] > 0 ? +(sum / holeCounts[i]).toFixed(2) : 0);
 
   destroyChart('stats-holes');
@@ -2165,6 +2185,7 @@ function updateStatsCharts() {
         label: 'Promedio gross',
         data: avgPerHole,
         backgroundColor: avgPerHole.map((v, i) => {
+          if (v === 0) return 'rgba(107,122,153,0.2)';
           const diff = v - par[i];
           if (diff < -0.5) return 'rgba(22,163,74,0.7)';
           if (diff < 0.5) return 'rgba(107,122,153,0.5)';
@@ -2184,51 +2205,39 @@ function updateStatsCharts() {
       }]
     },
     options: {
-      ...CHART_BASE,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'DM Sans', size: 10 }, color: '#6b7a99', padding: 12 } } },
-      scales: CHART_BASE.scales
+      scales: {
+        x: { ticks: { color: '#6b7a99', font: { size: 9 } }, grid: { display: false } },
+        y: { ticks: { color: '#6b7a99', font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' }, suggestedMin: 2 }
+      }
     }
   });
 
-  // ── 3. Stacked by fecha showing composition ──
-  destroyChart('stats-stacked');
-  const stackedDatasets = categories.map((cat, ci) => ({
+  // ── 3. Evolution by fecha (stacked bar) ──
+  const fechaLabels = selectedFechas.map(f => 'F' + f.num);
+  const stackedData = categories.map((cat, ci) => ({
     label: cat,
-    data: selectedFechas.map(f => {
-      let count = 0;
-      (f.scorecard || []).forEach(sc => {
-        if (!players.includes(sc.id)) return;
-        (sc.holes || []).forEach((score, hi) => {
-          if (score <= 0) return;
-          const diff = score - par[hi];
-          if (ci === 0 && diff <= -2) count++;
-          else if (ci === 1 && diff === -1) count++;
-          else if (ci === 2 && diff === 0) count++;
-          else if (ci === 3 && diff === 1) count++;
-          else if (ci === 4 && diff >= 2) count++;
-        });
-      });
-      return count;
-    }),
+    data: selectedFechas.map(f => byFecha[f.num]?.[catKeys[ci]] || 0),
     backgroundColor: colors[ci],
     borderRadius: 2
   }));
 
-  charts['stats-stacked'] = new Chart(byId('chart-stats-stacked'), {
-    type: 'bar',
-    data: {
-      labels: selectedFechas.map(f => 'F' + f.num),
-      datasets: stackedDatasets
-    },
-    options: {
-      ...CHART_BASE,
-      plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'DM Sans', size: 10 }, color: '#6b7a99', padding: 12, usePointStyle: true, pointStyle: 'rectRounded' } } },
-      scales: {
-        x: { stacked: true, ticks: { color: '#6b7a99' }, grid: { display: false } },
-        y: { stacked: true, beginAtZero: true, ticks: { color: '#6b7a99' }, grid: { color: 'rgba(0,0,0,0.05)' } }
+  destroyChart('stats-stacked');
+  if (fechaLabels.length > 0) {
+    charts['stats-stacked'] = new Chart(byId('chart-stats-stacked'), {
+      type: 'bar',
+      data: { labels: fechaLabels, datasets: stackedData },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'DM Sans', size: 10 }, color: '#6b7a99', padding: 10, usePointStyle: true, pointStyle: 'rectRounded' } } },
+        scales: {
+          x: { stacked: true, ticks: { color: '#6b7a99' }, grid: { display: false } },
+          y: { stacked: true, beginAtZero: true, ticks: { color: '#6b7a99' }, grid: { color: 'rgba(0,0,0,0.05)' } }
+        }
       }
-    }
-  });
+    });
+  }
 }
 
 // ─── FIXTURE ───
@@ -4115,9 +4124,26 @@ async function importFromExcel() {
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', async ()=>{
   loadPersistedfechas();
-  await loadfechasFromSupabase();
-  rendered = {}; // Clear cache so fresh data renders
+  rendered = {};
   renderSection('overview');
+
+  // Wait for Supabase CDN then load remote data
+  const sbReady = await waitForSupabase(8000);
+  if (sbReady) {
+    const loaded = await loadfechasFromSupabase();
+    if (loaded) {
+      rendered = {};
+      renderSection('overview');
+      // Re-render active tab if not overview
+      const activeTab = document.querySelector('.tab.on');
+      if (activeTab) {
+        const tabName = activeTab.textContent.trim().toLowerCase().replace(/[^a-z]/g,'');
+        if (tabName !== 'overview') renderSection(tabName);
+      }
+    }
+  } else {
+    console.warn('Supabase CDN no cargó. Los datos se muestran desde localStorage.');
+  }
 });
 </script>
 </body>
