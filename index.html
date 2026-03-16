@@ -574,7 +574,7 @@ const F9_MULT = 1.5, F10_MULT = 2;
 //    equipo con suplente pierde → rival oficial suma 0.5 normal
 //
 // El suplente NUNCA acumula pts de match en el torneo (excepto esOficialEspecial).
-// El suplente oficial especial (Scapparone) sí acumula match para el equipo que le toca.
+// El suplente oficial especial (Gatto, Ale) sí acumula match para el equipo que le toca.
 
 let SUPLENTE_ESPECIAL_ID = 'gatto_ale'; // Suplente oficial especial — configurable desde admin
 
@@ -706,11 +706,11 @@ function calcMedalPts(fecha) {
       // Calcular pts visuales (lo que "habría ganado")
       const posVisual = posMap[m.id];
       const ptsVisuales = Math.round((MEDAL_PTS[posVisual]||0) * mult);
-      const esEspecial = SUPLENTES_CONOCIDOS.find(s=>s.id===m.id)?.esOficialEspecial || false;
+      const esEspecial = SUPLENTES_CONOCIDOS.find(s=>s.id===m.id)?.esOficialEspecial || sup.acumulaPuntos || false;
       finalResult.push({
         id:m.id, hdcp:m.hdcp, neto:m.neto, gross:m.gross,
         pos:posVisual, pts:ptsVisuales,
-        esSuplente:true, esOficialEspecial:esEspecial,
+        esSuplente:true, esOficialEspecial:esEspecial, acumulaPuntos: sup.acumulaPuntos || false,
         equipoRepresenta: sup.equipo || null
       });
     } else {
@@ -794,9 +794,10 @@ function buildAccum() {
           const supEquipo = supEnGris ? 'g' : 'r';
           const rivEquipo = supEquipo === 'g' ? 'r' : 'g';
 
-          // ¿Es el suplente especial?
+          // ¿Es el suplente especial o tiene acumulaPuntos activado?
           const supInfo = SUPLENTES_CONOCIDOS.find(s=>s.id===supId);
-          const esEspecial = supInfo?.esOficialEspecial || false;
+          const supFechaInfo = getSustitutoInfo(supId, f);
+          const esEspecial = supInfo?.esOficialEspecial || supFechaInfo?.acumulaPuntos || false;
 
           if(tipo==='ind') {
             // 1vs1: el suplente juega solo en su lado
@@ -924,7 +925,7 @@ function buildAccum() {
         <div class="chip live" id="chip-fechas">F1 de 10 jugadas</div>
         <div class="chip">CUBA Fátima + Gira Nov</div>
         <div class="chip">16 Jugadores · Ale titular</div>
-        <div class="chip">Scapparone = suplente oficial</div>
+        <div class="chip" id="chip-suplente">Gatto, Ale = suplente oficial</div>
       </div>
     </div>
   </header>
@@ -2313,10 +2314,15 @@ function updateSuplenteEspecial(id) {
   SUPLENTE_ESPECIAL_ID = id;
   // Update SUPLENTES_CONOCIDOS
   SUPLENTES_CONOCIDOS.forEach(s => { s.esOficialEspecial = (s.id === id); });
+  // Update header chip
+  const chipSup = document.getElementById('chip-suplente');
+  if(chipSup) {
+    const supName = SUPLENTES_CONOCIDOS.find(s=>s.id===id)?.name || id;
+    chipSup.textContent = `${supName} = suplente oficial`;
+  }
   // If the selected one is a PLAYER, swap roles
   const playerIdx = PLAYERS.findIndex(p => p.id === id);
   if (playerIdx >= 0) {
-    // This player becomes the suplente — handle accordingly
     console.log(`${id} selected as suplente especial`);
   }
   rendered = {};
@@ -2535,8 +2541,9 @@ function adminBuildSuplentesList(suplentesData) {
   cont.innerHTML = '';
   suplanteCounter = 0;
 
-  // Always add Gatto Alejandro row first (pre-checked as ausente by default logic)
-  adminAddSuplente({id:SUPLENTE_ESPECIAL_ID, equipo:'r', reemplaza:'', esGatto: true});
+  // Always add Gatto Alejandro row first — use existing data if available
+  const gattoData = suplentesData?.find(s=>s.id===SUPLENTE_ESPECIAL_ID);
+  adminAddSuplente({id:SUPLENTE_ESPECIAL_ID, equipo: gattoData?.equipo||'r', reemplaza: gattoData?.reemplaza||'', esGatto: true});
 
   // Add any other suplentes from data
   if(suplentesData) {
@@ -2588,7 +2595,7 @@ function adminAddSuplente(data) {
   col2.style.cssText = 'display:flex;flex-direction:column;gap:4px;min-width:0';
   const nameEl = document.createElement(isGatto ? 'span' : 'input');
   if(isGatto) {
-    nameEl.textContent = 'Scapparone, Nico';
+    nameEl.textContent = SUPLENTES_CONOCIDOS.find(s=>s.id===SUPLENTE_ESPECIAL_ID)?.name || 'Suplente Oficial';
     nameEl.style.cssText = 'font-size:0.82rem;font-weight:600;color:var(--gold)';
   } else {
     nameEl.type = 'text';
@@ -2599,7 +2606,23 @@ function adminAddSuplente(data) {
   }
   const subEl = document.createElement('span');
   subEl.style.cssText = 'font-size:0.68rem;color:var(--muted)';
-  subEl.textContent = isGatto ? `ID: ${SUPLENTE_ESPECIAL_ID} — Suplente oficial especial` : 'Suplente externo — no acumula puntos al torneo';
+  subEl.textContent = isGatto ? `ID: ${SUPLENTE_ESPECIAL_ID} — Suplente oficial especial` : 'Suplente externo';
+  // Toggle acumula puntos (solo para no-especiales)
+  if(!isGatto) {
+    const toggleWrap = document.createElement('label');
+    toggleWrap.style.cssText = 'display:flex;align-items:center;gap:5px;margin-top:3px;cursor:pointer';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.id = 'sup-acumula-' + idx;
+    cb.checked = data?.acumulaPuntos || false;
+    cb.style.cssText = 'accent-color:var(--gold);width:14px;height:14px';
+    const cbLbl = document.createElement('span');
+    cbLbl.style.cssText = 'font-size:0.65rem;color:var(--muted-light)';
+    cbLbl.textContent = 'Acumula puntos para el equipo';
+    toggleWrap.appendChild(cb);
+    toggleWrap.appendChild(cbLbl);
+    col2.appendChild(toggleWrap);
+  }
   col2.appendChild(nameEl);
   col2.appendChild(subEl);
 
@@ -2694,8 +2717,9 @@ function adminGetSuplentes() {
     const equipo = document.getElementById(`sup-equipo-${idx}`)?.value || 'r';
     if(!reemplaza) return; // skip rows without a player selected
     const id = isGatto ? SUPLENTE_ESPECIAL_ID : (`sup-ext-${idx}`);
-    const nombre = isGatto ? 'Scapparone, Nico' : (document.getElementById(`sup-nombre-${idx}`)?.value || '');
-    result.push({id, equipo, reemplaza, nombre: isGatto ? undefined : nombre});
+    const nombre = isGatto ? (SUPLENTES_CONOCIDOS.find(s=>s.id===SUPLENTE_ESPECIAL_ID)?.name || 'Suplente Oficial') : (document.getElementById(`sup-nombre-${idx}`)?.value || '');
+    const acumulaPuntos = isGatto ? true : (document.getElementById(`sup-acumula-${idx}`)?.checked || false);
+    result.push({id, equipo, reemplaza, nombre: isGatto ? undefined : nombre, acumulaPuntos});
   });
   return result;
 }
