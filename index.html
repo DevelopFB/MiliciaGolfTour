@@ -1330,25 +1330,60 @@ function verifyAdmin() {
 
 async function loadfechasFromSupabase() {
   const client = getSupabaseClient();
-  if(!client) return false;
+  if(!client) { sbStatus('warn','Supabase client no disponible'); return false; }
   try {
+    sbStatus('loading','Conectando a Supabase...');
     const { data, error } = await client
       .from('fechas')
       .select('num,data')
       .order('num', { ascending: true });
-    if(error) throw error;
-    if(Array.isArray(data)) {
+    if(error) {
+      sbStatus('error','Error Supabase: ' + (error.message||error.code||JSON.stringify(error)));
+      throw error;
+    }
+    if(Array.isArray(data) && data.length > 0) {
+      let merged = 0;
       data.forEach(row => {
         const payload = row?.data && typeof row.data === 'object' ? { ...row.data, num: row.num ?? row.data.num } : null;
-        if(payload) mergeFechaIntoMemory(payload);
+        if(payload) { mergeFechaIntoMemory(payload); merged++; }
       });
       persistfechas();
+      sbStatus('ok',`Supabase OK — ${merged} fecha(s) cargada(s)`);
+      return true;
+    } else if(Array.isArray(data) && data.length === 0) {
+      sbStatus('warn','Supabase devolvió 0 filas. Verificar RLS: la tabla "fechas" necesita una policy SELECT para anon.');
+      console.warn('⚠ Supabase devolvió 0 filas. Posibles causas:\n' +
+        '  1. RLS habilitado sin policy SELECT para rol "anon"\n' +
+        '  2. La tabla "fechas" está vacía\n' +
+        'Solución: En Supabase Dashboard → Table Editor → fechas → RLS → agregar policy:\n' +
+        '  CREATE POLICY "Allow public read" ON fechas FOR SELECT USING (true);');
+      return false;
     }
-    return true;
+    return false;
   } catch (err) {
     console.warn('No se pudieron cargar fechas desde Supabase.', err);
+    sbStatus('error','No se pudo conectar a Supabase: ' + (err.message||''));
     return false;
   }
+}
+
+function sbStatus(type, msg) {
+  console.log('[Supabase]', type, msg);
+  let el = document.getElementById('sb-status');
+  if(!el) {
+    el = document.createElement('div');
+    el.id = 'sb-status';
+    el.style.cssText = 'position:fixed;bottom:12px;left:12px;padding:8px 14px;border-radius:8px;font-size:0.72rem;font-family:DM Mono,monospace;z-index:9999;max-width:90vw;transition:opacity 0.5s';
+    document.body.appendChild(el);
+  }
+  const colors = {loading:'#1e3050',ok:'#1a3a1a',warn:'#3a3000',error:'#3a1010'};
+  const borders = {loading:'#2a4a70',ok:'#2a6a2a',warn:'#6a5a10',error:'#6a2020'};
+  el.style.background = colors[type]||colors.loading;
+  el.style.border = '1px solid '+(borders[type]||borders.loading);
+  el.style.color = type==='ok'?'#4caf50':type==='warn'?'#e0a020':type==='error'?'#e05050':'#8899aa';
+  el.textContent = msg;
+  el.style.opacity = '1';
+  if(type==='ok') setTimeout(()=>{ el.style.opacity='0'; }, 4000);
 }
 
 async function saveFechaToSupabase(fechaObj) {
@@ -4142,7 +4177,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       }
     }
   } else {
-    console.warn('Supabase CDN no cargó. Los datos se muestran desde localStorage.');
+    sbStatus('warn','Supabase CDN no cargó. Los datos se muestran desde localStorage.');
   }
 });
 </script>
