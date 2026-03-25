@@ -339,6 +339,45 @@ header{
 .navy-card .pos.p3{color:rgba(180,130,90,0.9);}
 ::-webkit-scrollbar-thumb{background:#c8cedd;border-radius:3px;}
 
+/* ── RECAUDACIÓN ── */
+.rec-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+.rec-table th{
+  font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--border);text-align:right;
+  white-space:nowrap;
+}
+.rec-table th:first-child{text-align:left;}
+.rec-table td{padding:9px 10px;border-bottom:1px solid rgba(0,0,0,0.05);vertical-align:middle;text-align:right;}
+.rec-table td:first-child{text-align:left;font-weight:500;}
+.rec-table tr:last-child td{border-bottom:none;font-weight:700;background:rgba(201,168,76,0.06);}
+.rec-table tr:hover td{background:rgba(160,120,48,0.03);}
+.rec-table .rec-ok{color:var(--green);font-family:'DM Mono',monospace;font-size:0.75rem;}
+.rec-table .rec-zero{color:var(--muted-light);font-family:'DM Mono',monospace;font-size:0.75rem;}
+.rec-table .rec-neg{color:var(--rojo-color);font-family:'DM Mono',monospace;font-size:0.75rem;}
+.rec-table .rec-total{font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--gold-dark);font-weight:700;}
+.rec-kpi{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+.rec-kpi-item{flex:1;min-width:140px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.rec-kpi-item .rk-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.rec-kpi-item .rk-val{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1;}
+.rec-kpi-item .rk-sub{font-size:0.72rem;color:var(--muted-light);margin-top:4px;}
+/* Admin rec inputs */
+.rec-input{
+  width:68px;background:#f8fafc;border:1px solid #dde1ea;color:#1a2233;
+  padding:5px 7px;border-radius:6px;font-size:0.78rem;font-family:'DM Mono',monospace;
+  text-align:right;outline:none;transition:border 0.15s;
+}
+.rec-input:focus{border-color:var(--border-gold);}
+.rec-admin-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.rec-admin-table th{
+  font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--muted);padding:7px 8px;border-bottom:2px solid var(--border);text-align:center;
+  white-space:nowrap;background:#fafbfc;
+}
+.rec-admin-table th:nth-child(1){text-align:left;}
+.rec-admin-table td{padding:7px 8px;border-bottom:1px solid rgba(0,0,0,0.05);text-align:center;vertical-align:middle;}
+.rec-admin-table td:first-child{text-align:left;font-weight:500;font-size:0.8rem;}
+.rec-admin-table tr:hover td{background:rgba(201,168,76,0.03);}
+
 /* ── EMPTY STATE ── */
 .empty{
   text-align:center;padding:60px 20px;color:var(--muted);
@@ -939,6 +978,7 @@ function buildAccum() {
     <button class="tab" onclick="showTab('fixture',this)">📅 Fixture</button>
     <button class="tab" onclick="showTab('historicos',this)">🏆 Históricos</button>
     <button class="tab" onclick="showTab('estadisticas',this)">📊 Estadísticas</button>
+    <button class="tab" onclick="showTab('recaudacion',this)">💰 Recaudación</button>
   </nav>
 
   <!-- ══════════ OVERVIEW ══════════ -->
@@ -1110,6 +1150,36 @@ function buildAccum() {
     </div>
   </div>
 
+  <!-- ══════════ RECAUDACIÓN ══════════ -->
+  <div id="sec-recaudacion" class="sec">
+    <div class="sec-head">Recaudación 2026</div>
+
+    <!-- KPIs -->
+    <div class="rec-kpi" id="rec-kpi-row"></div>
+
+    <!-- Tabla principal -->
+    <div class="card" style="margin-bottom:16px;overflow-x:auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div class="kpi-label" style="margin-bottom:0">Estado por jugador</div>
+        <div style="display:flex;gap:6px">
+          <span style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:1px">Montos en USD · Multas por ausencia = USD 12</span>
+        </div>
+      </div>
+      <div id="rec-tabla-wrap" style="overflow-x:auto">
+        <table class="rec-table" id="rec-tabla-publica"></table>
+      </div>
+    </div>
+
+    <!-- Leyenda -->
+    <div class="card" style="padding:14px 18px;background:rgba(201,168,76,0.04);border-color:var(--border-gold)">
+      <div style="font-size:0.78rem;color:var(--muted);line-height:1.7">
+        💡 <strong style="color:var(--gold-dark)">Inscripción:</strong> USD 40 por jugador (pago en pesos al tipo de cambio MEP del 01/10/2026, entre el 20/10 y 31/10/2026). &nbsp;|&nbsp;
+        💡 <strong style="color:var(--gold-dark)">Multa por ausencia:</strong> USD 12 al pozo por fecha no jugada, sin importar el motivo (salvo fechas reprogramadas oficialmente). &nbsp;|&nbsp;
+        💡 <strong style="color:var(--gold-dark)">Ale Gatto</strong> participa como suplente oficial y también tiene inscripción y multas.
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══════════ ADMIN OVERLAY ══════════ -->
@@ -1124,7 +1194,9 @@ function buildAccum() {
     <div class="admin-tabs">
       <button class="admin-tab on"  id="atab-paste" onclick="switchAdminTab('paste',this)">📋 Pegar JSON</button>
       <button class="admin-tab"     id="atab-form"  onclick="switchAdminTab('form',this)">📝 Formulario</button>
+      <button class="admin-tab"     id="atab-prompt" onclick="switchAdminTab('prompt',this)">🤖 Prompt Fecha</button>
       <button class="admin-tab"     id="atab-view"  onclick="switchAdminTab('view',this)">🔍 Ver datos</button>
+      <button class="admin-tab"     id="atab-rec"   onclick="switchAdminTab('rec',this)">💰 Recaudación</button>
     </div>
 
     <!-- ── TAB: PEGAR JSON ── -->
@@ -1249,6 +1321,162 @@ function buildAccum() {
       </div>
       <button class="admin-btn secondary" style="margin-bottom:12px" onclick="adminCopyViewJson()">Copiar JSON</button>
       <div id="admin-json-view" style="background:var(--navy);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted-light);white-space:pre-wrap;max-height:420px;overflow-y:auto;line-height:1.6;display:none"></div>
+    </div>
+
+    <!-- ── TAB: PROMPT FECHA ── -->
+    <div id="admin-tab-prompt" style="display:none">
+      <div class="admin-notice">
+        🤖 <strong>Prompt listo para pegar en tu IA favorita.</strong><br>
+        Seleccioná la fecha, verificá los HDCPs contra la tarjeta AAG, y copiá el prompt completo. Pegalo como primer mensaje en Claude, ChatGPT, Gemini o cualquier LLM.
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-title">Configurar prompt</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+          <div class="admin-field">
+            <label>Fecha a procesar</label>
+            <select id="prompt-fecha-num" onchange="buildPrompt()">
+              <option value="">— Seleccionar —</option>
+              <option value="1">F1 · 14-mar-2026 · Fourball 2v2</option>
+              <option value="2">F2 · 11-abr-2026 · Fourball 2v2</option>
+              <option value="3">F3 · 09-may-2026 · Individual 1v1</option>
+              <option value="4">F4 · 06-jun-2026 · Fourball 2v2</option>
+              <option value="5">F5 · 04-jul-2026 · Fourball 2v2</option>
+              <option value="6">F6 · 08-ago-2026 · Individual 1v1</option>
+              <option value="7">F7 · 12-sep-2026 · Fourball 2v2</option>
+              <option value="8">F8 · 03-oct-2026 · Individual 1v1</option>
+              <option value="9">F9 · Nov-2026 · Fourball 2v2 (x1.5 pts)</option>
+              <option value="10">F10 · Nov-2026 · Final Individual (x2 pts)</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label>Ausentes conocidos (opcional)</label>
+            <input type="text" id="prompt-ausentes" placeholder="ej: Fernandez, Lucas / Mendez, Pato" oninput="buildPrompt()">
+          </div>
+        </div>
+        <div class="admin-notice" style="margin-bottom:12px;background:rgba(37,99,235,0.06);border-color:rgba(37,99,235,0.25)">
+          <strong style="color:#2563eb">⚠ HDCPs desde la tarjeta AAG:</strong> el prompt muestra los HDC index de referencia. Los HDCPs reales de juego se leen de la tarjeta AAG — si difieren del índice base, anotalo en el campo de ausentes/aclaraciones. Tope: 26.
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          <button class="admin-btn primary" onclick="copyPromptFecha()" id="btn-copy-prompt">
+            ⧉ Copiar prompt completo
+          </button>
+          <span id="prompt-copy-status" style="font-size:0.78rem;color:var(--muted-light);align-self:center"></span>
+        </div>
+      </div>
+
+      <!-- Preview del prompt -->
+      <div style="position:relative">
+        <div style="
+          background:#1a2233;border:1px solid rgba(201,168,76,0.2);border-radius:10px;
+          padding:18px 18px 18px 18px;font-family:'DM Mono',monospace;font-size:0.7rem;
+          color:#8ab0cc;white-space:pre-wrap;max-height:480px;overflow-y:auto;line-height:1.7;
+        " id="prompt-preview">Seleccioná una fecha para ver el prompt ↑</div>
+      </div>
+    </div>
+
+    <!-- ── TAB: RECAUDACIÓN ADMIN ── -->
+    <div id="admin-tab-rec" style="display:none">
+      <div class="admin-notice">
+        💰 <strong>Módulo de Recaudación — edición independiente.</strong><br>
+        Los montos se guardan en Supabase en la tabla <code>recaudacion</code> (separada de los datos del torneo). Inscripción por defecto: <strong>USD 40</strong>. Multas por fecha: <strong>USD 0</strong> por defecto — actualizalas cuando se genere la obligación. Los cambios se sincronizan en tiempo real.
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+        <div class="admin-field" style="min-width:180px">
+          <label>Inscripción global (USD)</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="number" id="rec-inscripcion-global" value="40" min="0" step="1" style="width:90px" class="rec-input" oninput="recUpdateAllInscripcion()">
+            <button class="admin-btn secondary" style="padding:6px 12px;font-size:0.7rem" onclick="recUpdateAllInscripcion()">Aplicar a todos</button>
+          </div>
+        </div>
+        <div class="admin-field" style="min-width:160px">
+          <label>Multa por ausencia (USD)</label>
+          <input type="number" id="rec-multa-default" value="12" min="0" step="1" style="width:90px" class="rec-input" title="Referencia — se aplica individualmente en la tabla">
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;margin-bottom:16px">
+        <table class="rec-admin-table" id="rec-admin-tabla">
+          <thead>
+            <tr id="rec-admin-thead">
+              <th style="min-width:150px">Jugador</th>
+              <th>Eq.</th>
+              <th>Insc. (USD)</th>
+              <th>F1</th><th>F2</th><th>F3</th><th>F4</th><th>F5</th>
+              <th>F6</th><th>F7</th><th>F8</th><th>F9</th><th>F10</th>
+              <th>Total Multas</th>
+              <th>Total Adeuda</th>
+            </tr>
+          </thead>
+          <tbody id="rec-admin-tbody"></tbody>
+        </table>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="admin-btn danger" onclick="recGuardar()" style="background:var(--green);color:#fff;border-color:var(--green);font-size:0.85rem;padding:11px 24px">
+          💾 Guardar en Supabase
+        </button>
+        <button class="admin-btn secondary" onclick="recRecargar()">↺ Recargar desde Supabase</button>
+        <span id="rec-save-status" style="font-size:0.78rem;color:var(--muted-light);align-self:center"></span>
+      </div>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+        <div class="admin-section-title">SQL para crear la tabla en Supabase</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button class="admin-btn secondary" style="padding:5px 12px;font-size:0.7rem" onclick="copySql()">Copiar SQL</button>
+          <span id="sql-copy-status" style="font-size:0.72rem;color:var(--muted-light);align-self:center"></span>
+        </div>
+        <pre style="background:#1a2233;border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:14px;font-family:'DM Mono',monospace;font-size:0.68rem;color:#6a9fc0;line-height:1.7;overflow-x:auto;white-space:pre-wrap" id="sql-preview">-- Ejecutar en Supabase → SQL Editor
+
+CREATE TABLE IF NOT EXISTS recaudacion (
+  id          TEXT PRIMARY KEY,         -- player_id ej: 'gonzalez'
+  nombre      TEXT NOT NULL,
+  equipo      TEXT NOT NULL,            -- 'g' | 'r'
+  inscripcion NUMERIC(8,2) DEFAULT 40,
+  f1  NUMERIC(8,2) DEFAULT 0,
+  f2  NUMERIC(8,2) DEFAULT 0,
+  f3  NUMERIC(8,2) DEFAULT 0,
+  f4  NUMERIC(8,2) DEFAULT 0,
+  f5  NUMERIC(8,2) DEFAULT 0,
+  f6  NUMERIC(8,2) DEFAULT 0,
+  f7  NUMERIC(8,2) DEFAULT 0,
+  f8  NUMERIC(8,2) DEFAULT 0,
+  f9  NUMERIC(8,2) DEFAULT 0,
+  f10 NUMERIC(8,2) DEFAULT 0,
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Row-level security: lectura pública, escritura solo con service_role o anon
+ALTER TABLE recaudacion ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read recaudacion"
+  ON recaudacion FOR SELECT USING (true);
+
+CREATE POLICY "Allow anon insert/update recaudacion"
+  ON recaudacion FOR ALL USING (true) WITH CHECK (true);
+
+-- Insertar filas iniciales (una por jugador)
+INSERT INTO recaudacion (id, nombre, equipo, inscripcion)
+VALUES
+  ('gonzalez',   'Gonzalez, Agus',    'g', 40),
+  ('tarasido',   'Tarasido, Gonzalo', 'g', 40),
+  ('zunino',     'Zunino, Javi',      'g', 40),
+  ('basaldua',   'Basaldua, Ignacio', 'g', 40),
+  ('pannullo',   'Pannullo, Tincho',  'g', 40),
+  ('benegas',    'Benegas, Pancho',   'g', 40),
+  ('guevara',    'Guevara, Franki',   'g', 40),
+  ('dipaola',    'Dipaola, Martin',   'g', 40),
+  ('gatto',      'Gatto, Mariano',    'r', 40),
+  ('elizalde',   'Elizalde, Juancho', 'r', 40),
+  ('canonico',   'Canonico, Agus',    'r', 40),
+  ('vogelius',   'Vogelius, Nico',    'r', 40),
+  ('mendez',     'Mendez, Pato',      'r', 40),
+  ('molinario',  'Molinario, Andy',   'r', 40),
+  ('scapparone', 'Scapparone, Nico',  'r', 40),
+  ('fernandez',  'Fernandez, Lucas',  'r', 40),
+  ('gatto_ale',  'Gatto, Ale',        'r', 40)
+ON CONFLICT (id) DO NOTHING;</pre>
+      </div>
     </div>
 
   </div>
@@ -1500,6 +1728,7 @@ function renderSection(name) {
   if(name==='fixture') renderFixture();
   if(name==='historicos') renderHistoricos();
   if(name==='estadisticas') renderEstadisticas();
+  if(name==='recaudacion') { rendered['recaudacion']=false; renderRecaudacionPublica(); }
 }
 
 // ─── OVERVIEW ───
@@ -2388,9 +2617,13 @@ function updateSuplenteEspecial(id) {
 function switchAdminTab(tab, btn) {
   document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  document.getElementById('admin-tab-paste').style.display = tab==='paste'?'':'none';
-  document.getElementById('admin-tab-form').style.display  = tab==='form'?'':'none';
-  document.getElementById('admin-tab-view').style.display  = tab==='view'?'':'none';
+  document.getElementById('admin-tab-paste').style.display  = tab==='paste' ?'':'none';
+  document.getElementById('admin-tab-form').style.display   = tab==='form'  ?'':'none';
+  document.getElementById('admin-tab-prompt').style.display = tab==='prompt'?'':'none';
+  document.getElementById('admin-tab-view').style.display   = tab==='view'  ?'':'none';
+  document.getElementById('admin-tab-rec').style.display    = tab==='rec'   ?'':'none';
+  // Inicializar tabla admin de recaudación cuando se abre ese tab
+  if (tab==='rec') renderRecAdminTabla();
 }
 
 // ── PEGAR JSON ──
@@ -4224,11 +4457,351 @@ async function importFromExcel() {
   input.click();
 }
 
+// ════════════════════════════════════════════════════════════
+// MÓDULO: PROMPT FECHA
+// ════════════════════════════════════════════════════════════
+const FIXTURE_INFO = {
+  1:{fecha:'14-mar-2026',formato:'Fourball 2v2',criterio:'Por HDC: (1y2)(3y4)(5y6)(7y8)',org:'Gatto, Mariano · Zunino, Javi'},
+  2:{fecha:'11-abr-2026',formato:'Fourball 2v2',criterio:'100% aleatorio',org:'Gonzalez, Agus · Tarasido, Gonzalo'},
+  3:{fecha:'09-may-2026',formato:'Individual 1v1',criterio:'100% aleatorio',org:'Molinario, Andy · Dipaola, Martin'},
+  4:{fecha:'06-jun-2026',formato:'Fourball 2v2',criterio:'Por posición Medal acumulada',org:'Pannullo, Tincho · Basaldua, Ignacio'},
+  5:{fecha:'04-jul-2026',formato:'Fourball 2v2',criterio:'100% aleatorio',org:'Fernandez, Lucas · Canonico, Agus'},
+  6:{fecha:'08-ago-2026',formato:'Individual 1v1',criterio:'100% aleatorio',org:'Guevara, Franki · Vogelius, Nico'},
+  7:{fecha:'12-sep-2026',formato:'Fourball 2v2',criterio:'100% aleatorio',org:'Scapparone, Nico · Benegas, Pancho'},
+  8:{fecha:'03-oct-2026',formato:'Individual 1v1',criterio:'Por posición Match acumulada',org:'Elizalde, Juancho · Mendez, Pato'},
+  9:{fecha:'Nov-2026',formato:'Fourball 2v2',criterio:'GIRA · Match inverso: (1v8)(2v7)(3v6)(4v5)',org:'GIRA'},
+  10:{fecha:'Nov-2026',formato:'Individual 1v1',criterio:'GIRA · FINAL: #1 GRIS vs #1 ROJO',org:'GIRA'},
+};
+const MEDAL_PTS_PROMPT = {1:500,2:300,3:200,4:150,5:120,6:100,7:90,8:80,9:75,10:70,11:20,12:20,13:20,14:20,15:0,16:0};
+
+function buildPrompt() {
+  const num = parseInt(byId('prompt-fecha-num').value);
+  if (!num) { byId('prompt-preview').textContent='Seleccioná una fecha para ver el prompt ↑'; return; }
+  const info = FIXTURE_INFO[num];
+  const mult = num===9?1.5:num===10?2:1;
+  const ausentes = byId('prompt-ausentes').value.trim();
+
+  const ptsRows = Object.entries(MEDAL_PTS_PROMPT).map(([pos,pts])=>{
+    const p = Math.round(pts*mult);
+    return `  Puesto ${pos.padStart(2,'0')}:  ${p} pts`;
+  }).join('\n');
+
+  const grisLines = PLAYERS.filter(p=>p.team==='g').map(p=>
+    `  ${p.name.padEnd(24)} | GRIS | HDC index: ${p.hdc}${p.hdc>=26?' → juega con 26':''}`
+  ).join('\n');
+  const rojoLines = PLAYERS.filter(p=>p.team==='r').map(p=>
+    `  ${p.name.padEnd(24)} | ROJO | HDC index: ${p.hdc}${p.hdc>=26?' → juega con 26':''}`
+  ).join('\n');
+
+  const prompt =
+`FECHA NUMERO ${num}
+════════════════════════════════════════════════════════
+Milicia Golf Tour 2026 — Procesamiento oficial de fecha
+════════════════════════════════════════════════════════
+
+Sos el agente del Milicia Golf Tour 2026. Procesá la Fecha ${num} con los datos que te voy a proveer.
+
+DATOS DE LA FECHA
+─────────────────
+Número:        F${num}
+Fecha:         ${info.fecha}
+Formato:       ${info.formato}
+Organizadores: ${info.org}
+Criterio Match:${info.criterio}
+${mult>1?'\n⚠ MULTIPLICADOR: ×'+mult+' (esta fecha reparte '+(mult===1.5?'50%':'100%')+' más puntos)\n':''}
+PUNTOS A REPARTIR ESTA FECHA (F${num}${mult>1?' · ×'+mult:''})
+─────────────────────────────────────
+${ptsRows}
+
+  Empates: puntos de posiciones empatadas se suman y dividen en partes iguales.
+  Sin tarjeta aceptada por la AAG = 0 pts (no se redistribuyen a otros).
+
+JUGADORES Y HANDICAPS DE REFERENCIA
+─────────────────────────────────────
+⚠ HDC index son referencia. Los HDCPs reales de juego se leen de la tarjeta AAG.
+  Si difieren del índice, usá los de la tarjeta. Tope máximo: 26.
+
+EQUIPO GRIS:
+${grisLines}
+
+EQUIPO ROJO:
+${rojoLines}
+
+Suplente oficial especial:
+  Gatto, Ale (ID: gatto_ale) — SIEMPRE acumula puntos Medal + Match + Gross.
+  Su equipo varía según a quién reemplace cada fecha.
+${ausentes?'\nAUSENCIAS CONOCIDAS\n─────────────────────────────────────\n'+ausentes+'\n':''}
+PAR DEL CAMPO — CUBA Fátima (default — verificar contra tarjeta AAG)
+─────────────────────────────────────
+H:  1  2  3  4  5  6  7  8  9 | 10 11 12 13 14 15 16 17 18
+P:  5  3  4  5  4  4  3  4  4 |  4  5  4  4  3  4  4  3  5
+Front: 36 / Back: 36 / Total: 72
+⚠ Nunca asumir el PAR — leerlo de la tarjeta AAG (puede variar por tees o cancha).
+
+QUÉ NECESITO QUE HAGAS
+─────────────────────────────────────
+Te voy a pasar en mensajes separados (o en este mismo):
+  1. Fotos o texto del scorecard con golpes hoyo por hoyo
+  2. Ausencias y suplentes (a quién reemplaza, a qué equipo representa)
+  3. Resultados de los matchs (parejas, ganador, diferencia de hoyos)
+
+Una vez que tengas todo, producís en este orden:
+  1. Tabla Medal de la fecha (posiciones, neto, gross, hdcp, puntos con tie-splitting)
+  2. Ranking Medal acumulado
+  3. Tabla de matchs
+  4. Consolidado de equipos (pts + dif hoyos: fecha y acumulado)
+  5. Stats y highlights del día
+  6. Próxima fecha
+  7. JSON completo para el dashboard (con scorecard obligatorio, pendiente: false)
+
+Esperá los datos antes de procesar. Si falta algún dato, preguntá.
+────────────────────────────────────────────────────────────────
+LISTO. Mandame los scores de la tarjeta.`;
+
+  byId('prompt-preview').textContent = prompt;
+}
+
+function copyPromptFecha() {
+  const text = byId('prompt-preview').textContent;
+  if (!text || text.startsWith('Seleccioná')) return;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = byId('btn-copy-prompt');
+    const st = byId('prompt-copy-status');
+    const orig = btn.textContent;
+    btn.textContent='✓ Copiado';
+    btn.style.background='var(--green)';
+    if(st){st.textContent='¡Pegalo como primer mensaje en tu IA!';st.style.color='var(--green)';}
+    setTimeout(()=>{btn.textContent=orig;btn.style.background='';if(st){st.textContent='';st.style.color='';}},3000);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// MÓDULO: RECAUDACIÓN
+// ════════════════════════════════════════════════════════════
+const REC_PLAYERS = [
+  ...PLAYERS,
+  {id:'gatto_ale',name:'Gatto, Ale',team:'r',hdc:20}
+];
+let recData = {};
+
+function recDefaultRow(p) {
+  const r = {id:p.id,nombre:p.name,equipo:p.team,inscripcion:40};
+  for(let i=1;i<=10;i++) r[`f${i}`]=0;
+  return r;
+}
+
+function recInitLocal() {
+  recData = {};
+  REC_PLAYERS.forEach(p=>{ recData[p.id]=recDefaultRow(p); });
+}
+
+async function loadRecaudacionFromSupabase() {
+  const client = getSupabaseClient();
+  if(!client) return false;
+  try {
+    const {data,error} = await client.from('recaudacion').select('*');
+    if(error) throw error;
+    if(data&&data.length>0) {
+      data.forEach(row=>{ if(recData[row.id]) recData[row.id]={...recData[row.id],...row}; });
+      return true;
+    }
+    return false;
+  } catch(err) { console.warn('[Rec] Error cargando Supabase:',err); return false; }
+}
+
+async function recGuardar() {
+  const client = getSupabaseClient();
+  const st = byId('rec-save-status');
+  if(!client){if(st)st.textContent='⚠ Supabase no disponible';return;}
+  if(st){st.textContent='Guardando...';st.style.color='var(--muted-light)';}
+  recReadFormToData();
+  try {
+    const rows = Object.values(recData).map(r=>({
+      id:r.id,nombre:r.nombre,equipo:r.equipo,inscripcion:r.inscripcion,
+      f1:r.f1,f2:r.f2,f3:r.f3,f4:r.f4,f5:r.f5,
+      f6:r.f6,f7:r.f7,f8:r.f8,f9:r.f9,f10:r.f10,
+      updated_at:new Date().toISOString()
+    }));
+    const {error} = await client.from('recaudacion').upsert(rows,{onConflict:'id'});
+    if(error) throw error;
+    if(st){st.textContent='✓ Guardado en Supabase';st.style.color='var(--green)';}
+    setTimeout(()=>{if(st)st.textContent='';},3500);
+    renderRecaudacionPublica();
+  } catch(err) {
+    console.error('[Rec] Error guardando:',err);
+    if(st){st.textContent='⚠ Error: '+(err.message||err);st.style.color='var(--rojo-light)';}
+  }
+}
+
+async function recRecargar() {
+  const st = byId('rec-save-status');
+  if(st){st.textContent='Recargando...';st.style.color='var(--muted-light)';}
+  recInitLocal();
+  const ok = await loadRecaudacionFromSupabase();
+  renderRecAdminTabla();
+  renderRecaudacionPublica();
+  if(st){
+    st.textContent=ok?'✓ Recargado desde Supabase':'⚠ Sin datos en Supabase — usando valores por defecto';
+    st.style.color=ok?'var(--green)':'var(--gold)';
+    setTimeout(()=>{if(st)st.textContent='';},3000);
+  }
+}
+
+function recReadFormToData() {
+  REC_PLAYERS.forEach(p=>{
+    const r=recData[p.id]; if(!r) return;
+    const inscEl=byId(`rec-insc-${p.id}`);
+    if(inscEl) r.inscripcion=parseFloat(inscEl.value)||0;
+    for(let i=1;i<=10;i++){
+      const el=byId(`rec-f${i}-${p.id}`);
+      if(el) r[`f${i}`]=parseFloat(el.value)||0;
+    }
+  });
+}
+
+function recUpdateAllInscripcion() {
+  const val=parseFloat(byId('rec-inscripcion-global').value)||40;
+  REC_PLAYERS.forEach(p=>{
+    const el=byId(`rec-insc-${p.id}`); if(el) el.value=val;
+    if(recData[p.id]) recData[p.id].inscripcion=val;
+  });
+}
+
+function recTotalMultas(row) {
+  let t=0; for(let i=1;i<=10;i++) t+=parseFloat(row[`f${i}`])||0; return t;
+}
+
+function recCalcRow(pid) {
+  const insc=parseFloat(byId(`rec-insc-${pid}`)?.value)||0;
+  let multas=0;
+  for(let i=1;i<=10;i++) multas+=parseFloat(byId(`rec-f${i}-${pid}`)?.value)||0;
+  const multEl=byId(`rec-multas-${pid}`);
+  const totEl=byId(`rec-total-${pid}`);
+  if(multEl){multEl.textContent=multas.toFixed(0);multEl.style.color=multas>0?'var(--rojo-light)':'var(--muted)';}
+  if(totEl) totEl.textContent=(insc+multas).toFixed(0);
+  if(recData[pid]){
+    recData[pid].inscripcion=insc;
+    for(let i=1;i<=10;i++) recData[pid][`f${i}`]=parseFloat(byId(`rec-f${i}-${pid}`)?.value)||0;
+  }
+}
+
+function renderRecAdminTabla() {
+  const tbody=byId('rec-admin-tbody'); if(!tbody) return;
+  tbody.innerHTML='';
+  let totInsc=0,totMult=0,totTot=0;
+  const totF=Array(10).fill(0);
+
+  REC_PLAYERS.forEach(p=>{
+    const r=recData[p.id]||recDefaultRow(p);
+    const multas=recTotalMultas(r);
+    const total=(parseFloat(r.inscripcion)||0)+multas;
+    totInsc+=parseFloat(r.inscripcion)||0;
+    totMult+=multas; totTot+=total;
+    for(let i=1;i<=10;i++) totF[i-1]+=parseFloat(r[`f${i}`])||0;
+
+    const dot=p.team==='g'
+      ?'<span class="dot g" style="display:inline-block"></span>'
+      :'<span class="dot r" style="display:inline-block"></span>';
+
+    const fdCells=Array.from({length:10},(_,i)=>
+      `<td><input type="number" id="rec-f${i+1}-${p.id}" class="rec-input" value="${r[`f${i+1}`]??0}" min="0" step="1" onchange="recCalcRow('${p.id}')"></td>`
+    ).join('');
+
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${p.name}${p.id==='gatto_ale'?' <span style="font-size:0.62rem;color:var(--gold);font-family:\'DM Mono\',monospace">★</span>':''}</td>
+      <td>${dot}</td>
+      <td><input type="number" id="rec-insc-${p.id}" class="rec-input" value="${r.inscripcion??40}" min="0" step="1" onchange="recCalcRow('${p.id}')"></td>
+      ${fdCells}
+      <td id="rec-multas-${p.id}" style="font-family:'DM Mono',monospace;font-weight:600;color:${multas>0?'var(--rojo-light)':'var(--muted)'}">${multas.toFixed(0)}</td>
+      <td id="rec-total-${p.id}" style="font-family:'DM Mono',monospace;font-weight:700;color:var(--gold-dark)">${total.toFixed(0)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const trTot=document.createElement('tr');
+  trTot.style.cssText='background:rgba(201,168,76,0.06);font-weight:700;';
+  const totFCells=totF.map(v=>`<td style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted)">${v>0?v.toFixed(0):'—'}</td>`).join('');
+  trTot.innerHTML=`
+    <td style="font-family:'DM Mono',monospace;letter-spacing:1px;color:var(--muted)">TOTAL</td>
+    <td></td>
+    <td style="font-family:'DM Mono',monospace;color:var(--gold-dark)">${totInsc.toFixed(0)}</td>
+    ${totFCells}
+    <td style="font-family:'DM Mono',monospace;color:var(--rojo-light)">${totMult.toFixed(0)}</td>
+    <td style="font-family:'DM Mono',monospace;color:var(--gold-dark);font-size:0.9rem">${totTot.toFixed(0)}</td>
+  `;
+  tbody.appendChild(trTot);
+}
+
+function renderRecaudacionPublica() {
+  const kpiRow=byId('rec-kpi-row'); if(!kpiRow) return;
+  let totPozo=0,totMultas=0;
+  REC_PLAYERS.forEach(p=>{
+    const r=recData[p.id]||recDefaultRow(p);
+    totPozo+=(parseFloat(r.inscripcion)||0)+recTotalMultas(r);
+    totMultas+=recTotalMultas(r);
+  });
+  kpiRow.innerHTML=`
+    <div class="rec-kpi-item"><div class="rk-label">Pozo total estimado</div><div class="rk-val">USD ${totPozo.toFixed(0)}</div><div class="rk-sub">Inscripciones + multas</div></div>
+    <div class="rec-kpi-item"><div class="rk-label">Total multas</div><div class="rk-val" style="color:var(--rojo-color)">USD ${totMultas.toFixed(0)}</div><div class="rk-sub">Ausencias acumuladas</div></div>
+    <div class="rec-kpi-item"><div class="rk-label">Jugadores</div><div class="rk-val">${REC_PLAYERS.length}</div><div class="rk-sub">16 oficiales + Ale Gatto</div></div>
+    <div class="rec-kpi-item"><div class="rk-label">Inscripción base</div><div class="rk-val">USD 40</div><div class="rk-sub">Por jugador · en pesos MEP</div></div>
+  `;
+  const tbl=byId('rec-tabla-publica'); if(!tbl) return;
+  let thead='<thead><tr><th>Jugador</th><th style="text-align:center">Eq.</th><th>Inscripción</th>';
+  for(let i=1;i<=10;i++) thead+=`<th>F${i}</th>`;
+  thead+='<th>Multas</th><th>Total</th></tr></thead>';
+  let tbody='<tbody>';
+  let totInsc=0,totMult=0,totTot=0;
+  const totF=Array(10).fill(0);
+  REC_PLAYERS.forEach(p=>{
+    const r=recData[p.id]||recDefaultRow(p);
+    const insc=parseFloat(r.inscripcion)||0;
+    const multas=recTotalMultas(r);
+    const total=insc+multas;
+    totInsc+=insc;totMult+=multas;totTot+=total;
+    for(let i=1;i<=10;i++) totF[i-1]+=parseFloat(r[`f${i}`])||0;
+    const badge=p.team==='g'
+      ?'<span class="badge gris" style="font-size:0.55rem;padding:2px 6px">GRIS</span>'
+      :'<span class="badge rojo" style="font-size:0.55rem;padding:2px 6px">ROJO</span>';
+    const fCells=Array.from({length:10},(_,i)=>{
+      const v=parseFloat(r[`f${i+1}`])||0;
+      return `<td class="${v>0?'rec-neg':'rec-zero'}">${v>0?v.toFixed(0):'—'}</td>`;
+    }).join('');
+    tbody+=`<tr>
+      <td>${p.name}${p.id==='gatto_ale'?' <span style="font-size:0.62rem;color:var(--gold);font-family:\'DM Mono\',monospace">★</span>':''}</td>
+      <td style="text-align:center">${badge}</td>
+      <td class="rec-ok">${insc.toFixed(0)}</td>
+      ${fCells}
+      <td class="${multas>0?'rec-neg':'rec-zero'}" style="font-weight:${multas>0?700:400}">${multas>0?multas.toFixed(0):'—'}</td>
+      <td class="rec-total">${total.toFixed(0)}</td>
+    </tr>`;
+  });
+  const totFCells=totF.map(v=>`<td class="${v>0?'rec-neg':'rec-zero'}">${v>0?v.toFixed(0):'—'}</td>`).join('');
+  tbody+=`<tr>
+    <td>TOTAL</td><td></td><td class="rec-total">${totInsc.toFixed(0)}</td>
+    ${totFCells}
+    <td class="${totMult>0?'rec-neg':'rec-zero'}">${totMult>0?totMult.toFixed(0):'—'}</td>
+    <td class="rec-total" style="font-size:0.95rem">${totTot.toFixed(0)}</td>
+  </tr></tbody>`;
+  tbl.innerHTML=thead+tbody;
+}
+
+function copySql() {
+  const text=byId('sql-preview').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const st=byId('sql-copy-status');
+    if(st){st.textContent='✓ SQL copiado';st.style.color='var(--green)';setTimeout(()=>{st.textContent='';},2500);}
+  });
+}
+
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', async ()=>{
   loadPersistedfechas();
   rendered = {};
   renderSection('overview');
+  // Inicializar recaudación
+  recInitLocal();
 
   // Wait for Supabase CDN then load remote data
   const sbReady = await waitForSupabase(8000);
@@ -4267,6 +4840,9 @@ document.addEventListener('DOMContentLoaded', async ()=>{
         if (tabName !== 'overview') renderSection(tabName);
       }
     }
+    // Cargar recaudación en paralelo
+    await loadRecaudacionFromSupabase();
+    renderRecaudacionPublica();
   } else {
     sbStatus('warn','Supabase CDN no cargó. Los datos se muestran desde localStorage.');
   }
