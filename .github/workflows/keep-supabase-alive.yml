@@ -25,4 +25,20 @@ jobs:
             exit 1
           fi
 
-  # ping-portfolio: deshabilitado hasta configurar secrets
+  ping-portfolio:
+    name: Ping — Portfolio Analyst
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query tabla properties (Portfolio)
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_KEY_PORTFOLIO }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY_PORTFOLIO }}" \
+            "${{ secrets.SUPABASE_URL_PORTFOLIO }}/rest/v1/properties?select=id&limit=1")
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" = "200" ] || [ "$STATUS" = "404" ]; then
+            echo "✅ Portfolio Analyst — Supabase activo"
+          else
+            echo "⚠️  Respuesta inesperada: $STATUS"
+            exit 1
+          fi
