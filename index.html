@@ -1206,7 +1206,7 @@ function buildAccum() {
       </div>
     </div>
     <div class="card" style="margin-bottom:16px">
-      <div class="kpi-label">Distribución por jugador (Eagle/Birdie/Par/Bogey/Doble+)</div>
+      <div class="kpi-label">Distribución promedio por ronda (Eagle/Birdie/Par/Bogey/Doble+)</div>
       <div class="ch" style="height:320px"><canvas id="chart-stats-dist"></canvas></div>
     </div>
     <div class="card" style="margin-bottom:16px">
@@ -1291,6 +1291,7 @@ function buildAccum() {
       <button class="admin-tab"     id="atab-prompt" onclick="switchAdminTab('prompt',this)">🤖 Prompt Fecha</button>
       <button class="admin-tab"     id="atab-view"  onclick="switchAdminTab('view',this)">🔍 Ver datos</button>
       <button class="admin-tab"     id="atab-rec"   onclick="switchAdminTab('rec',this)">💰 Recaudación</button>
+      <button class="admin-tab"     id="atab-fixture" onclick="switchAdminTab('fixture',this)">📅 Fixture</button>
       <button class="admin-tab"     id="atab-hist"  onclick="switchAdminTab('hist',this)">👤 Histórico</button>
     </div>
 
@@ -1651,6 +1652,24 @@ ON CONFLICT (id) DO NOTHING;</pre>
       </div>
     </div>
 
+    <!-- ── TAB: FIXTURE ── -->
+    <div id="admin-tab-fixture" style="display:none">
+      <div class="admin-notice">
+        📅 <strong>Fixture editable.</strong> Modificá fecha, modalidad, criterio y organizadores de cada fecha. Los cambios se guardan en localStorage y Supabase.
+      </div>
+      <div style="overflow-x:auto;margin-bottom:16px">
+        <table class="tbl" style="font-size:0.75rem;width:100%" id="fixture-admin-table">
+          <thead><tr><th>F</th><th style="min-width:120px">Fecha</th><th style="min-width:140px">Modalidad</th><th style="min-width:160px">Criterio</th><th style="min-width:160px">Organizadores</th></tr></thead>
+          <tbody id="fixture-admin-tbody"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="admin-btn primary" onclick="fixtureAdminSave()" style="background:var(--green);color:#fff;border-color:var(--green)">💾 Guardar Fixture</button>
+        <button class="admin-btn secondary" onclick="fixtureAdminReset()">↺ Resetear a defaults</button>
+        <span id="fixture-admin-status" style="font-size:0.78rem;color:var(--muted-light);align-self:center"></span>
+      </div>
+    </div>
+
     <!-- ── TAB: HISTÓRICO ── -->
     <div id="admin-tab-hist" style="display:none">
       <div class="admin-notice">
@@ -1966,7 +1985,7 @@ function renderOverview(acc) {
   byId('kpi-row').innerHTML = `
     <div class="card"><div class="kpi-label">fechas Jugadas</div><div class="kpi-val">${played}</div><div class="kpi-sub">de 10 en el año</div></div>
     <div class="card"><div class="kpi-label">Líder Medal</div><div class="kpi-name">${lp?.name.split(',')[1]?.trim()||lp?.name}</div><div class="kpi-sub">${leader_medal[1].pts} pts · ${teamLabel(lp?.team||'g')}</div></div>
-    <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${totalMatchPts_g>=totalMatchPts_r?'var(--gris-color)':'var(--rojo-light)'}">${totalMatchPts_g>=totalMatchPts_r?'GRIS':'ROJO'}</div><div class="kpi-sub">${Math.max(totalMatchPts_g,totalMatchPts_r)} pts de equipo</div></div>
+    <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${totalMatchPts_g>=totalMatchPts_r?'var(--gris-color)':'var(--rojo-light)'}">${totalMatchPts_g>=totalMatchPts_r?'GRIS':'ROJO'}</div><div class="kpi-sub">${fmtPts(Math.max(totalMatchPts_g,totalMatchPts_r))} pts de equipo</div></div>
     <div class="card"><div class="kpi-label">Próxima Fecha</div><div class="kpi-val" style="font-size:1.6rem">${fechas.find(f=>f.pendiente)?.fecha||'—'}</div><div class="kpi-sub">F${fechas.findIndex(f=>f.pendiente)+1}</div></div>
     <div class="card"><div class="kpi-label">Jugadores</div><div class="kpi-val">16</div><div class="kpi-sub">8 Gris · 8 Rojo</div></div>
   `;
@@ -2267,10 +2286,21 @@ function renderfechasNav() {
       renderFechaDetail(parseInt(btn.dataset.num));
     });
   });
-  // Auto-select primera jugada
-  const first = nav.querySelector('.fnav-btn:not(.pending)');
+  // Auto-select última fecha jugada
+  const allPlayed = [...nav.querySelectorAll('.fnav-btn:not(.pending)')];
+  const first = allPlayed.length ? allPlayed[allPlayed.length - 1] : null;
   if(first){ first.classList.add('on'); renderFechaDetail(parseInt(first.dataset.num)); }
   else { byId('fecha-detail').innerHTML='<div class="empty"><div class="eicon">⏳</div><p>Aún no se han jugado fechas.</p></div>'; }
+}
+
+function getOrganizadoresFecha(num) {
+  // Primero buscar en fixture editable, fallback a defaults
+  const fx = fixtureData?.find(x => x.num === num);
+  if(fx?.organizadores) return fx.organizadores;
+  const map = {1:'Gatto + Zunino',2:'Gonzalez + Tarasido',3:'Molinario + Dipaola',
+    4:'Pannullo + Basaldua',5:'Fernandez + Canónico',6:'Guevara + Vogelius',
+    7:'Scapparone + Benegas',8:'Elizalde + Mendez',9:'GIRA',10:'GIRA'};
+  return map[num] || null;
 }
 
 function renderFechaDetail(num) {
@@ -2359,7 +2389,7 @@ function renderFechaDetail(num) {
   byId('fecha-detail').innerHTML = `
     <div class="g3" style="margin-bottom:16px">
       <div class="card"><div class="kpi-label">Fecha</div><div style="font-size:1.1rem;font-weight:600;cursor:default;user-select:none" onclick="adminTripleClick()" title="">F${f.num} · ${f.fecha}</div><div style="font-size:0.78rem;color:var(--muted-light);margin-top:4px">${f.cancha||''}</div></div>
-      <div class="card"><div class="kpi-label">Organizadores</div><div style="font-size:0.95rem;font-weight:500">${f.organizadores||'—'}</div></div>
+      <div class="card"><div class="kpi-label">Organizadores</div><div style="font-size:0.95rem;font-weight:500">${f.organizadores||getOrganizadoresFecha(f.num)||'—'}</div></div>
       <div class="card"><div class="kpi-label">Ausentes</div><div style="font-size:0.9rem">${(f.ausentes||[]).length===0?'<span style="color:var(--muted)">Todos presentes 💪</span>':f.ausentes.join(', ')}</div>
         ${supNotaFecha}
       </div>
@@ -2611,7 +2641,11 @@ function updateStatsCharts() {
         labels: playerLabels,
         datasets: categories.map((cat, ci) => ({
           label: cat,
-          data: playerIds.map(id => byPlayer[id]?.[catKeys[ci]] || 0),
+          data: playerIds.map(id => {
+            const val = byPlayer[id]?.[catKeys[ci]] || 0;
+            const fj = selectedFechas.filter(f => f.scorecard?.some(sc => sc.id === id)).length;
+            return fj > 0 ? +(val / fj).toFixed(1) : 0;
+          }),
           backgroundColor: colors[ci],
           borderRadius: 2
         }))
@@ -2817,9 +2851,11 @@ function switchAdminTab(tab, btn) {
   document.getElementById('admin-tab-prompt').style.display = tab==='prompt'?'':'none';
   document.getElementById('admin-tab-view').style.display   = tab==='view'  ?'':'none';
   document.getElementById('admin-tab-rec').style.display    = tab==='rec'   ?'':'none';
+  document.getElementById('admin-tab-fixture').style.display = tab==='fixture'?'':'none';
   document.getElementById('admin-tab-hist').style.display   = tab==='hist'  ?'':'none';
   // Inicializar tabla admin de recaudación cuando se abre ese tab
   if (tab==='rec') renderRecAdminTabla();
+  if (tab==='fixture') fixtureAdminRender();
   if (tab==='hist') adminRenderFotosGrid();
   if (tab==='scorecard') {
     // Populate fecha selector
@@ -5023,6 +5059,108 @@ function copyPromptFecha() {
 
 // ════════════════════════════════════════════════════════════
 // ════════════════════════════════════════════════════════════
+// MÓDULO: FIXTURE EDITABLE
+// ════════════════════════════════════════════════════════════
+
+const FIXTURE_STORAGE_KEY = 'mgt2026_fixture';
+const FIXTURE_DEFAULTS = [
+  {num:1, fecha:'14 Mar 2026', modalidad:'Fourball 2v2', criterio:'Por HDC (1y2)(3y4)(5y6)(7y8)', organizadores:'Gatto + Zunino'},
+  {num:2, fecha:'11 Abr 2026', modalidad:'Fourball 2v2', criterio:'100% aleatorio', organizadores:'Gonzalez + Tarasido'},
+  {num:3, fecha:'09 May 2026', modalidad:'Individual 1v1', criterio:'100% aleatorio', organizadores:'Molinario + Dipaola'},
+  {num:4, fecha:'06 Jun 2026', modalidad:'Fourball 2v2', criterio:'Por posición Medal', organizadores:'Pannullo + Basaldua'},
+  {num:5, fecha:'04 Jul 2026', modalidad:'Fourball 2v2', criterio:'100% aleatorio', organizadores:'Fernandez + Canónico'},
+  {num:6, fecha:'08 Ago 2026', modalidad:'Individual 1v1', criterio:'100% aleatorio', organizadores:'Guevara + Vogelius'},
+  {num:7, fecha:'12 Sep 2026', modalidad:'Fourball 2v2', criterio:'100% aleatorio', organizadores:'Scapparone + Benegas'},
+  {num:8, fecha:'03 Oct 2026', modalidad:'Individual 1v1', criterio:'Por posición Match', organizadores:'Elizalde + Mendez'},
+  {num:9, fecha:'Nov 2026', modalidad:'Fourball 2v2', criterio:'Match inverso (1v8)(2v7)...', organizadores:'GIRA'},
+  {num:10, fecha:'Nov 2026', modalidad:'Individual 1v1 FINAL', criterio:'#1 Gris vs #1 Rojo', organizadores:'GIRA'},
+];
+
+let fixtureData = [];
+
+function fixtureLoadLocal() {
+  try {
+    const raw = localStorage.getItem(FIXTURE_STORAGE_KEY);
+    if(raw) { fixtureData = JSON.parse(raw); return; }
+  } catch(e) {}
+  fixtureData = JSON.parse(JSON.stringify(FIXTURE_DEFAULTS));
+}
+
+function fixtureSaveLocal() {
+  localStorage.setItem(FIXTURE_STORAGE_KEY, JSON.stringify(fixtureData));
+}
+
+function fixtureAdminRender() {
+  if(!fixtureData.length) fixtureLoadLocal();
+  const tbody = byId('fixture-admin-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = fixtureData.map(fx => `<tr>
+    <td style="font-weight:700;color:var(--gold)">F${fx.num}</td>
+    <td><input type="text" class="fx-input" data-num="${fx.num}" data-field="fecha" value="${fx.fecha}" style="width:110px;font-size:0.72rem;padding:4px 6px"></td>
+    <td><select class="fx-input" data-num="${fx.num}" data-field="modalidad" style="font-size:0.72rem;padding:4px">
+      <option value="Fourball 2v2" ${fx.modalidad.includes('Fourball')?'selected':''}>Fourball 2v2</option>
+      <option value="Individual 1v1" ${fx.modalidad==='Individual 1v1'?'selected':''}>Individual 1v1</option>
+      <option value="Individual 1v1 FINAL" ${fx.modalidad.includes('FINAL')?'selected':''}>Individual 1v1 FINAL</option>
+    </select></td>
+    <td><input type="text" class="fx-input" data-num="${fx.num}" data-field="criterio" value="${fx.criterio}" style="width:180px;font-size:0.72rem;padding:4px 6px"></td>
+    <td><input type="text" class="fx-input" data-num="${fx.num}" data-field="organizadores" value="${fx.organizadores}" style="width:160px;font-size:0.72rem;padding:4px 6px"></td>
+  </tr>`).join('');
+}
+
+function fixtureAdminSave() {
+  document.querySelectorAll('.fx-input').forEach(input => {
+    const num = parseInt(input.dataset.num);
+    const field = input.dataset.field;
+    const fx = fixtureData.find(f => f.num === num);
+    if(fx) fx[field] = input.value;
+  });
+  fixtureSaveLocal();
+  // Update fechas array dates
+  fixtureData.forEach(fx => {
+    const f = fechas.find(x => x.num === fx.num);
+    if(f) f.fecha = fx.fecha;
+  });
+  // Re-render fixture tab
+  rendered.fixture = false;
+  const st = byId('fixture-admin-status');
+  if(st) { st.textContent = 'Fixture guardado'; st.style.color = 'var(--green)'; setTimeout(()=>{st.textContent='';},3000); }
+}
+
+function fixtureAdminReset() {
+  if(!confirm('Resetear fixture a los valores originales?')) return;
+  fixtureData = JSON.parse(JSON.stringify(FIXTURE_DEFAULTS));
+  fixtureSaveLocal();
+  fixtureAdminRender();
+  rendered.fixture = false;
+}
+
+// Override renderFixture to use editable fixture data
+const _origRenderFixture = renderFixture;
+renderFixture = function() {
+  if(!fixtureData.length) fixtureLoadLocal();
+  const rows = fechas.map(f => {
+    const fx = fixtureData.find(x => x.num === f.num);
+    const modalidad = f.pendiente ? (fx?.modalidad || '—') : (f.matchs?.some(m=>m.tipo==='fb')?'Fourball 2v2':'Individual 1v1');
+    const criterio = f.pendiente ? (fx?.criterio || '—') : '—';
+    const org = f.organizadores || fx?.organizadores || '—';
+    const status = f.pendiente?'<span style="color:var(--muted)">Pendiente</span>':'<span style="color:var(--green)">✓ Jugada</span>';
+    const isGira = f.num>=9;
+    return `<tr>
+      <td style="color:var(--gold);font-family:'DM Mono',monospace;font-size:0.85rem;font-weight:600">F${f.num}</td>
+      <td>${fx?.fecha || f.fecha}${isGira?' <span class="badge gold">GIRA</span>':''}</td>
+      <td style="font-size:0.78rem">${modalidad}</td>
+      <td style="font-size:0.75rem;color:var(--muted-light)">${criterio}</td>
+      <td style="font-size:0.82rem">${org}</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+  byId('tbl-fixture').innerHTML=`<thead><tr><th>F</th><th>Fecha</th><th>Modalidad</th><th>Criterio</th><th>Organizadores</th><th>Estado</th></tr></thead><tbody>${rows}</tbody>`;
+};
+
+// Init fixture on load
+fixtureLoadLocal();
+
+// ════════════════════════════════════════════════════════════
 // MÓDULO: CARGA SCORECARD (Builder de JSON desde grilla/imágenes)
 // ════════════════════════════════════════════════════════════
 
@@ -5646,6 +5784,7 @@ async function loadJugadoresHistorico() {
         };
       });
       localStorage.setItem(HISTORICO_STORAGE_KEY, JSON.stringify(jugadoresHistorico));
+      console.log('[Histórico] Cargados', data.length, 'jugadores de Supabase. Sample:', data[0]?.id, Object.keys(data[0]?.data||{}));
     } else {
       // Supabase vacío — no sobreescribir localStorage si ya tiene datos
       console.log('[Histórico] Supabase devolvió 0 filas, se mantienen datos locales');
@@ -5665,7 +5804,9 @@ async function saveJugadoresHistorico() {
     const { error } = await client.from('jugadores_historico').upsert(rows, { onConflict: 'id' });
     if(error) throw error;
     localStorage.setItem(HISTORICO_STORAGE_KEY, JSON.stringify(jugadoresHistorico));
+    rendered.jugadores = false;
     sbStatus('ok','Histórico guardado (' + rows.length + ' jugadores)');
+    console.log('[Histórico] Guardados', rows.length, 'jugadores. Sample:', rows[0]?.id, Object.keys(rows[0]?.data||{}));
   } catch(e) {
     console.warn('Error guardando histórico', e);
     sbStatus('error','Error guardando histórico: ' + (e.message||''));
