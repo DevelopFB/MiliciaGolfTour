@@ -1375,6 +1375,22 @@
           "avgGross": 90.0,
           "avgNeto": 90.0,
           "posicionFinal": null
+        },
+        "2018": {
+          "fechasJugadas": 3,
+          "fechasGanadas": 1,
+          "avgGross": 90.0,
+          "avgNeto": 77.0,
+          "mejorPosicion": 1,
+          "posicionFinal": null
+        },
+        "2022": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 1,
+          "avgGross": 83.0,
+          "avgNeto": 67.0,
+          "mejorPosicion": 1,
+          "posicionFinal": null
         }
       }
     }
