@@ -13,68 +13,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 9,
+          "mejorPosicion": 5,
           "avgGross": 94.9,
-          "avgNeto": 94.9,
-          "posicionFinal": 9
+          "avgNeto": 79.3,
+          "posicionFinal": null
         },
         "2018": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 3,
+          "mejorPosicion": 1,
           "avgGross": 93.4,
-          "avgNeto": 91.4,
-          "posicionFinal": 3
+          "avgNeto": 77.1,
+          "posicionFinal": null
         },
         "2019": {
           "fechasJugadas": 8,
           "fechasGanadas": 2,
-          "mejorPosicion": 2,
+          "mejorPosicion": 1,
           "avgGross": 92.4,
-          "avgNeto": 90.5,
-          "posicionFinal": 2
+          "avgNeto": 76.6,
+          "posicionFinal": null
         },
         "2021": {
           "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 2,
+          "mejorPosicion": 1,
           "avgGross": 88.4,
-          "avgNeto": 88.4,
-          "posicionFinal": 2
+          "avgNeto": 76.0,
+          "posicionFinal": null
         },
         "2022": {
           "fechasJugadas": 9,
           "fechasGanadas": 2,
-          "mejorPosicion": 3,
+          "mejorPosicion": 1,
           "avgGross": 88.3,
-          "avgNeto": 88.3,
-          "posicionFinal": 3
+          "avgNeto": 76.9,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 9,
           "fechasGanadas": 2,
           "mejorPosicion": 1,
-          "avgGross": 80.7,
-          "avgNeto": 82.6,
-          "posicionFinal": 1
+          "avgGross": 82.6,
+          "avgNeto": 74.9,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 16,
-          "avgGross": 87.5,
-          "avgNeto": 87.5,
-          "posicionFinal": 16
+          "mejorPosicion": 5,
+          "avgGross": 87.4,
+          "avgNeto": 80.3,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 10,
           "fechasGanadas": 0,
-          "mejorPosicion": 13,
+          "mejorPosicion": 7,
           "avgGross": 91.0,
-          "avgNeto": 89.7,
-          "posicionFinal": 13
+          "avgNeto": 80.9,
+          "posicionFinal": null
         }
       }
     },
@@ -91,68 +91,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 1,
-          "mejorPosicion": 4,
+          "mejorPosicion": 1,
           "avgGross": 96.9,
-          "avgNeto": 92.3,
-          "posicionFinal": 4
+          "avgNeto": 80.9,
+          "posicionFinal": null
         },
         "2018": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 11,
+          "mejorPosicion": 3,
           "avgGross": 99.0,
-          "avgNeto": 89.0,
-          "posicionFinal": 11
+          "avgNeto": 82.2,
+          "posicionFinal": null
         },
         "2019": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 7,
+          "mejorPosicion": 2,
           "avgGross": 96.3,
-          "avgNeto": 96.3,
-          "posicionFinal": 7
+          "avgNeto": 78.4,
+          "posicionFinal": null
         },
         "2021": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 8,
+          "mejorPosicion": 3,
           "avgGross": 94.8,
-          "avgNeto": 94.8,
-          "posicionFinal": 8
+          "avgNeto": 76.2,
+          "posicionFinal": null
         },
         "2022": {
           "fechasJugadas": 9,
           "fechasGanadas": 4,
           "mejorPosicion": 1,
           "avgGross": 91.4,
-          "avgNeto": 87.3,
-          "posicionFinal": 1
+          "avgNeto": 73.2,
+          "posicionFinal": null
         },
         "2023": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 11,
+          "mejorPosicion": 8,
           "avgGross": 95.2,
-          "avgNeto": 93.6,
-          "posicionFinal": 11
+          "avgNeto": 80.8,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 6,
+          "mejorPosicion": 1,
           "avgGross": 93.2,
-          "avgNeto": 91.2,
-          "posicionFinal": 6
+          "avgNeto": 78.2,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 10,
           "fechasGanadas": 2,
           "mejorPosicion": 1,
           "avgGross": 92.1,
-          "avgNeto": 92.1,
-          "posicionFinal": 1
+          "avgNeto": 75.6,
+          "posicionFinal": null
         }
       }
     },
@@ -171,66 +171,66 @@
         "2017": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 8,
+          "mejorPosicion": 4,
           "avgGross": 97.6,
-          "avgNeto": 93.4,
-          "posicionFinal": 8
+          "avgNeto": 80.2,
+          "posicionFinal": null
         },
         "2018": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 7,
+          "mejorPosicion": 2,
           "avgGross": 96.6,
-          "avgNeto": 93.9,
-          "posicionFinal": 7
+          "avgNeto": 77.1,
+          "posicionFinal": null
         },
         "2019": {
           "fechasJugadas": 8,
           "fechasGanadas": 2,
           "mejorPosicion": 1,
           "avgGross": 92.4,
-          "avgNeto": 92.4,
-          "posicionFinal": 1
+          "avgNeto": 73.2,
+          "posicionFinal": null
         },
         "2021": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 5,
           "fechasGanadas": 1,
-          "mejorPosicion": 11,
+          "mejorPosicion": 1,
           "avgGross": 93.0,
-          "avgNeto": 93.0,
-          "posicionFinal": 11
+          "avgNeto": 76.2,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 7,
           "fechasGanadas": 1,
-          "mejorPosicion": 6,
+          "mejorPosicion": 1,
           "avgGross": 93.9,
-          "avgNeto": 91.1,
-          "posicionFinal": 6
+          "avgNeto": 76.1,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 1,
-          "mejorPosicion": 6,
-          "avgGross": 93.2,
-          "avgNeto": 92.0,
-          "posicionFinal": 6
+          "mejorPosicion": 1,
+          "avgGross": 92.0,
+          "avgNeto": 77.3,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 11,
+          "mejorPosicion": 2,
           "avgGross": 94.9,
-          "avgNeto": 89.0,
-          "posicionFinal": 11
+          "avgNeto": 80.5,
+          "posicionFinal": null
         },
         "2025": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 15,
+          "mejorPosicion": 7,
           "avgGross": 95.5,
-          "avgNeto": 93.4,
-          "posicionFinal": 15
+          "avgNeto": 81.2,
+          "posicionFinal": null
         }
       }
     },
@@ -247,12 +247,12 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 10,
+          "mejorPosicion": 3,
           "avgGross": 102.8,
-          "avgNeto": 89.4,
-          "posicionFinal": 10
+          "avgNeto": 80.2,
+          "posicionFinal": null
         }
       }
     },
@@ -269,68 +269,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 2,
-          "mejorPosicion": 2,
+          "mejorPosicion": 1,
           "avgGross": 94.4,
-          "avgNeto": 86.3,
-          "posicionFinal": 2
+          "avgNeto": 75.9,
+          "posicionFinal": null
         },
         "2018": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 5,
+          "mejorPosicion": 1,
           "avgGross": 95.1,
-          "avgNeto": 89.9,
-          "posicionFinal": 5
+          "avgNeto": 81.1,
+          "posicionFinal": null
         },
         "2019": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 4,
+          "mejorPosicion": 2,
           "avgGross": 90.0,
-          "avgNeto": 91.3,
-          "posicionFinal": 4
+          "avgNeto": 77.4,
+          "posicionFinal": null
         },
         "2021": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 8,
           "fechasGanadas": 2,
           "mejorPosicion": 1,
-          "avgGross": 84.7,
-          "avgNeto": 84.8,
-          "posicionFinal": 1
+          "avgGross": 84.8,
+          "avgNeto": 74.4,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 9,
+          "mejorPosicion": 3,
           "avgGross": 87.7,
-          "avgNeto": 87.1,
-          "posicionFinal": 9
+          "avgNeto": 76.4,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 9,
           "fechasGanadas": 0,
-          "mejorPosicion": 9,
+          "mejorPosicion": 2,
           "avgGross": 84.8,
-          "avgNeto": 84.8,
-          "posicionFinal": 9
+          "avgNeto": 75.7,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 9,
           "fechasGanadas": 0,
-          "mejorPosicion": 10,
-          "avgGross": 87.3,
-          "avgNeto": 87.6,
-          "posicionFinal": 10
+          "mejorPosicion": 2,
+          "avgGross": 87.2,
+          "avgNeto": 78.0,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 4,
+          "mejorPosicion": 1,
           "avgGross": 85.9,
-          "avgNeto": 86.2,
-          "posicionFinal": 4
+          "avgNeto": 76.0,
+          "posicionFinal": null
         }
       }
     },
@@ -347,68 +347,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 14,
+          "mejorPosicion": 5,
           "avgGross": 104.6,
-          "avgNeto": 86.2,
-          "posicionFinal": 14
+          "avgNeto": 81.6,
+          "posicionFinal": null
         },
         "2018": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 4,
+          "mejorPosicion": 1,
           "avgGross": 103.9,
-          "avgNeto": 88.4,
-          "posicionFinal": 4
+          "avgNeto": 79.1,
+          "posicionFinal": null
         },
         "2019": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 9,
-          "avgGross": 108.0,
+          "mejorPosicion": 7,
+          "avgGross": 107.3,
           "avgNeto": 83.2,
-          "posicionFinal": 9
+          "posicionFinal": null
         },
         "2021": {
           "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 3,
+          "mejorPosicion": 2,
           "avgGross": 101.0,
-          "avgNeto": 95.4,
-          "posicionFinal": 3
+          "avgNeto": 76.1,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 7,
+          "mejorPosicion": 2,
           "avgGross": 100.9,
-          "avgNeto": 89.7,
-          "posicionFinal": 7
+          "avgNeto": 75.1,
+          "posicionFinal": null
         },
         "2023": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 5,
+          "mejorPosicion": 1,
           "avgGross": 100.0,
-          "avgNeto": 87.6,
-          "posicionFinal": 5
+          "avgNeto": 75.2,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 10,
           "fechasGanadas": 1,
-          "mejorPosicion": 3,
-          "avgGross": 99.1,
-          "avgNeto": 90.3,
-          "posicionFinal": 3
+          "mejorPosicion": 1,
+          "avgGross": 99.0,
+          "avgNeto": 77.0,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 12,
+          "mejorPosicion": 3,
           "avgGross": 98.1,
-          "avgNeto": 92.5,
-          "posicionFinal": 12
+          "avgNeto": 78.6,
+          "posicionFinal": null
         }
       }
     },
@@ -425,68 +425,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 7,
+          "mejorPosicion": 2,
           "avgGross": 105.3,
-          "avgNeto": 87.3,
-          "posicionFinal": 7
+          "avgNeto": 78.3,
+          "posicionFinal": null
         },
         "2018": {
           "fechasJugadas": 8,
           "fechasGanadas": 2,
-          "mejorPosicion": 2,
+          "mejorPosicion": 1,
           "avgGross": 107.0,
-          "avgNeto": 83.4,
-          "posicionFinal": 2
+          "avgNeto": 80.0,
+          "posicionFinal": null
         },
         "2019": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 2,
-          "mejorPosicion": 3,
+          "mejorPosicion": 1,
           "avgGross": 101.3,
-          "avgNeto": 86.4,
-          "posicionFinal": 3
+          "avgNeto": 75.3,
+          "posicionFinal": null
         },
         "2021": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 9,
+          "mejorPosicion": 2,
           "avgGross": 102.2,
-          "avgNeto": 86.3,
-          "posicionFinal": 9
+          "avgNeto": 78.3,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 12,
+          "mejorPosicion": 6,
           "avgGross": 101.7,
-          "avgNeto": 92.0,
-          "posicionFinal": 12
+          "avgNeto": 79.1,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 9,
           "fechasGanadas": 3,
-          "mejorPosicion": 2,
+          "mejorPosicion": 1,
           "avgGross": 95.9,
-          "avgNeto": 88.2,
-          "posicionFinal": 2
+          "avgNeto": 73.4,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 10,
           "fechasGanadas": 1,
-          "mejorPosicion": 4,
-          "avgGross": 95.0,
-          "avgNeto": 89.5,
-          "posicionFinal": 4
+          "mejorPosicion": 3,
+          "avgGross": 94.9,
+          "avgNeto": 77.3,
+          "posicionFinal": null
         },
         "2025": {
-          "fechasJugadas": 10,
+          "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 10,
+          "mejorPosicion": 1,
           "avgGross": 95.9,
-          "avgNeto": 89.9,
-          "posicionFinal": 10
+          "avgNeto": 80.7,
+          "posicionFinal": null
         }
       }
     },
@@ -503,68 +503,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 11,
+          "mejorPosicion": 2,
           "avgGross": 105.2,
-          "avgNeto": 91.8,
-          "posicionFinal": 11
+          "avgNeto": 85.2,
+          "posicionFinal": null
         },
         "2018": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 1,
-          "mejorPosicion": 8,
+          "mejorPosicion": 1,
           "avgGross": 99.4,
-          "avgNeto": 93.3,
-          "posicionFinal": 8
+          "avgNeto": 78.3,
+          "posicionFinal": null
         },
         "2019": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 6,
-          "avgGross": 97.2,
-          "avgNeto": 95.6,
-          "posicionFinal": 6
+          "mejorPosicion": 2,
+          "avgGross": 101.7,
+          "avgNeto": 79.7,
+          "posicionFinal": null
         },
         "2021": {
           "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 4,
+          "mejorPosicion": 1,
           "avgGross": 97.6,
-          "avgNeto": 90.6,
-          "posicionFinal": 4
+          "avgNeto": 76.1,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 5,
+          "mejorPosicion": 2,
           "avgGross": 94.6,
-          "avgNeto": 94.6,
-          "posicionFinal": 5
+          "avgNeto": 73.1,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 4,
+          "mejorPosicion": 1,
           "avgGross": 99.1,
-          "avgNeto": 93.0,
-          "posicionFinal": 4
+          "avgNeto": 79.8,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 10,
           "fechasGanadas": 0,
-          "mejorPosicion": 7,
+          "mejorPosicion": 3,
           "avgGross": 95.0,
-          "avgNeto": 92.9,
-          "posicionFinal": 7
+          "avgNeto": 76.5,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 10,
           "fechasGanadas": 2,
-          "mejorPosicion": 5,
+          "mejorPosicion": 1,
           "avgGross": 95.8,
-          "avgNeto": 90.7,
-          "posicionFinal": 5
+          "avgNeto": 77.9,
+          "posicionFinal": null
         }
       }
     },
@@ -581,68 +581,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 5,
+          "mejorPosicion": 3,
           "avgGross": 100.9,
-          "avgNeto": 94.0,
-          "posicionFinal": 5
+          "avgNeto": 76.7,
+          "posicionFinal": null
         },
         "2018": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 6,
+          "mejorPosicion": 2,
           "avgGross": 101.2,
-          "avgNeto": 89.8,
-          "posicionFinal": 6
+          "avgNeto": 78.2,
+          "posicionFinal": null
         },
         "2019": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 8,
-          "avgGross": 104.1,
-          "avgNeto": 90.0,
-          "posicionFinal": 8
+          "mejorPosicion": 6,
+          "avgGross": 105.0,
+          "avgNeto": 82.7,
+          "posicionFinal": null
         },
         "2021": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 12,
+          "mejorPosicion": 5,
           "avgGross": 103.6,
-          "avgNeto": 83.8,
-          "posicionFinal": 12
+          "avgNeto": 78.8,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 10,
+          "mejorPosicion": 3,
           "avgGross": 102.5,
-          "avgNeto": 89.8,
-          "posicionFinal": 10
+          "avgNeto": 77.5,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 9,
           "fechasGanadas": 0,
-          "mejorPosicion": 10,
+          "mejorPosicion": 5,
           "avgGross": 98.6,
-          "avgNeto": 93.8,
-          "posicionFinal": 10
+          "avgNeto": 77.4,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 8,
+          "mejorPosicion": 1,
           "avgGross": 97.0,
-          "avgNeto": 94.2,
-          "posicionFinal": 8
+          "avgNeto": 76.6,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 10,
           "fechasGanadas": 0,
-          "mejorPosicion": 9,
+          "mejorPosicion": 3,
           "avgGross": 98.9,
-          "avgNeto": 90.6,
-          "posicionFinal": 9
+          "avgNeto": 78.7,
+          "posicionFinal": null
         }
       }
     },
@@ -659,60 +659,60 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 1,
-          "mejorPosicion": 6,
+          "mejorPosicion": 1,
           "avgGross": 93.3,
-          "avgNeto": 93.3,
-          "posicionFinal": 6
+          "avgNeto": 81.8,
+          "posicionFinal": null
         },
         "2018": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 10,
+          "mejorPosicion": 2,
           "avgGross": 95.9,
-          "avgNeto": 93.7,
-          "posicionFinal": 10
+          "avgNeto": 81.6,
+          "posicionFinal": null
         },
         "2021": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 3,
           "fechasGanadas": 1,
-          "mejorPosicion": null,
+          "mejorPosicion": 1,
           "avgGross": 90.7,
-          "avgNeto": 93.5,
+          "avgNeto": 72.7,
           "posicionFinal": null
         },
         "2022": {
           "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 2,
+          "mejorPosicion": 1,
           "avgGross": 86.9,
-          "avgNeto": 86.9,
-          "posicionFinal": 2
+          "avgNeto": 74.3,
+          "posicionFinal": null
         },
         "2023": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 13,
+          "mejorPosicion": 4,
           "avgGross": 90.6,
-          "avgNeto": 89.6,
-          "posicionFinal": 13
+          "avgNeto": 80.5,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 9,
           "fechasGanadas": 0,
-          "mejorPosicion": 14,
-          "avgGross": 90.5,
-          "avgNeto": 89.3,
-          "posicionFinal": 14
+          "mejorPosicion": 7,
+          "avgGross": 90.4,
+          "avgNeto": 80.6,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 10,
           "fechasGanadas": 1,
           "mejorPosicion": 2,
           "avgGross": 88.4,
-          "avgNeto": 88.4,
-          "posicionFinal": 2
+          "avgNeto": 75.5,
+          "posicionFinal": null
         }
       }
     },
@@ -729,19 +729,11 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 12,
+          "mejorPosicion": 6,
           "avgGross": 103.4,
-          "avgNeto": 87.4,
-          "posicionFinal": 12
-        },
-        "2018": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": null,
-          "avgNeto": null,
+          "avgNeto": 83.2,
           "posicionFinal": null
         }
       }
@@ -759,68 +751,68 @@
           "posicionFinal": null
         },
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 2,
           "mejorPosicion": 1,
           "avgGross": 100.4,
-          "avgNeto": 86.0,
-          "posicionFinal": 1
+          "avgNeto": 75.6,
+          "posicionFinal": null
         },
         "2018": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 9,
+          "mejorPosicion": 2,
           "avgGross": 105.7,
-          "avgNeto": 86.3,
-          "posicionFinal": 9
+          "avgNeto": 82.5,
+          "posicionFinal": null
         },
         "2019": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 3,
           "fechasGanadas": 0,
-          "mejorPosicion": 10,
+          "mejorPosicion": 4,
           "avgGross": 106.0,
-          "avgNeto": 90.7,
-          "posicionFinal": 10
+          "avgNeto": 82.7,
+          "posicionFinal": null
         },
         "2021": {
-          "fechasJugadas": 9,
-          "fechasGanadas": 1,
-          "mejorPosicion": 6,
-          "avgGross": 100.9,
-          "avgNeto": 89.9,
-          "posicionFinal": 6
-        },
-        "2022": {
-          "fechasJugadas": 9,
-          "fechasGanadas": 1,
-          "mejorPosicion": 4,
-          "avgGross": 97.6,
-          "avgNeto": 94.1,
-          "posicionFinal": 4
-        },
-        "2023": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
+          "mejorPosicion": 1,
+          "avgGross": 100.9,
+          "avgNeto": 79.0,
+          "posicionFinal": null
+        },
+        "2022": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 1,
           "mejorPosicion": 3,
+          "avgGross": 97.6,
+          "avgNeto": 75.1,
+          "posicionFinal": null
+        },
+        "2023": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 1,
+          "mejorPosicion": 1,
           "avgGross": 94.7,
-          "avgNeto": 92.0,
-          "posicionFinal": 3
+          "avgNeto": 74.4,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 5,
+          "mejorPosicion": 1,
           "avgGross": 99.4,
-          "avgNeto": 91.0,
-          "posicionFinal": 5
+          "avgNeto": 81.1,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 8,
+          "mejorPosicion": 2,
           "avgGross": 95.5,
-          "avgNeto": 92.8,
-          "posicionFinal": 8
+          "avgNeto": 77.5,
+          "posicionFinal": null
         }
       }
     },
@@ -831,10 +823,10 @@
         "2017": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 3,
+          "mejorPosicion": 2,
           "avgGross": 97.5,
-          "avgNeto": 97.5,
-          "posicionFinal": 3
+          "avgNeto": 73.1,
+          "posicionFinal": null
         }
       }
     },
@@ -843,12 +835,12 @@
       "foto": null,
       "años": {
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 13,
+          "mejorPosicion": 3,
           "avgGross": 105.4,
-          "avgNeto": 85.4,
-          "posicionFinal": 13
+          "avgNeto": 80.4,
+          "posicionFinal": null
         }
       }
     },
@@ -857,12 +849,12 @@
       "foto": null,
       "años": {
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 15,
+          "mejorPosicion": 7,
           "avgGross": 98.3,
-          "avgNeto": 93.7,
-          "posicionFinal": 15
+          "avgNeto": 84.3,
+          "posicionFinal": null
         }
       }
     },
@@ -871,44 +863,44 @@
       "foto": null,
       "años": {
         "2017": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 2,
           "fechasGanadas": 0,
-          "mejorPosicion": 16,
+          "mejorPosicion": 15,
           "avgGross": 118.5,
           "avgNeto": 93.5,
-          "posicionFinal": 16
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
-          "fechasGanadas": 0,
-          "mejorPosicion": 13,
-          "avgGross": 108.4,
-          "avgNeto": 82.9,
-          "posicionFinal": 13
-        },
-        "2023": {
-          "fechasJugadas": 8,
-          "fechasGanadas": 0,
-          "mejorPosicion": 14,
-          "avgGross": 103.1,
-          "avgNeto": 92.0,
-          "posicionFinal": 14
-        },
-        "2024": {
           "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 13,
+          "mejorPosicion": 5,
+          "avgGross": 108.4,
+          "avgNeto": 82.9,
+          "posicionFinal": null
+        },
+        "2023": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": 103.1,
+          "avgNeto": 77.1,
+          "posicionFinal": null
+        },
+        "2024": {
+          "fechasJugadas": 6,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
           "avgGross": 102.2,
-          "avgNeto": 89.2,
-          "posicionFinal": 13
+          "avgNeto": 77.0,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 14,
+          "mejorPosicion": 3,
           "avgGross": 100.0,
-          "avgNeto": 89.0,
-          "posicionFinal": 14
+          "avgNeto": 78.0,
+          "posicionFinal": null
         }
       }
     },
@@ -919,66 +911,66 @@
         "2017": {
           "fechasJugadas": 1,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
+          "mejorPosicion": 5,
           "avgGross": 88.0,
-          "avgNeto": 88.0,
+          "avgNeto": 77.0,
           "posicionFinal": null
         },
         "2018": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 2,
           "mejorPosicion": 1,
           "avgGross": 88.0,
-          "avgNeto": 88.0,
-          "posicionFinal": 1
+          "avgNeto": 75.1,
+          "posicionFinal": null
         },
         "2019": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": 90.3,
+          "avgNeto": 78.3,
+          "posicionFinal": null
+        },
+        "2021": {
+          "fechasJugadas": 5,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": 91.8,
+          "avgNeto": 80.0,
+          "posicionFinal": null
+        },
+        "2022": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": 90.3,
-          "avgNeto": 90.3,
-          "posicionFinal": 5
-        },
-        "2021": {
-          "fechasJugadas": 9,
-          "fechasGanadas": 0,
-          "mejorPosicion": 10,
-          "avgGross": 91.8,
-          "avgNeto": 91.8,
-          "posicionFinal": 10
-        },
-        "2022": {
-          "fechasJugadas": 9,
-          "fechasGanadas": 0,
-          "mejorPosicion": 11,
           "avgGross": 93.0,
-          "avgNeto": 93.0,
-          "posicionFinal": 11
+          "avgNeto": 78.8,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 1,
-          "mejorPosicion": 7,
+          "mejorPosicion": 1,
           "avgGross": 94.0,
-          "avgNeto": 89.3,
-          "posicionFinal": 7
+          "avgNeto": 78.3,
+          "posicionFinal": null
         },
         "2024": {
           "fechasJugadas": 9,
           "fechasGanadas": 2,
           "mejorPosicion": 1,
-          "avgGross": 89.2,
-          "avgNeto": 89.2,
-          "posicionFinal": 1
+          "avgGross": 89.1,
+          "avgNeto": 75.1,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 6,
+          "mejorPosicion": 1,
           "avgGross": 87.9,
-          "avgNeto": 87.9,
-          "posicionFinal": 6
+          "avgNeto": 76.3,
+          "posicionFinal": null
         }
       }
     },
@@ -987,11 +979,11 @@
       "foto": null,
       "años": {
         "2019": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 2,
           "fechasGanadas": 1,
-          "mejorPosicion": null,
+          "mejorPosicion": 1,
           "avgGross": 93.0,
-          "avgNeto": 93.0,
+          "avgNeto": 70.0,
           "posicionFinal": null
         }
       }
@@ -1003,7 +995,7 @@
         "2019": {
           "fechasJugadas": 1,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
+          "mejorPosicion": 5,
           "avgGross": 103.0,
           "avgNeto": 82.0,
           "posicionFinal": null
@@ -1015,44 +1007,44 @@
       "foto": null,
       "años": {
         "2021": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 8,
           "fechasGanadas": 1,
-          "mejorPosicion": 5,
+          "mejorPosicion": 1,
           "avgGross": 95.8,
-          "avgNeto": 93.5,
-          "posicionFinal": 5
+          "avgNeto": 77.4,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 14,
+          "mejorPosicion": 4,
           "avgGross": 101.4,
-          "avgNeto": 94.2,
-          "posicionFinal": 14
+          "avgNeto": 83.2,
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 15,
+          "mejorPosicion": 3,
           "avgGross": 97.7,
-          "avgNeto": 92.7,
-          "posicionFinal": 15
+          "avgNeto": 80.0,
+          "posicionFinal": null
         },
         "2024": {
-          "fechasJugadas": 10,
+          "fechasJugadas": 9,
           "fechasGanadas": 1,
-          "mejorPosicion": 2,
-          "avgGross": 90.0,
-          "avgNeto": 90.0,
-          "posicionFinal": 2
+          "mejorPosicion": 1,
+          "avgGross": 90.9,
+          "avgNeto": 75.0,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 10,
           "fechasGanadas": 2,
-          "mejorPosicion": 3,
+          "mejorPosicion": 1,
           "avgGross": 91.3,
-          "avgNeto": 91.3,
-          "posicionFinal": 3
+          "avgNeto": 75.5,
+          "posicionFinal": null
         }
       }
     },
@@ -1061,79 +1053,62 @@
       "foto": null,
       "años": {
         "2021": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 7,
+          "mejorPosicion": 2,
           "avgGross": 103.5,
-          "avgNeto": 84.0,
-          "posicionFinal": 7
+          "avgNeto": 77.5,
+          "posicionFinal": null
         },
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 15,
+          "mejorPosicion": 10,
           "avgGross": 104.5,
           "avgNeto": 83.5,
-          "posicionFinal": 15
+          "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 6,
           "fechasGanadas": 0,
-          "mejorPosicion": 16,
+          "mejorPosicion": 10,
           "avgGross": 100.5,
-          "avgNeto": 90.0,
-          "posicionFinal": 16
+          "avgNeto": 79.5,
+          "posicionFinal": null
         },
         "2024": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 1,
-          "mejorPosicion": 9,
+          "mejorPosicion": 1,
           "avgGross": 101.1,
-          "avgNeto": 84.7,
-          "posicionFinal": 9
+          "avgNeto": 79.0,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 10,
           "fechasGanadas": 1,
-          "mejorPosicion": 7,
+          "mejorPosicion": 1,
           "avgGross": 98.4,
-          "avgNeto": 89.6,
-          "posicionFinal": 7
+          "avgNeto": 78.6,
+          "posicionFinal": null
         }
       }
     },
     "abreu": {
       "nombre": "Abreu, Santiago",
       "foto": null,
-      "años": {
-        "2021": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": null,
-          "avgNeto": null,
-          "posicionFinal": null
-        }
-      }
+      "años": {}
     },
     "miceli": {
       "nombre": "Miceli, Julian (INV)",
       "foto": null,
       "años": {
         "2021": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 3,
           "fechasGanadas": 1,
-          "mejorPosicion": null,
+          "mejorPosicion": 1,
           "avgGross": 94.7,
-          "avgNeto": 94.7,
-          "posicionFinal": null
-        },
-        "2023": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": null,
-          "avgNeto": null,
+          "avgNeto": 74.3,
           "posicionFinal": null
         }
       }
@@ -1145,9 +1120,9 @@
         "2021": {
           "fechasJugadas": 1,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
+          "mejorPosicion": 5,
           "avgGross": 92.0,
-          "avgNeto": 92.0,
+          "avgNeto": 77.0,
           "posicionFinal": null
         }
       }
@@ -1157,36 +1132,36 @@
       "foto": null,
       "años": {
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 8,
+          "mejorPosicion": 2,
           "avgGross": 83.3,
-          "avgNeto": 83.3,
-          "posicionFinal": 8
+          "avgNeto": 74.9,
+          "posicionFinal": null
         },
         "2023": {
           "fechasJugadas": 8,
           "fechasGanadas": 0,
-          "mejorPosicion": 12,
+          "mejorPosicion": 3,
           "avgGross": 84.6,
-          "avgNeto": 84.6,
-          "posicionFinal": 12
+          "avgNeto": 77.9,
+          "posicionFinal": null
         },
         "2024": {
-          "fechasJugadas": 8,
+          "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 12,
-          "avgGross": 81.5,
-          "avgNeto": 81.5,
-          "posicionFinal": 12
+          "mejorPosicion": 3,
+          "avgGross": 81.4,
+          "avgNeto": 75.9,
+          "posicionFinal": null
         },
         "2025": {
           "fechasJugadas": 7,
           "fechasGanadas": 0,
-          "mejorPosicion": 11,
+          "mejorPosicion": 3,
           "avgGross": 86.9,
-          "avgNeto": 86.9,
-          "posicionFinal": 11
+          "avgNeto": 78.3,
+          "posicionFinal": null
         }
       }
     },
@@ -1195,12 +1170,12 @@
       "foto": null,
       "años": {
         "2022": {
-          "fechasJugadas": 9,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": 16,
+          "mejorPosicion": 12,
           "avgGross": 112.0,
           "avgNeto": 87.0,
-          "posicionFinal": 16
+          "posicionFinal": null
         }
       }
     },
@@ -1209,20 +1184,20 @@
       "foto": null,
       "años": {
         "2022": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 2,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
+          "mejorPosicion": 2,
           "avgGross": 90.0,
-          "avgNeto": 90.0,
+          "avgNeto": 70.5,
           "posicionFinal": null
         },
         "2023": {
-          "fechasJugadas": 7,
+          "fechasJugadas": 6,
           "fechasGanadas": 1,
-          "mejorPosicion": 8,
+          "mejorPosicion": 9,
           "avgGross": 93.5,
-          "avgNeto": 93.5,
-          "posicionFinal": 8
+          "avgNeto": 76.3,
+          "posicionFinal": null
         }
       }
     },
@@ -1233,9 +1208,9 @@
         "2022": {
           "fechasJugadas": 1,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
+          "mejorPosicion": 9,
           "avgGross": 85.0,
-          "avgNeto": 85.0,
+          "avgNeto": 79.0,
           "posicionFinal": null
         }
       }
@@ -1244,19 +1219,11 @@
       "nombre": "Uribelarrea, Rafael (INV)",
       "foto": null,
       "años": {
-        "2023": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": null,
-          "avgNeto": null,
-          "posicionFinal": null
-        },
         "2024": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 2,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 102.0,
+          "mejorPosicion": 15,
+          "avgGross": 102.5,
           "avgNeto": 83.5,
           "posicionFinal": null
         }
@@ -1275,20 +1242,20 @@
           "posicionFinal": null
         },
         "2024": {
-          "fechasJugadas": 6,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 15,
-          "avgGross": 101.5,
-          "avgNeto": 89.9,
-          "posicionFinal": 15
+          "mejorPosicion": 8,
+          "avgGross": 99.8,
+          "avgNeto": 77.8,
+          "posicionFinal": null
         },
         "2025": {
-          "fechasJugadas": 6,
+          "fechasJugadas": 5,
           "fechasGanadas": 0,
-          "mejorPosicion": 16,
+          "mejorPosicion": 3,
           "avgGross": 99.0,
-          "avgNeto": 92.0,
-          "posicionFinal": 16
+          "avgNeto": 81.0,
+          "posicionFinal": null
         }
       }
     },
@@ -1297,19 +1264,19 @@
       "foto": null,
       "años": {
         "2024": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 2,
-          "mejorPosicion": null,
+          "mejorPosicion": 1,
           "avgGross": 87.8,
-          "avgNeto": 87.8,
+          "avgNeto": 72.5,
           "posicionFinal": null
         },
         "2025": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 3,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 84.5,
-          "avgNeto": 89.0,
+          "mejorPosicion": 2,
+          "avgGross": 89.0,
+          "avgNeto": 77.3,
           "posicionFinal": null
         }
       }
@@ -1319,11 +1286,11 @@
       "foto": null,
       "años": {
         "2024": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 111.0,
-          "avgNeto": 88.0,
+          "mejorPosicion": 4,
+          "avgGross": 110.8,
+          "avgNeto": 84.8,
           "posicionFinal": null
         },
         "2025": {
@@ -1331,7 +1298,7 @@
           "fechasGanadas": 0,
           "mejorPosicion": null,
           "avgGross": 100.0,
-          "avgNeto": 98.0,
+          "avgNeto": 78.0,
           "posicionFinal": null
         }
       }
@@ -1343,9 +1310,9 @@
         "2024": {
           "fechasJugadas": 1,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
+          "mejorPosicion": 12,
           "avgGross": 92.0,
-          "avgNeto": 92.0,
+          "avgNeto": 82.0,
           "posicionFinal": null
         }
       }
@@ -1353,43 +1320,50 @@
     "gatto_ale": {
       "nombre": "Gatto, Alejandro",
       "foto": null,
-      "años": {
-        "2024": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": null,
-          "avgNeto": null,
-          "posicionFinal": null
-        }
-      }
+      "años": {}
     },
     "hector_gatto": {
       "nombre": "Hector, Gatto",
       "foto": null,
       "años": {
-        "2025": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 90.0,
-          "avgNeto": 90.0,
-          "posicionFinal": null
-        },
         "2018": {
           "fechasJugadas": 3,
           "fechasGanadas": 1,
+          "mejorPosicion": 1,
           "avgGross": 90.0,
           "avgNeto": 77.0,
-          "mejorPosicion": 1,
+          "posicionFinal": null
+        },
+        "2019": {
+          "fechasJugadas": 2,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": 96.5,
+          "avgNeto": 84.5,
           "posicionFinal": null
         },
         "2022": {
           "fechasJugadas": 1,
           "fechasGanadas": 1,
+          "mejorPosicion": 1,
           "avgGross": 83.0,
           "avgNeto": 67.0,
-          "mejorPosicion": 1,
+          "posicionFinal": null
+        },
+        "2024": {
+          "fechasJugadas": 2,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": 89.0,
+          "avgNeto": 74.5,
+          "posicionFinal": null
+        },
+        "2025": {
+          "fechasJugadas": 2,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": 89.5,
+          "avgNeto": 77.5,
           "posicionFinal": null
         }
       }
