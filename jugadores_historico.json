@@ -1110,6 +1110,14 @@
           "avgGross": 94.7,
           "avgNeto": 74.3,
           "posicionFinal": null
+        },
+        "2022": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": 99.0,
+          "avgNeto": 80.0,
+          "posicionFinal": null
         }
       }
     },
@@ -1294,11 +1302,11 @@
           "posicionFinal": null
         },
         "2025": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 2,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 100.0,
-          "avgNeto": 78.0,
+          "mejorPosicion": 3,
+          "avgGross": 98.0,
+          "avgNeto": 75.5,
           "posicionFinal": null
         }
       }
@@ -1364,6 +1372,34 @@
           "mejorPosicion": 6,
           "avgGross": 89.5,
           "avgNeto": 77.5,
+          "posicionFinal": null
+        }
+      }
+    },
+    "basaldua_javi": {
+      "nombre": "Basaldua, Javier",
+      "foto": null,
+      "años": {
+        "2024": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": 82.0,
+          "avgNeto": 71.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "vigil": {
+      "nombre": "Vigil, Tomas",
+      "foto": null,
+      "años": {
+        "2025": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": 95.0,
+          "avgNeto": 77.0,
           "posicionFinal": null
         }
       }
