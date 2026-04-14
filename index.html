@@ -1231,6 +1231,11 @@ function buildAccum() {
         white-space:nowrap;flex-shrink:0;
       ">⬇ Export XLSX</button>
     </div>
+    <div style="font-size:0.68rem;color:var(--muted);margin-bottom:10px;line-height:1.5;padding:8px 12px;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);border-radius:4px">
+      <strong style="color:var(--gold)">Fechas Ganadas (FG):</strong> en caso de empate en el primer puesto, todos los oficiales empatados suman fecha ganada.
+      Si el ganador de la fecha fue un suplente o un jugador que ya no participa del tour, la fecha queda <em>vacante</em> (no se asigna a nadie).
+      Por eso la suma de FJ y FG puede no coincidir con la cantidad total de fechas del año.
+    </div>
     <div class="card" style="margin-bottom:16px;overflow-x:auto">
       <div id="jugadores-matriz-wrap"></div>
     </div>
@@ -5856,7 +5861,18 @@ function calcStats2026(playerId) {
     const entry = mpts.find(m => m.id === playerId);
     if(!entry) return;
     fechasJugadas++;
-    if(entry.pos === 1 && !entry.esSuplente) fechasGanadas++;
+
+    // Ganador de fecha: el neto mínimo de TODA la scorecard (incl. suplentes).
+    // - Empate en 1er puesto → todos los oficiales empatados suman fecha ganada.
+    // - Si el neto mínimo lo tiene un suplente o no-oficial → vacante (nadie suma).
+    const minNeto = Math.min(...f.medal.map(m => m.neto));
+    const supOMirador = f.medal.some(m => {
+      if(m.neto !== minNeto) return false;
+      const sup = getSustitutoInfo(m.id, f);
+      return !!sup || !PLAYERS.find(p => p.id === m.id);
+    });
+    if(!supOMirador && !entry.esSuplente && entry.neto === minNeto) fechasGanadas++;
+
     if(entry.pos < mejorPos) mejorPos = entry.pos;
     if(entry.gross > 0) { grossSum += entry.gross; netoSum += entry.neto; grossCount++; }
   });

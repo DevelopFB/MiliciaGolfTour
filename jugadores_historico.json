@@ -8,7 +8,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 90.4,
           "avgNeto": 55.0,
           "posicionFinal": null
         },
@@ -16,7 +16,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 9,
-          "avgGross": null,
+          "avgGross": 94.9,
           "avgNeto": 94.9,
           "posicionFinal": 9
         },
@@ -24,7 +24,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 3,
-          "avgGross": null,
+          "avgGross": 93.4,
           "avgNeto": 91.4,
           "posicionFinal": 3
         },
@@ -32,7 +32,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 2,
-          "avgGross": null,
+          "avgGross": 92.4,
           "avgNeto": 90.5,
           "posicionFinal": 2
         },
@@ -64,7 +64,7 @@
           "fechasJugadas": 7,
           "fechasGanadas": 0,
           "mejorPosicion": 16,
-          "avgGross": null,
+          "avgGross": 87.5,
           "avgNeto": 87.5,
           "posicionFinal": 16
         },
@@ -72,7 +72,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 13,
-          "avgGross": null,
+          "avgGross": 91.0,
           "avgNeto": 89.7,
           "posicionFinal": 13
         }
@@ -86,7 +86,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 101.5,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -110,7 +110,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 96.3,
           "avgNeto": 96.3,
           "posicionFinal": 7
         },
@@ -118,7 +118,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 8,
-          "avgGross": null,
+          "avgGross": 94.8,
           "avgNeto": 94.8,
           "posicionFinal": 8
         },
@@ -126,7 +126,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 1,
-          "avgGross": null,
+          "avgGross": 91.4,
           "avgNeto": 87.3,
           "posicionFinal": 1
         },
@@ -134,7 +134,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 11,
-          "avgGross": null,
+          "avgGross": 95.2,
           "avgNeto": 93.6,
           "posicionFinal": 11
         },
@@ -142,7 +142,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 6,
-          "avgGross": null,
+          "avgGross": 93.2,
           "avgNeto": 91.2,
           "posicionFinal": 6
         },
@@ -150,7 +150,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 1,
-          "avgGross": null,
+          "avgGross": 92.1,
           "avgNeto": 92.1,
           "posicionFinal": 1
         }
@@ -164,7 +164,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 97.2,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -172,7 +172,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 8,
-          "avgGross": null,
+          "avgGross": 97.6,
           "avgNeto": 93.4,
           "posicionFinal": 8
         },
@@ -180,7 +180,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 96.6,
           "avgNeto": 93.9,
           "posicionFinal": 7
         },
@@ -188,7 +188,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 1,
-          "avgGross": null,
+          "avgGross": 92.4,
           "avgNeto": 92.4,
           "posicionFinal": 1
         },
@@ -196,7 +196,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 11,
-          "avgGross": null,
+          "avgGross": 93.0,
           "avgNeto": 93.0,
           "posicionFinal": 11
         },
@@ -204,7 +204,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 6,
-          "avgGross": null,
+          "avgGross": 93.9,
           "avgNeto": 91.1,
           "posicionFinal": 6
         },
@@ -220,7 +220,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 11,
-          "avgGross": null,
+          "avgGross": 94.9,
           "avgNeto": 89.0,
           "posicionFinal": 11
         },
@@ -228,7 +228,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 15,
-          "avgGross": null,
+          "avgGross": 95.5,
           "avgNeto": 93.4,
           "posicionFinal": 15
         }
@@ -242,7 +242,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 98.9,
           "avgNeto": 58.0,
           "posicionFinal": null
         },
@@ -250,7 +250,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 10,
-          "avgGross": null,
+          "avgGross": 102.8,
           "avgNeto": 89.4,
           "posicionFinal": 10
         }
@@ -264,7 +264,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 94.3,
           "avgNeto": 64.0,
           "posicionFinal": null
         },
@@ -272,7 +272,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 2,
-          "avgGross": null,
+          "avgGross": 94.4,
           "avgNeto": 86.3,
           "posicionFinal": 2
         },
@@ -280,7 +280,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 95.1,
           "avgNeto": 89.9,
           "posicionFinal": 5
         },
@@ -288,7 +288,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 4,
-          "avgGross": null,
+          "avgGross": 90.0,
           "avgNeto": 91.3,
           "posicionFinal": 4
         },
@@ -304,7 +304,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 9,
-          "avgGross": null,
+          "avgGross": 87.7,
           "avgNeto": 87.1,
           "posicionFinal": 9
         },
@@ -312,7 +312,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 9,
-          "avgGross": null,
+          "avgGross": 84.8,
           "avgNeto": 84.8,
           "posicionFinal": 9
         },
@@ -320,7 +320,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 10,
-          "avgGross": null,
+          "avgGross": 87.3,
           "avgNeto": 87.6,
           "posicionFinal": 10
         },
@@ -328,7 +328,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 4,
-          "avgGross": null,
+          "avgGross": 85.9,
           "avgNeto": 86.2,
           "posicionFinal": 4
         }
@@ -342,7 +342,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 108.5,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -358,7 +358,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 4,
-          "avgGross": null,
+          "avgGross": 103.9,
           "avgNeto": 88.4,
           "posicionFinal": 4
         },
@@ -374,7 +374,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 3,
-          "avgGross": null,
+          "avgGross": 101.0,
           "avgNeto": 95.4,
           "posicionFinal": 3
         },
@@ -382,7 +382,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 100.9,
           "avgNeto": 89.7,
           "posicionFinal": 7
         },
@@ -390,7 +390,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 100.0,
           "avgNeto": 87.6,
           "posicionFinal": 5
         },
@@ -398,7 +398,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 3,
-          "avgGross": null,
+          "avgGross": 99.1,
           "avgNeto": 90.3,
           "posicionFinal": 3
         },
@@ -420,7 +420,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 113.0,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -428,7 +428,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 105.3,
           "avgNeto": 87.3,
           "posicionFinal": 7
         },
@@ -436,7 +436,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 2,
-          "avgGross": null,
+          "avgGross": 107.0,
           "avgNeto": 83.4,
           "posicionFinal": 2
         },
@@ -444,7 +444,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 3,
-          "avgGross": null,
+          "avgGross": 101.3,
           "avgNeto": 86.4,
           "posicionFinal": 3
         },
@@ -452,7 +452,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 9,
-          "avgGross": null,
+          "avgGross": 102.2,
           "avgNeto": 86.3,
           "posicionFinal": 9
         },
@@ -460,7 +460,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 12,
-          "avgGross": null,
+          "avgGross": 101.7,
           "avgNeto": 92.0,
           "posicionFinal": 12
         },
@@ -468,7 +468,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 2,
-          "avgGross": null,
+          "avgGross": 95.9,
           "avgNeto": 88.2,
           "posicionFinal": 2
         },
@@ -476,7 +476,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 4,
-          "avgGross": null,
+          "avgGross": 95.0,
           "avgNeto": 89.5,
           "posicionFinal": 4
         },
@@ -484,7 +484,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 10,
-          "avgGross": null,
+          "avgGross": 95.9,
           "avgNeto": 89.9,
           "posicionFinal": 10
         }
@@ -498,7 +498,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 102.8,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -506,7 +506,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 11,
-          "avgGross": null,
+          "avgGross": 105.2,
           "avgNeto": 91.8,
           "posicionFinal": 11
         },
@@ -514,7 +514,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 8,
-          "avgGross": null,
+          "avgGross": 99.4,
           "avgNeto": 93.3,
           "posicionFinal": 8
         },
@@ -530,7 +530,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 4,
-          "avgGross": null,
+          "avgGross": 97.6,
           "avgNeto": 90.6,
           "posicionFinal": 4
         },
@@ -538,7 +538,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 94.6,
           "avgNeto": 94.6,
           "posicionFinal": 5
         },
@@ -546,7 +546,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 4,
-          "avgGross": null,
+          "avgGross": 99.1,
           "avgNeto": 93.0,
           "posicionFinal": 4
         },
@@ -554,7 +554,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 95.0,
           "avgNeto": 92.9,
           "posicionFinal": 7
         },
@@ -562,7 +562,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 95.8,
           "avgNeto": 90.7,
           "posicionFinal": 5
         }
@@ -576,7 +576,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 110.4,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -584,7 +584,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 100.9,
           "avgNeto": 94.0,
           "posicionFinal": 5
         },
@@ -592,7 +592,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 6,
-          "avgGross": null,
+          "avgGross": 101.2,
           "avgNeto": 89.8,
           "posicionFinal": 6
         },
@@ -616,7 +616,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 10,
-          "avgGross": null,
+          "avgGross": 102.5,
           "avgNeto": 89.8,
           "posicionFinal": 10
         },
@@ -624,7 +624,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 10,
-          "avgGross": null,
+          "avgGross": 98.6,
           "avgNeto": 93.8,
           "posicionFinal": 10
         },
@@ -632,7 +632,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 8,
-          "avgGross": null,
+          "avgGross": 97.0,
           "avgNeto": 94.2,
           "posicionFinal": 8
         },
@@ -640,7 +640,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 9,
-          "avgGross": null,
+          "avgGross": 98.9,
           "avgNeto": 90.6,
           "posicionFinal": 9
         }
@@ -654,7 +654,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 102.5,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -662,7 +662,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 6,
-          "avgGross": null,
+          "avgGross": 93.3,
           "avgNeto": 93.3,
           "posicionFinal": 6
         },
@@ -670,7 +670,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 10,
-          "avgGross": null,
+          "avgGross": 95.9,
           "avgNeto": 93.7,
           "posicionFinal": 10
         },
@@ -678,7 +678,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 90.7,
           "avgNeto": 93.5,
           "posicionFinal": null
         },
@@ -694,7 +694,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 13,
-          "avgGross": null,
+          "avgGross": 90.6,
           "avgNeto": 89.6,
           "posicionFinal": 13
         },
@@ -702,7 +702,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 14,
-          "avgGross": null,
+          "avgGross": 90.5,
           "avgNeto": 89.3,
           "posicionFinal": 14
         },
@@ -710,7 +710,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 2,
-          "avgGross": null,
+          "avgGross": 88.4,
           "avgNeto": 88.4,
           "posicionFinal": 2
         }
@@ -724,7 +724,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 107.6,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -732,7 +732,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 12,
-          "avgGross": null,
+          "avgGross": 103.4,
           "avgNeto": 87.4,
           "posicionFinal": 12
         },
@@ -754,7 +754,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 118.4,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -762,7 +762,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 1,
-          "avgGross": null,
+          "avgGross": 100.4,
           "avgNeto": 86.0,
           "posicionFinal": 1
         },
@@ -770,7 +770,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 9,
-          "avgGross": null,
+          "avgGross": 105.7,
           "avgNeto": 86.3,
           "posicionFinal": 9
         },
@@ -786,7 +786,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 6,
-          "avgGross": null,
+          "avgGross": 100.9,
           "avgNeto": 89.9,
           "posicionFinal": 6
         },
@@ -794,7 +794,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 4,
-          "avgGross": null,
+          "avgGross": 97.6,
           "avgNeto": 94.1,
           "posicionFinal": 4
         },
@@ -802,7 +802,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 3,
-          "avgGross": null,
+          "avgGross": 94.7,
           "avgNeto": 92.0,
           "posicionFinal": 3
         },
@@ -810,7 +810,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 99.4,
           "avgNeto": 91.0,
           "posicionFinal": 5
         },
@@ -832,7 +832,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 3,
-          "avgGross": null,
+          "avgGross": 97.5,
           "avgNeto": 97.5,
           "posicionFinal": 3
         }
@@ -846,7 +846,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 13,
-          "avgGross": null,
+          "avgGross": 105.4,
           "avgNeto": 85.4,
           "posicionFinal": 13
         }
@@ -860,7 +860,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 15,
-          "avgGross": null,
+          "avgGross": 98.3,
           "avgNeto": 93.7,
           "posicionFinal": 15
         }
@@ -882,7 +882,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 13,
-          "avgGross": null,
+          "avgGross": 108.4,
           "avgNeto": 82.9,
           "posicionFinal": 13
         },
@@ -890,7 +890,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 14,
-          "avgGross": null,
+          "avgGross": 103.1,
           "avgNeto": 92.0,
           "posicionFinal": 14
         },
@@ -898,7 +898,7 @@
           "fechasJugadas": 7,
           "fechasGanadas": 0,
           "mejorPosicion": 13,
-          "avgGross": null,
+          "avgGross": 102.2,
           "avgNeto": 89.2,
           "posicionFinal": 13
         },
@@ -906,7 +906,7 @@
           "fechasJugadas": 6,
           "fechasGanadas": 0,
           "mejorPosicion": 14,
-          "avgGross": null,
+          "avgGross": 100.0,
           "avgNeto": 89.0,
           "posicionFinal": 14
         }
@@ -920,7 +920,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 88.0,
           "avgNeto": 88.0,
           "posicionFinal": null
         },
@@ -936,7 +936,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 90.3,
           "avgNeto": 90.3,
           "posicionFinal": 5
         },
@@ -944,7 +944,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 10,
-          "avgGross": null,
+          "avgGross": 91.8,
           "avgNeto": 91.8,
           "posicionFinal": 10
         },
@@ -952,7 +952,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 11,
-          "avgGross": null,
+          "avgGross": 93.0,
           "avgNeto": 93.0,
           "posicionFinal": 11
         },
@@ -960,7 +960,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 94.0,
           "avgNeto": 89.3,
           "posicionFinal": 7
         },
@@ -968,7 +968,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 1,
-          "avgGross": null,
+          "avgGross": 89.2,
           "avgNeto": 89.2,
           "posicionFinal": 1
         },
@@ -976,7 +976,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 6,
-          "avgGross": null,
+          "avgGross": 87.9,
           "avgNeto": 87.9,
           "posicionFinal": 6
         }
@@ -990,7 +990,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 93.0,
           "avgNeto": 93.0,
           "posicionFinal": null
         }
@@ -1004,7 +1004,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 103.0,
           "avgNeto": 82.0,
           "posicionFinal": null
         }
@@ -1018,7 +1018,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 5,
-          "avgGross": null,
+          "avgGross": 95.8,
           "avgNeto": 93.5,
           "posicionFinal": 5
         },
@@ -1026,7 +1026,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 14,
-          "avgGross": null,
+          "avgGross": 101.4,
           "avgNeto": 94.2,
           "posicionFinal": 14
         },
@@ -1034,7 +1034,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 15,
-          "avgGross": null,
+          "avgGross": 97.7,
           "avgNeto": 92.7,
           "posicionFinal": 15
         },
@@ -1042,7 +1042,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 2,
-          "avgGross": null,
+          "avgGross": 90.0,
           "avgNeto": 90.0,
           "posicionFinal": 2
         },
@@ -1050,7 +1050,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 3,
-          "avgGross": null,
+          "avgGross": 91.3,
           "avgNeto": 91.3,
           "posicionFinal": 3
         }
@@ -1064,7 +1064,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 103.5,
           "avgNeto": 84.0,
           "posicionFinal": 7
         },
@@ -1080,7 +1080,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 16,
-          "avgGross": null,
+          "avgGross": 100.5,
           "avgNeto": 90.0,
           "posicionFinal": 16
         },
@@ -1088,7 +1088,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 9,
-          "avgGross": null,
+          "avgGross": 101.1,
           "avgNeto": 84.7,
           "posicionFinal": 9
         },
@@ -1096,7 +1096,7 @@
           "fechasJugadas": 10,
           "fechasGanadas": 0,
           "mejorPosicion": 7,
-          "avgGross": null,
+          "avgGross": 98.4,
           "avgNeto": 89.6,
           "posicionFinal": 7
         }
@@ -1124,7 +1124,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 94.7,
           "avgNeto": 94.7,
           "posicionFinal": null
         },
@@ -1146,7 +1146,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 92.0,
           "avgNeto": 92.0,
           "posicionFinal": null
         }
@@ -1160,7 +1160,7 @@
           "fechasJugadas": 9,
           "fechasGanadas": 0,
           "mejorPosicion": 8,
-          "avgGross": null,
+          "avgGross": 83.3,
           "avgNeto": 83.3,
           "posicionFinal": 8
         },
@@ -1168,7 +1168,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 12,
-          "avgGross": null,
+          "avgGross": 84.6,
           "avgNeto": 84.6,
           "posicionFinal": 12
         },
@@ -1176,7 +1176,7 @@
           "fechasJugadas": 8,
           "fechasGanadas": 0,
           "mejorPosicion": 12,
-          "avgGross": null,
+          "avgGross": 81.5,
           "avgNeto": 81.5,
           "posicionFinal": 12
         },
@@ -1184,7 +1184,7 @@
           "fechasJugadas": 7,
           "fechasGanadas": 0,
           "mejorPosicion": 11,
-          "avgGross": null,
+          "avgGross": 86.9,
           "avgNeto": 86.9,
           "posicionFinal": 11
         }
@@ -1212,7 +1212,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 90.0,
           "avgNeto": 90.0,
           "posicionFinal": null
         },
@@ -1234,7 +1234,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 85.0,
           "avgNeto": 85.0,
           "posicionFinal": null
         }
@@ -1256,7 +1256,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 102.0,
           "avgNeto": 83.5,
           "posicionFinal": null
         }
@@ -1270,7 +1270,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 105.0,
           "avgNeto": 83.0,
           "posicionFinal": null
         },
@@ -1286,7 +1286,7 @@
           "fechasJugadas": 6,
           "fechasGanadas": 0,
           "mejorPosicion": 16,
-          "avgGross": null,
+          "avgGross": 99.0,
           "avgNeto": 92.0,
           "posicionFinal": 16
         }
@@ -1300,7 +1300,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 87.8,
           "avgNeto": 87.8,
           "posicionFinal": null
         },
@@ -1308,7 +1308,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 84.5,
           "avgNeto": 89.0,
           "posicionFinal": null
         }
@@ -1322,7 +1322,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 111.0,
           "avgNeto": 88.0,
           "posicionFinal": null
         },
@@ -1330,7 +1330,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 100.0,
           "avgNeto": 98.0,
           "posicionFinal": null
         }
@@ -1344,7 +1344,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 92.0,
           "avgNeto": 92.0,
           "posicionFinal": null
         }
@@ -1372,7 +1372,7 @@
           "fechasJugadas": 1,
           "fechasGanadas": 0,
           "mejorPosicion": null,
-          "avgGross": null,
+          "avgGross": 90.0,
           "avgNeto": 90.0,
           "posicionFinal": null
         }
