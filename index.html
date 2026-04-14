@@ -5885,10 +5885,8 @@ function getJugadorAllYears(playerId) {
 function getAllJugadoresIds() {
   const ids = new Set();
   PLAYERS.forEach(p => ids.add(p.id));
-  // Suplente especial
+  // Suplente especial (Ale Gatto)
   SUPLENTES_CONOCIDOS.filter(s => s.esOficialEspecial).forEach(s => ids.add(s.id));
-  // Históricos que no son actuales
-  Object.keys(jugadoresHistorico).forEach(id => ids.add(id));
   return [...ids];
 }
 
