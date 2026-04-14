@@ -1,0 +1,1429 @@
+{
+  "players": {
+    "elizalde": {
+      "nombre": "Elizalde, Juancho",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 55.0,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": null,
+          "avgNeto": 94.9,
+          "posicionFinal": 9
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": null,
+          "avgNeto": 91.4,
+          "posicionFinal": 3
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": null,
+          "avgNeto": 90.5,
+          "posicionFinal": 2
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": 88.4,
+          "avgNeto": 88.4,
+          "posicionFinal": 2
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": 88.3,
+          "avgNeto": 88.3,
+          "posicionFinal": 3
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": 80.7,
+          "avgNeto": 82.6,
+          "posicionFinal": 1
+        },
+        "2024": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 0,
+          "mejorPosicion": 16,
+          "avgGross": null,
+          "avgNeto": 87.5,
+          "posicionFinal": 16
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 13,
+          "avgGross": null,
+          "avgNeto": 89.7,
+          "posicionFinal": 13
+        }
+      }
+    },
+    "vogelius": {
+      "nombre": "Vogelius, Nico",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": 96.9,
+          "avgNeto": 92.3,
+          "posicionFinal": 4
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 11,
+          "avgGross": 99.0,
+          "avgNeto": 89.0,
+          "posicionFinal": 11
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 96.3,
+          "posicionFinal": 7
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": null,
+          "avgNeto": 94.8,
+          "posicionFinal": 8
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": null,
+          "avgNeto": 87.3,
+          "posicionFinal": 1
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 11,
+          "avgGross": null,
+          "avgNeto": 93.6,
+          "posicionFinal": 11
+        },
+        "2024": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": null,
+          "avgNeto": 91.2,
+          "posicionFinal": 6
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": null,
+          "avgNeto": 92.1,
+          "posicionFinal": 1
+        }
+      }
+    },
+    "canonico": {
+      "nombre": "Canónico, Agus",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": null,
+          "avgNeto": 93.4,
+          "posicionFinal": 8
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 93.9,
+          "posicionFinal": 7
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": null,
+          "avgNeto": 92.4,
+          "posicionFinal": 1
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 11,
+          "avgGross": null,
+          "avgNeto": 93.0,
+          "posicionFinal": 11
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": null,
+          "avgNeto": 91.1,
+          "posicionFinal": 6
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": 93.2,
+          "avgNeto": 92.0,
+          "posicionFinal": 6
+        },
+        "2024": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 11,
+          "avgGross": null,
+          "avgNeto": 89.0,
+          "posicionFinal": 11
+        },
+        "2025": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 15,
+          "avgGross": null,
+          "avgNeto": 93.4,
+          "posicionFinal": 15
+        }
+      }
+    },
+    "canonico_nacho": {
+      "nombre": "Canónico, Nacho",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 58.0,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": null,
+          "avgNeto": 89.4,
+          "posicionFinal": 10
+        }
+      }
+    },
+    "gatto": {
+      "nombre": "Gatto, Mariano",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 64.0,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": null,
+          "avgNeto": 86.3,
+          "posicionFinal": 2
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 89.9,
+          "posicionFinal": 5
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": null,
+          "avgNeto": 91.3,
+          "posicionFinal": 4
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": 84.7,
+          "avgNeto": 84.8,
+          "posicionFinal": 1
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": null,
+          "avgNeto": 87.1,
+          "posicionFinal": 9
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": null,
+          "avgNeto": 84.8,
+          "posicionFinal": 9
+        },
+        "2024": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": null,
+          "avgNeto": 87.6,
+          "posicionFinal": 10
+        },
+        "2025": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": null,
+          "avgNeto": 86.2,
+          "posicionFinal": 4
+        }
+      }
+    },
+    "benegas": {
+      "nombre": "Benegas, Pancho",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 14,
+          "avgGross": 104.6,
+          "avgNeto": 86.2,
+          "posicionFinal": 14
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": null,
+          "avgNeto": 88.4,
+          "posicionFinal": 4
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": 108.0,
+          "avgNeto": 83.2,
+          "posicionFinal": 9
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": null,
+          "avgNeto": 95.4,
+          "posicionFinal": 3
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 89.7,
+          "posicionFinal": 7
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 87.6,
+          "posicionFinal": 5
+        },
+        "2024": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": null,
+          "avgNeto": 90.3,
+          "posicionFinal": 3
+        },
+        "2025": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 12,
+          "avgGross": 98.1,
+          "avgNeto": 92.5,
+          "posicionFinal": 12
+        }
+      }
+    },
+    "pannullo": {
+      "nombre": "Pannullo, Tincho",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 87.3,
+          "posicionFinal": 7
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": null,
+          "avgNeto": 83.4,
+          "posicionFinal": 2
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": null,
+          "avgNeto": 86.4,
+          "posicionFinal": 3
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": null,
+          "avgNeto": 86.3,
+          "posicionFinal": 9
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 12,
+          "avgGross": null,
+          "avgNeto": 92.0,
+          "posicionFinal": 12
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": null,
+          "avgNeto": 88.2,
+          "posicionFinal": 2
+        },
+        "2024": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": null,
+          "avgNeto": 89.5,
+          "posicionFinal": 4
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": null,
+          "avgNeto": 89.9,
+          "posicionFinal": 10
+        }
+      }
+    },
+    "mendez": {
+      "nombre": "Mendez, Pato",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 11,
+          "avgGross": null,
+          "avgNeto": 91.8,
+          "posicionFinal": 11
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": null,
+          "avgNeto": 93.3,
+          "posicionFinal": 8
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": 97.2,
+          "avgNeto": 95.6,
+          "posicionFinal": 6
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": null,
+          "avgNeto": 90.6,
+          "posicionFinal": 4
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 94.6,
+          "posicionFinal": 5
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": null,
+          "avgNeto": 93.0,
+          "posicionFinal": 4
+        },
+        "2024": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 92.9,
+          "posicionFinal": 7
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 90.7,
+          "posicionFinal": 5
+        }
+      }
+    },
+    "guevara": {
+      "nombre": "Guevara, Franki",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 94.0,
+          "posicionFinal": 5
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": null,
+          "avgNeto": 89.8,
+          "posicionFinal": 6
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": 104.1,
+          "avgNeto": 90.0,
+          "posicionFinal": 8
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 12,
+          "avgGross": 103.6,
+          "avgNeto": 83.8,
+          "posicionFinal": 12
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": null,
+          "avgNeto": 89.8,
+          "posicionFinal": 10
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": null,
+          "avgNeto": 93.8,
+          "posicionFinal": 10
+        },
+        "2024": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": null,
+          "avgNeto": 94.2,
+          "posicionFinal": 8
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": null,
+          "avgNeto": 90.6,
+          "posicionFinal": 9
+        }
+      }
+    },
+    "zunino": {
+      "nombre": "Zunino, Javi",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": null,
+          "avgNeto": 93.3,
+          "posicionFinal": 6
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": null,
+          "avgNeto": 93.7,
+          "posicionFinal": 10
+        },
+        "2021": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 93.5,
+          "posicionFinal": null
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": 86.9,
+          "avgNeto": 86.9,
+          "posicionFinal": 2
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 13,
+          "avgGross": null,
+          "avgNeto": 89.6,
+          "posicionFinal": 13
+        },
+        "2024": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 14,
+          "avgGross": null,
+          "avgNeto": 89.3,
+          "posicionFinal": 14
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": null,
+          "avgNeto": 88.4,
+          "posicionFinal": 2
+        }
+      }
+    },
+    "nielsen": {
+      "nombre": "Nielsen, Juanchi",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 12,
+          "avgGross": null,
+          "avgNeto": 87.4,
+          "posicionFinal": 12
+        },
+        "2018": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        }
+      }
+    },
+    "molinario": {
+      "nombre": "Molinario, Andy",
+      "foto": null,
+      "años": {
+        "2016": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": null,
+          "avgNeto": 86.0,
+          "posicionFinal": 1
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": null,
+          "avgNeto": 86.3,
+          "posicionFinal": 9
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": 106.0,
+          "avgNeto": 90.7,
+          "posicionFinal": 10
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": null,
+          "avgNeto": 89.9,
+          "posicionFinal": 6
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 4,
+          "avgGross": null,
+          "avgNeto": 94.1,
+          "posicionFinal": 4
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": null,
+          "avgNeto": 92.0,
+          "posicionFinal": 3
+        },
+        "2024": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 91.0,
+          "posicionFinal": 5
+        },
+        "2025": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": 95.5,
+          "avgNeto": 92.8,
+          "posicionFinal": 8
+        }
+      }
+    },
+    "copello": {
+      "nombre": "Copello, Santi",
+      "foto": null,
+      "años": {
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": null,
+          "avgNeto": 97.5,
+          "posicionFinal": 3
+        }
+      }
+    },
+    "delger": {
+      "nombre": "Delger, Martin",
+      "foto": null,
+      "años": {
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 13,
+          "avgGross": null,
+          "avgNeto": 85.4,
+          "posicionFinal": 13
+        }
+      }
+    },
+    "señorans_julio": {
+      "nombre": "Señorans, Julio",
+      "foto": null,
+      "años": {
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 15,
+          "avgGross": null,
+          "avgNeto": 93.7,
+          "posicionFinal": 15
+        }
+      }
+    },
+    "dipaola": {
+      "nombre": "Dipaola, Martin",
+      "foto": null,
+      "años": {
+        "2017": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 16,
+          "avgGross": 118.5,
+          "avgNeto": 93.5,
+          "posicionFinal": 16
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 13,
+          "avgGross": null,
+          "avgNeto": 82.9,
+          "posicionFinal": 13
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 14,
+          "avgGross": null,
+          "avgNeto": 92.0,
+          "posicionFinal": 14
+        },
+        "2024": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 0,
+          "mejorPosicion": 13,
+          "avgGross": null,
+          "avgNeto": 89.2,
+          "posicionFinal": 13
+        },
+        "2025": {
+          "fechasJugadas": 6,
+          "fechasGanadas": 0,
+          "mejorPosicion": 14,
+          "avgGross": null,
+          "avgNeto": 89.0,
+          "posicionFinal": 14
+        }
+      }
+    },
+    "tarasido": {
+      "nombre": "Tarasido, Gonzalo",
+      "foto": null,
+      "años": {
+        "2017": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 88.0,
+          "posicionFinal": null
+        },
+        "2018": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": 88.0,
+          "avgNeto": 88.0,
+          "posicionFinal": 1
+        },
+        "2019": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 90.3,
+          "posicionFinal": 5
+        },
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 10,
+          "avgGross": null,
+          "avgNeto": 91.8,
+          "posicionFinal": 10
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 11,
+          "avgGross": null,
+          "avgNeto": 93.0,
+          "posicionFinal": 11
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 89.3,
+          "posicionFinal": 7
+        },
+        "2024": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 1,
+          "avgGross": null,
+          "avgNeto": 89.2,
+          "posicionFinal": 1
+        },
+        "2025": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 6,
+          "avgGross": null,
+          "avgNeto": 87.9,
+          "posicionFinal": 6
+        }
+      }
+    },
+    "sanchez_ricoy": {
+      "nombre": "Sánchez Ricoy, Jorge",
+      "foto": null,
+      "años": {
+        "2019": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 93.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "hack": {
+      "nombre": "Hack, Federico",
+      "foto": null,
+      "años": {
+        "2019": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 82.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "basaldua": {
+      "nombre": "Basaldua, Ignacio",
+      "foto": null,
+      "años": {
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 5,
+          "avgGross": null,
+          "avgNeto": 93.5,
+          "posicionFinal": 5
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 14,
+          "avgGross": null,
+          "avgNeto": 94.2,
+          "posicionFinal": 14
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 15,
+          "avgGross": null,
+          "avgNeto": 92.7,
+          "posicionFinal": 15
+        },
+        "2024": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 2,
+          "avgGross": null,
+          "avgNeto": 90.0,
+          "posicionFinal": 2
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 3,
+          "avgGross": null,
+          "avgNeto": 91.3,
+          "posicionFinal": 3
+        }
+      }
+    },
+    "fernandez": {
+      "nombre": "Fernandez, Lucas",
+      "foto": null,
+      "años": {
+        "2021": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 84.0,
+          "posicionFinal": 7
+        },
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 15,
+          "avgGross": 104.5,
+          "avgNeto": 83.5,
+          "posicionFinal": 15
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 16,
+          "avgGross": null,
+          "avgNeto": 90.0,
+          "posicionFinal": 16
+        },
+        "2024": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 9,
+          "avgGross": null,
+          "avgNeto": 84.7,
+          "posicionFinal": 9
+        },
+        "2025": {
+          "fechasJugadas": 10,
+          "fechasGanadas": 0,
+          "mejorPosicion": 7,
+          "avgGross": null,
+          "avgNeto": 89.6,
+          "posicionFinal": 7
+        }
+      }
+    },
+    "abreu": {
+      "nombre": "Abreu, Santiago",
+      "foto": null,
+      "años": {
+        "2021": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        }
+      }
+    },
+    "miceli": {
+      "nombre": "Miceli, Julian (INV)",
+      "foto": null,
+      "años": {
+        "2021": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 94.7,
+          "posicionFinal": null
+        },
+        "2023": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        }
+      }
+    },
+    "miranda": {
+      "nombre": "Miranda, Francisco",
+      "foto": null,
+      "años": {
+        "2021": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 92.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "gonzalez": {
+      "nombre": "Gonzalez, Agus",
+      "foto": null,
+      "años": {
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": null,
+          "avgNeto": 83.3,
+          "posicionFinal": 8
+        },
+        "2023": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 12,
+          "avgGross": null,
+          "avgNeto": 84.6,
+          "posicionFinal": 12
+        },
+        "2024": {
+          "fechasJugadas": 8,
+          "fechasGanadas": 0,
+          "mejorPosicion": 12,
+          "avgGross": null,
+          "avgNeto": 81.5,
+          "posicionFinal": 12
+        },
+        "2025": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 0,
+          "mejorPosicion": 11,
+          "avgGross": null,
+          "avgNeto": 86.9,
+          "posicionFinal": 11
+        }
+      }
+    },
+    "diaz_andrade": {
+      "nombre": "Diaz Andrade, Juampi",
+      "foto": null,
+      "años": {
+        "2022": {
+          "fechasJugadas": 9,
+          "fechasGanadas": 0,
+          "mejorPosicion": 16,
+          "avgGross": 112.0,
+          "avgNeto": 87.0,
+          "posicionFinal": 16
+        }
+      }
+    },
+    "perez_a": {
+      "nombre": "Perez A., Nacho",
+      "foto": null,
+      "años": {
+        "2022": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 90.0,
+          "posicionFinal": null
+        },
+        "2023": {
+          "fechasJugadas": 7,
+          "fechasGanadas": 0,
+          "mejorPosicion": 8,
+          "avgGross": 93.5,
+          "avgNeto": 93.5,
+          "posicionFinal": 8
+        }
+      }
+    },
+    "lavalle": {
+      "nombre": "Lavalle, Joaquin",
+      "foto": null,
+      "años": {
+        "2022": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 85.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "uribelarrea": {
+      "nombre": "Uribelarrea, Rafael (INV)",
+      "foto": null,
+      "años": {
+        "2023": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        },
+        "2024": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 83.5,
+          "posicionFinal": null
+        }
+      }
+    },
+    "scapparone": {
+      "nombre": "Scapparone, Nico",
+      "foto": null,
+      "años": {
+        "2023": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 83.0,
+          "posicionFinal": null
+        },
+        "2024": {
+          "fechasJugadas": 6,
+          "fechasGanadas": 0,
+          "mejorPosicion": 15,
+          "avgGross": 101.5,
+          "avgNeto": 89.9,
+          "posicionFinal": 15
+        },
+        "2025": {
+          "fechasJugadas": 6,
+          "fechasGanadas": 0,
+          "mejorPosicion": 16,
+          "avgGross": null,
+          "avgNeto": 92.0,
+          "posicionFinal": 16
+        }
+      }
+    },
+    "robles": {
+      "nombre": "Robles, Juancho",
+      "foto": null,
+      "años": {
+        "2024": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 87.8,
+          "posicionFinal": null
+        },
+        "2025": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 89.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "alfonso": {
+      "nombre": "Alfonso, Juani",
+      "foto": null,
+      "años": {
+        "2024": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 88.0,
+          "posicionFinal": null
+        },
+        "2025": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 98.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "troncoso": {
+      "nombre": "Troncoso, Tati",
+      "foto": null,
+      "años": {
+        "2024": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 92.0,
+          "posicionFinal": null
+        }
+      }
+    },
+    "gatto_ale": {
+      "nombre": "Gatto, Alejandro",
+      "foto": null,
+      "años": {
+        "2024": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": null,
+          "posicionFinal": null
+        }
+      }
+    },
+    "hector_gatto": {
+      "nombre": "Hector, Gatto",
+      "foto": null,
+      "años": {
+        "2025": {
+          "fechasJugadas": 1,
+          "fechasGanadas": 0,
+          "mejorPosicion": null,
+          "avgGross": null,
+          "avgNeto": 90.0,
+          "posicionFinal": null
+        }
+      }
+    }
+  },
+  "tourTotals": {
+    "2016": {
+      "avgGross": null,
+      "avgNeto": 59.0,
+      "totalJugadores": 12
+    },
+    "2017": {
+      "avgGross": 106.7,
+      "avgNeto": 90.6,
+      "totalJugadores": 17
+    },
+    "2018": {
+      "avgGross": 93.5,
+      "avgNeto": 89.7,
+      "totalJugadores": 12
+    },
+    "2019": {
+      "avgGross": 103.8,
+      "avgNeto": 90.1,
+      "totalJugadores": 12
+    },
+    "2021": {
+      "avgGross": 92.2,
+      "avgNeto": 90.4,
+      "totalJugadores": 16
+    },
+    "2022": {
+      "avgGross": 97.9,
+      "avgNeto": 88.9,
+      "totalJugadores": 18
+    },
+    "2023": {
+      "avgGross": 89.1,
+      "avgNeto": 89.5,
+      "totalJugadores": 19
+    },
+    "2024": {
+      "avgGross": 101.5,
+      "avgNeto": 88.9,
+      "totalJugadores": 21
+    },
+    "2025": {
+      "avgGross": 96.8,
+      "avgNeto": 90.5,
+      "totalJugadores": 19
+    }
+  }
+}
