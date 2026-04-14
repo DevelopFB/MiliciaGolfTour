@@ -1673,6 +1673,22 @@ ON CONFLICT (id) DO NOTHING;</pre>
         <button class="admin-btn secondary" onclick="fixtureAdminReset()">↺ Resetear a defaults</button>
         <span id="fixture-admin-status" style="font-size:0.78rem;color:var(--muted-light);align-self:center"></span>
       </div>
+      <details style="margin-top:14px">
+        <summary style="cursor:pointer;font-size:0.75rem;color:var(--gold)">🔧 Primera vez: crear tabla fixture en Supabase</summary>
+        <pre style="background:#1a2233;border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:12px;font-family:'DM Mono',monospace;font-size:0.66rem;color:#6a9fc0;line-height:1.6;overflow-x:auto;white-space:pre-wrap;margin-top:8px">CREATE TABLE IF NOT EXISTS fixture (
+  num INT PRIMARY KEY,
+  fecha TEXT,
+  modalidad TEXT,
+  criterio TEXT,
+  organizadores TEXT,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE fixture ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read fixture"
+  ON fixture FOR SELECT USING (true);
+CREATE POLICY "Allow anon write fixture"
+  ON fixture FOR ALL USING (true) WITH CHECK (true);</pre>
+      </details>
     </div>
 
     <!-- ── TAB: HISTÓRICO ── -->
@@ -5095,6 +5111,48 @@ function fixtureSaveLocal() {
   localStorage.setItem(FIXTURE_STORAGE_KEY, JSON.stringify(fixtureData));
 }
 
+async function fixtureLoadRemote() {
+  const client = getSupabaseClient();
+  if(!client) return false;
+  try {
+    const { data, error } = await client.from('fixture').select('*').order('num');
+    if(error) { console.warn('[Fixture] Error load Supabase', error); return false; }
+    if(data && data.length > 0) {
+      // Merge: para cada num en defaults, tomar la versión remota si existe
+      fixtureData = FIXTURE_DEFAULTS.map(def => {
+        const remote = data.find(r => r.num === def.num);
+        return remote ? {
+          num: remote.num,
+          fecha: remote.fecha ?? def.fecha,
+          modalidad: remote.modalidad ?? def.modalidad,
+          criterio: remote.criterio ?? def.criterio,
+          organizadores: remote.organizadores ?? def.organizadores
+        } : {...def};
+      });
+      localStorage.setItem(FIXTURE_STORAGE_KEY, JSON.stringify(fixtureData));
+      console.log('[Fixture] Cargado de Supabase:', data.length, 'rows');
+      return true;
+    }
+  } catch(e) { console.warn('[Fixture] Excepción load', e); }
+  return false;
+}
+
+async function fixtureSaveRemote() {
+  const client = getSupabaseClient();
+  if(!client) return false;
+  try {
+    const rows = fixtureData.map(fx => ({
+      num: fx.num, fecha: fx.fecha, modalidad: fx.modalidad,
+      criterio: fx.criterio, organizadores: fx.organizadores,
+      updated_at: new Date().toISOString()
+    }));
+    const { error } = await client.from('fixture').upsert(rows, { onConflict: 'num' });
+    if(error) { console.warn('[Fixture] Error save Supabase', error); return false; }
+    console.log('[Fixture] Guardado en Supabase:', rows.length, 'rows');
+    return true;
+  } catch(e) { console.warn('[Fixture] Excepción save', e); return false; }
+}
+
 function fixtureAdminRender() {
   if(!fixtureData.length) fixtureLoadLocal();
   const tbody = byId('fixture-admin-tbody');
@@ -5112,7 +5170,7 @@ function fixtureAdminRender() {
   </tr>`).join('');
 }
 
-function fixtureAdminSave() {
+async function fixtureAdminSave() {
   document.querySelectorAll('.fx-input').forEach(input => {
     const num = parseInt(input.dataset.num);
     const field = input.dataset.field;
@@ -5128,7 +5186,13 @@ function fixtureAdminSave() {
   // Re-render fixture tab
   rendered.fixture = false;
   const st = byId('fixture-admin-status');
-  if(st) { st.textContent = 'Fixture guardado'; st.style.color = 'var(--green)'; setTimeout(()=>{st.textContent='';},3000); }
+  if(st) { st.textContent = 'Guardando en Supabase...'; st.style.color = 'var(--gold)'; }
+  const ok = await fixtureSaveRemote();
+  if(st) {
+    if(ok) { st.textContent = '✓ Fixture sincronizado en todos los dispositivos'; st.style.color = 'var(--green)'; }
+    else { st.textContent = '⚠ Guardado local (Supabase no disponible)'; st.style.color = 'var(--gold)'; }
+    setTimeout(()=>{st.textContent='';},4000);
+  }
 }
 
 function fixtureAdminReset() {
@@ -5162,8 +5226,24 @@ renderFixture = function() {
   byId('tbl-fixture').innerHTML=`<thead><tr><th>F</th><th>Fecha</th><th>Modalidad</th><th>Criterio</th><th>Organizadores</th><th>Estado</th></tr></thead><tbody>${rows}</tbody>`;
 };
 
-// Init fixture on load
+// Init fixture on load: primero local (rápido), luego Supabase (remoto gana)
 fixtureLoadLocal();
+(async () => {
+  const ok = await fixtureLoadRemote();
+  if(ok) {
+    // Actualizar fechas array y re-render si la tab está visible
+    fixtureData.forEach(fx => {
+      const f = fechas.find(x => x.num === fx.num);
+      if(f) f.fecha = fx.fecha;
+    });
+    rendered.fixture = false;
+    const fxSec = byId('sec-fixture');
+    if(fxSec && fxSec.classList.contains('on')) renderFixture();
+    rendered.overview = false;
+    const ovSec = byId('sec-overview');
+    if(ovSec && ovSec.classList.contains('on')) renderOverview(getAccum());
+  }
+})();
 
 // ════════════════════════════════════════════════════════════
 // MÓDULO: CARGA SCORECARD (Builder de JSON desde grilla/imágenes)
