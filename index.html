@@ -5767,65 +5767,60 @@ const HISTORICO_STORAGE_KEY = 'mgt2026_jugadores_historico';
 const HISTORICO_YEARS = [2026,2025,2024,2023,2022,2021,2019,2018,2017,2016];
 
 // ── Supabase: Load/Save ──
+const HISTORICO_VERSION_KEY = 'mgt2026_jugadores_historico_version';
+
 async function loadJugadoresHistorico() {
-  // Primero cargar de localStorage
+  const client = getSupabaseClient();
+
+  // 1) Intentar primero fetchar el JSON del repo (fuente de verdad)
+  let jsonFromRepo = null;
+  try {
+    const resp = await fetch('./jugadores_historico.json', {cache:'no-store'});
+    if(resp.ok) jsonFromRepo = await resp.json();
+  } catch(e) { console.warn('No se pudo fetchar jugadores_historico.json', e); }
+
+  if(jsonFromRepo?.players) {
+    const repoVersion = jsonFromRepo._version || JSON.stringify(jsonFromRepo).length.toString();
+    const localVersion = localStorage.getItem(HISTORICO_VERSION_KEY);
+    const versionChanged = localVersion !== repoVersion;
+
+    Object.entries(jsonFromRepo.players).forEach(([id, p]) => {
+      jugadoresHistorico[id] = { nombre: p.nombre, foto: p.foto || null, años: p.años || {} };
+    });
+    localStorage.setItem(HISTORICO_STORAGE_KEY, JSON.stringify(jugadoresHistorico));
+    localStorage.setItem(HISTORICO_VERSION_KEY, repoVersion);
+    console.log('[Histórico] Cargado desde jugadores_historico.json:', Object.keys(jsonFromRepo.players).length, 'jugadores', versionChanged?'(nueva versión)':'(misma versión)');
+
+    // Si cambió la versión, sincronizar a Supabase para que otros clientes se beneficien
+    if(versionChanged && client) {
+      const rows = Object.entries(jugadoresHistorico).map(([id, d]) => ({
+        id, nombre: d.nombre, foto: d.foto || null, data: d.años,
+        updated_at: new Date().toISOString()
+      }));
+      client.from('jugadores_historico').upsert(rows, { onConflict: 'id' })
+        .then(({error})=> error ? console.warn('Auto-sync Supabase fallo',error) : console.log('[Histórico] Sincronizado a Supabase (nueva versión)'));
+    }
+    return;
+  }
+
+  // 2) Fallback: localStorage
   try {
     const raw = localStorage.getItem(HISTORICO_STORAGE_KEY);
     if(raw) jugadoresHistorico = JSON.parse(raw);
   } catch(e) { console.warn('Error cargando histórico local', e); }
 
-  // Luego de Supabase
-  const client = getSupabaseClient();
-  let supabaseHadData = false;
+  // 3) Fallback: Supabase
   if(client) {
     try {
       const { data, error } = await client.from('jugadores_historico').select('*');
-      if(error) { console.warn('Error cargando histórico Supabase', error); }
-      else if(data && data.length > 0) {
-        supabaseHadData = true;
+      if(!error && data && data.length > 0) {
         data.forEach(row => {
-          jugadoresHistorico[row.id] = {
-            nombre: row.nombre,
-            foto: row.foto || null,
-            años: row.data || {}
-          };
+          jugadoresHistorico[row.id] = { nombre: row.nombre, foto: row.foto || null, años: row.data || {} };
         });
         localStorage.setItem(HISTORICO_STORAGE_KEY, JSON.stringify(jugadoresHistorico));
-        console.log('[Histórico] Cargados', data.length, 'jugadores de Supabase. Sample:', data[0]?.id, Object.keys(data[0]?.data||{}));
-      } else {
-        console.log('[Histórico] Supabase devolvió 0 filas');
+        console.log('[Histórico] Cargados', data.length, 'jugadores de Supabase');
       }
     } catch(e) { console.warn('No se pudo cargar histórico de Supabase', e); }
-  }
-
-  // Fallback: si Supabase no tuvo datos y localStorage tampoco trae años históricos, fetch del JSON local del repo
-  const hasHistYears = Object.values(jugadoresHistorico).some(p => {
-    const keys = Object.keys(p.años||{});
-    return keys.some(y => y !== '2026');
-  });
-  if(!supabaseHadData && !hasHistYears) {
-    try {
-      const resp = await fetch('./jugadores_historico.json', {cache:'no-store'});
-      if(resp.ok) {
-        const json = await resp.json();
-        if(json.players) {
-          Object.entries(json.players).forEach(([id, p]) => {
-            jugadoresHistorico[id] = { nombre: p.nombre, foto: p.foto || null, años: p.años || {} };
-          });
-          localStorage.setItem(HISTORICO_STORAGE_KEY, JSON.stringify(jugadoresHistorico));
-          console.log('[Histórico] Cargado desde jugadores_historico.json:', Object.keys(json.players).length, 'jugadores');
-          // Si hay cliente y estaba vacío, guardar en Supabase para futuras cargas
-          if(client) {
-            const rows = Object.entries(jugadoresHistorico).map(([id, d]) => ({
-              id, nombre: d.nombre, foto: d.foto || null, data: d.años,
-              updated_at: new Date().toISOString()
-            }));
-            client.from('jugadores_historico').upsert(rows, { onConflict: 'id' })
-              .then(({error})=> error ? console.warn('Auto-save histórico fallo',error) : console.log('[Histórico] Auto-guardado en Supabase'));
-          }
-        }
-      }
-    } catch(e) { console.warn('No se pudo fetchar jugadores_historico.json', e); }
   }
 }
 
