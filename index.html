@@ -2423,60 +2423,96 @@ function renderFechaDetail(num) {
 
 // ─── GROSS ───
 function renderGross(acc) {
+  const fechasJugadas = fechas.filter(f=>!f.pendiente&&f.medal);
+  const BEST_N = 7; // tarjetas que cuentan para el premio gross
+
   const grossMap = {};
-  PLAYERS.forEach(p=>{ grossMap[p.id]={scores:[],dates:[]}; });
-  fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
-    f.medal.forEach(m=>{ if(grossMap[m.id]){ grossMap[m.id].scores.push(m.gross); grossMap[m.id].dates.push('F'+f.num); }});
+  PLAYERS.forEach(p=>{ grossMap[p.id]={scoresByF:{}, scores:[]}; });
+  fechasJugadas.forEach(f=>{
+    f.medal.forEach(m=>{
+      if(grossMap[m.id] && m.gross){
+        grossMap[m.id].scoresByF[f.num] = m.gross;
+        grossMap[m.id].scores.push(m.gross);
+      }
+    });
   });
 
-  // Sumar suplente oficial al ranking general (sus scores cuando jugó)
+  // Suplente oficial integrado al ranking (cuando jugó como suplente)
   const supEspG = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
   if(supEspG) {
-    grossMap[supEspG.id] = {scores:[], dates:[], esSupOficial:true};
-    fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
+    grossMap[supEspG.id] = {scoresByF:{}, scores:[], esSupOficial:true};
+    fechasJugadas.forEach(f=>{
       f.medal.forEach(m=>{
         if(m.id === supEspG.id && getSustitutoInfo(m.id, f) && m.gross) {
+          grossMap[supEspG.id].scoresByF[f.num] = m.gross;
           grossMap[supEspG.id].scores.push(m.gross);
-          grossMap[supEspG.id].dates.push('F'+f.num);
         }
       });
     });
   }
 
   const rank = Object.entries(grossMap).map(([id,v])=>{
-    const avg = v.scores.length?(v.scores.reduce((a,b)=>a+b,0)/v.scores.length).toFixed(1):null;
-    const best = v.scores.length?Math.min(...v.scores):null;
-    return {id, avg, best, tarjetas:v.scores.length, esSupOficial:!!v.esSupOficial};
-  }).filter(x=>x.avg!==null).sort((a,b)=>a.avg-b.avg);
+    const sorted = [...v.scores].sort((a,b)=>a-b);
+    const bestN = sorted.slice(0, BEST_N);
+    const avgBestN = bestN.length ? (bestN.reduce((a,b)=>a+b,0)/bestN.length) : null;
+    const avgAll = v.scores.length ? (v.scores.reduce((a,b)=>a+b,0)/v.scores.length) : null;
+    const best = v.scores.length ? Math.min(...v.scores) : null;
+    return {
+      id,
+      scoresByF: v.scoresByF,
+      avgBestN: avgBestN!=null ? +avgBestN.toFixed(1) : null,
+      avgAll: avgAll!=null ? +avgAll.toFixed(1) : null,
+      best,
+      tarjetas: v.scores.length,
+      esSupOficial: !!v.esSupOficial
+    };
+  }).filter(x=>x.avgAll!==null).sort((a,b)=> (a.avgBestN ?? a.avgAll) - (b.avgBestN ?? b.avgAll));
 
+  // Columnas por fecha
+  const fechaCols = fechasJugadas.map(f=>`<th class="num" style="font-size:0.65rem">F${f.num}</th>`).join('');
   const rows = rank.map((m,i)=>{
     const p = m.esSupOficial ? supEspG : PLAYERS.find(x=>x.id===m.id);
     const premio = m.esSupOficial
       ? '<span style="color:var(--muted);font-size:0.7rem">no compite ★</span>'
-      : (m.tarjetas>=7?'<span style="color:var(--green);font-size:0.7rem">★ en carrera</span>':'<span style="color:var(--muted);font-size:0.7rem">falta '+( 7-m.tarjetas)+' tarj.</span>');
+      : (m.tarjetas>=BEST_N?'<span style="color:var(--green);font-size:0.7rem">★ en carrera</span>':'<span style="color:var(--muted);font-size:0.7rem">falta '+(BEST_N-m.tarjetas)+' tarj.</span>');
     const dot = m.esSupOficial
       ? '<div class="dot" style="background:var(--gold)"></div>'
       : `<div class="dot ${p?.team}"></div>`;
     const nameStyle = m.esSupOficial ? 'style="color:var(--gold);font-weight:600" title="Suplente oficial"' : '';
     const supBadge = m.esSupOficial ? `<span style="font-size:0.55rem;color:var(--gold);margin-left:6px;font-family:'DM Mono',monospace;letter-spacing:1px">★ SUP</span>` : '';
+    // marcar la mejor con ★ y los scores en el grupo de bestN con fondo sutil
+    const sortedScores = [...m.scoresByF || {}].length ? Object.values(m.scoresByF).sort((a,b)=>a-b) : [];
+    const bestNSet = new Set(sortedScores.slice(0, BEST_N));
+    const fechaCells = fechasJugadas.map(f => {
+      const s = m.scoresByF[f.num];
+      if(s == null) return `<td class="num" style="color:var(--muted);font-size:0.7rem">—</td>`;
+      const isBest = s === m.best;
+      const inBestN = bestNSet.has(s);
+      const style = isBest
+        ? 'color:var(--gold);font-weight:700'
+        : inBestN ? 'color:#aab8d0' : 'color:var(--muted-light);opacity:0.7';
+      return `<td class="num" style="${style};font-size:0.75rem">${s}${isBest?'★':''}</td>`;
+    }).join('');
     return `<tr>
       <td><span class="rank-num ${i<3?'r'+(i+1):''}">${i+1}</span></td>
       <td><div class="player-name-cell">${dot}<span ${nameStyle}>${p?.name}</span>${supBadge}</div></td>
-      <td class="num" style="color:var(--gold)">${m.avg}</td>
-      <td class="num">${m.best}</td>
+      ${fechaCells}
+      <td class="num" style="color:var(--gold);font-weight:600" title="Promedio de las mejores ${BEST_N} tarjetas">${m.avgBestN ?? '—'}</td>
+      <td class="num" style="color:var(--muted-light)" title="Promedio de todas las tarjetas">${m.avgAll}</td>
+      <td class="num" style="color:#2bb673;font-weight:600">${m.best}</td>
       <td class="num">${m.tarjetas}</td>
       <td>${premio}</td>
     </tr>`;
   }).join('');
 
-  byId('tbl-gross').innerHTML = `<thead><tr><th>#</th><th>Jugador</th><th>Avg Gross</th><th>Mejor</th><th>Tarjetas</th><th>Premio</th></tr></thead><tbody>${rows}</tbody>`;
+  byId('tbl-gross').innerHTML = `<thead><tr><th>#</th><th>Jugador</th>${fechaCols}<th class="num" title="Promedio mejores ${BEST_N}">Avg★</th><th class="num">Avg</th><th class="num">Mejor</th><th>Tarj.</th><th>Premio</th></tr></thead><tbody>${rows}</tbody>`;
 
   destroyChart('gross-bar');
   charts['gross-bar'] = new Chart(byId('chart-gross-bar'),{
     type:'bar',
     data:{
       labels:rank.map(r=>(r.esSupOficial?supEspG.name:PLAYERS.find(p=>p.id===r.id)?.name).split(',')[0]),
-      datasets:[{label:'Avg Gross',data:rank.map(r=>parseFloat(r.avg)),backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(PLAYERS.find(p=>p.id===r.id)?.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)')),borderRadius:5}]
+      datasets:[{label:`Avg gross (mejores ${BEST_N})`,data:rank.map(r=>r.avgBestN ?? r.avgAll),backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(PLAYERS.find(p=>p.id===r.id)?.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)')),borderRadius:5}]
     },
     options:{...CHART_BASE,plugins:{legend:{display:false}},scales:{...CHART_BASE.scales,y:{...CHART_BASE.scales.y,min:60}}}
   });
