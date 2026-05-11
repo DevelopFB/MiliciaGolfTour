@@ -26,32 +26,34 @@ Desplegado en GitHub Pages desde repo `DevelopFB/MiliciaGolfTour`.
 
 ### Oficiales del Tour 2026 (16)
 
-| ID interno | Display | Equipo |
-|---|---|---|
-| `gonzalez` | Gonzalez, Agus | Gris |
-| `tarasido` | Tarasido, Gonzalo | Gris |
-| `zunino` | Zunino, Javi | Gris |
-| `basaldua` | Basaldua, Ignacio | Gris |
-| `pannullo` | Pannullo, Tincho | Gris |
-| `benegas` | Benegas, Pancho | Gris |
-| `guevara` | Guevara, Franki | Gris |
-| `dipaola` | Dipaola, Martin | Gris |
-| `gatto` | **Gatto, Mariano** | Rojo |
-| `elizalde` | Elizalde, Juancho | Rojo |
-| `canonico` | Canónico, Agus | Rojo |
-| `vogelius` | Vogelius, Nico | Rojo |
-| `mendez` | Mendez, Pato | Rojo |
-| `molinario` | Molinario, Andy | Rojo |
-| `scapparone` | Scapparone, Nico | Rojo |
-| `fernandez` | Fernandez, Lucas | Rojo |
+**Regla de naming**: en **todos los reportes, dashboards, exports y PDFs** se usa siempre el **nombre completo** (`Apellido, NombreCompleto`). Los sobrenombres están solo para **matching de entrada** (cuando se pega texto/info del usuario que usa el sobrenombre).
+
+| ID interno | Nombre completo (display) | Sobrenombre | Equipo |
+|---|---|---|---|
+| `gonzalez` | Gonzalez, Agustín | Agus | Gris |
+| `tarasido` | Tarasido, Gonzalo | Gonzalo | Gris |
+| `zunino` | Zunino, Javier | Javi | Gris |
+| `basaldua` | Basaldua, Ignacio | Ignacio | Gris |
+| `pannullo` | Pannullo, Martín | Tincho | Gris |
+| `benegas` | Benegas, Francisco | Pancho | Gris |
+| `guevara` | Guevara, Francisco | Franki | Gris |
+| `dipaola` | Dipaola, Martín | Martín | Gris |
+| `gatto` | **Gatto, Mariano** | Mariano | Rojo |
+| `elizalde` | Elizalde, Juan Pedro | Juancho | Rojo |
+| `canonico` | Canónico, Agustín | Agus | Rojo |
+| `vogelius` | Vogelius, Nicolás | Nico | Rojo |
+| `mendez` | Méndez, Gastón | Pato | Rojo |
+| `molinario` | Molinario, Andrés | Andy | Rojo |
+| `scapparone` | Scapparone, Nicolás | Nico | Rojo |
+| `fernandez` | Fernandez, Lucas | Lucas | Rojo |
 
 > **Nota Hdcp**: el hdcp de cada jugador es **dinámico** y cambia de fecha a fecha según evolución. Se lee de la tarjeta del día. Lo que figura en `PLAYERS[].hdc` del `index.html` son valores semilla (default) usados solo si no hay tarjeta cargada todavía; se sobrescriben al cargar cada fecha.
 
 ### Suplente Oficial (única excepción permitida en match)
 
-| ID | Display | Notas |
-|---|---|---|
-| `gatto_ale` | **Gatto, Alejandro** | Suplente oficial especial. Acumula pts de match para el equipo que representa cuando entra. Hdcp también dinámico por tarjeta. |
+| ID | Nombre completo | Sobrenombre | Notas |
+|---|---|---|---|
+| `gatto_ale` | **Gatto, Alejandro** | Ale | Suplente oficial especial. Acumula pts de match para el equipo que representa cuando entra. Hdcp también dinámico por tarjeta. |
 
 ### Jugadores históricos / no activos (no se ven en la web)
 

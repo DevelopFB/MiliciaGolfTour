@@ -39,26 +39,30 @@ Cuando reportes "estado del torneo" o "líder", aclará SIEMPRE de cuál compete
 JUGADORES — LISTA CANÓNICA 2026 (usar formato "Apellido, Nombre")
 ------------------------------------------------------
 
-OFICIALES (16):
- 1. Gonzalez, Agus       — id: gonzalez    — Gris
- 2. Tarasido, Gonzalo    — id: tarasido    — Gris
- 3. Zunino, Javi         — id: zunino      — Gris
- 4. Basaldua, Ignacio    — id: basaldua    — Gris
- 5. Pannullo, Tincho     — id: pannullo    — Gris
- 6. Benegas, Pancho      — id: benegas     — Gris
- 7. Guevara, Franki      — id: guevara     — Gris
- 8. Dipaola, Martin      — id: dipaola     — Gris
- 9. Gatto, Mariano       — id: gatto       — Rojo
-10. Elizalde, Juancho    — id: elizalde    — Rojo
-11. Canónico, Agus       — id: canonico    — Rojo
-12. Vogelius, Nico       — id: vogelius    — Rojo
-13. Mendez, Pato         — id: mendez      — Rojo
-14. Molinario, Andy      — id: molinario   — Rojo
-15. Scapparone, Nico     — id: scapparone  — Rojo
-16. Fernandez, Lucas     — id: fernandez   — Rojo
+REGLA DE NAMING:
+  En TODOS los reportes, dashboards, exports y PDFs: usar SIEMPRE el nombre completo.
+  Los sobrenombres están solo para matching de entrada (cuando el usuario te pasa info usando el sobrenombre, lo resolvés al ID y mostrás el nombre completo en la salida).
+
+OFICIALES (16) — nombre completo / sobrenombre / id / equipo:
+ 1. Gonzalez, Agustín      (Agus)     — gonzalez    — Gris
+ 2. Tarasido, Gonzalo      (Gonzalo)  — tarasido    — Gris
+ 3. Zunino, Javier         (Javi)     — zunino      — Gris
+ 4. Basaldua, Ignacio      (Ignacio)  — basaldua    — Gris
+ 5. Pannullo, Martín       (Tincho)   — pannullo    — Gris
+ 6. Benegas, Francisco     (Pancho)   — benegas     — Gris
+ 7. Guevara, Francisco     (Franki)   — guevara     — Gris
+ 8. Dipaola, Martín        (Martín)   — dipaola     — Gris
+ 9. Gatto, Mariano         (Mariano)  — gatto       — Rojo
+10. Elizalde, Juan Pedro   (Juancho)  — elizalde    — Rojo
+11. Canónico, Agustín      (Agus)     — canonico    — Rojo
+12. Vogelius, Nicolás      (Nico)     — vogelius    — Rojo
+13. Méndez, Gastón         (Pato)     — mendez      — Rojo
+14. Molinario, Andrés      (Andy)     — molinario   — Rojo
+15. Scapparone, Nicolás    (Nico)     — scapparone  — Rojo
+16. Fernandez, Lucas       (Lucas)    — fernandez   — Rojo
 
 SUPLENTE OFICIAL ESPECIAL:
-17. Gatto, Alejandro     — id: gatto_ale   — sin equipo fijo, juega para el que reemplaza
+17. Gatto, Alejandro       (Ale)      — gatto_ale   — sin equipo fijo, juega para el que reemplaza
 
 ⚠️ El HDCP de cada jugador es DINÁMICO. Cambia fecha a fecha según evolución del jugador. NUNCA asumas un hdcp por jugador — siempre leelo de la tarjeta del día (campo "HCP" en la tarjeta de shagolf u otro sistema). Al tour se aplica `min(hdcp_día, 26)` para calcular el neto.
 

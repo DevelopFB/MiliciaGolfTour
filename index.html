@@ -602,23 +602,25 @@ header{
 // ║  ZONA DE DATOS — acá es donde se actualiza fecha a fecha ║
 // ╚═══════════════════════════════════════════════════════════╝
 
+// name = nombre completo (display oficial en toda la app y reportes)
+// nick = sobrenombre para matching cuando se pega info de tarjetas/usuarios
 const PLAYERS = [
-  {id:'gonzalez',   name:'Gonzalez, Agus', team:'g', hdc:7.7},
-  {id:'tarasido',   name:'Tarasido, Gonzalo', team:'g', hdc:10.3},
-  {id:'zunino',     name:'Zunino, Javi', team:'g', hdc:14.2},
-  {id:'basaldua',   name:'Basaldua, Ignacio', team:'g', hdc:16.1},
-  {id:'pannullo',   name:'Pannullo, Tincho', team:'g', hdc:17.7},
-  {id:'benegas',    name:'Benegas, Pancho', team:'g', hdc:21.2},
-  {id:'guevara',    name:'Guevara, Franki', team:'g', hdc:22.2},
-  {id:'dipaola',    name:'Dipaola, Martin', team:'g', hdc:26.0},
-  {id:'gatto',      name:'Gatto, Mariano', team:'r', hdc:9.1},
-  {id:'elizalde',   name:'Elizalde, Juancho', team:'r', hdc:12.5},
-  {id:'canonico',   name:'Canónico, Agus', team:'r', hdc:15.7},
-  {id:'vogelius',   name:'Vogelius, Nico', team:'r', hdc:17.7},
-  {id:'mendez',     name:'Mendez, Pato', team:'r', hdc:18.7},
-  {id:'molinario',  name:'Molinario, Andy', team:'r', hdc:20.2},
-  {id:'scapparone', name:'Scapparone, Nico', team:'r', hdc:22.4},
-  {id:'fernandez',  name:'Fernandez, Lucas', team:'r', hdc:24.7},
+  {id:'gonzalez',   name:'Gonzalez, Agustín',     nick:'Agus',     team:'g', hdc:7.7},
+  {id:'tarasido',   name:'Tarasido, Gonzalo',     nick:'Gonzalo',  team:'g', hdc:10.3},
+  {id:'zunino',     name:'Zunino, Javier',        nick:'Javi',     team:'g', hdc:14.2},
+  {id:'basaldua',   name:'Basaldua, Ignacio',     nick:'Ignacio',  team:'g', hdc:16.1},
+  {id:'pannullo',   name:'Pannullo, Martín',      nick:'Tincho',   team:'g', hdc:17.7},
+  {id:'benegas',    name:'Benegas, Francisco',    nick:'Pancho',   team:'g', hdc:21.2},
+  {id:'guevara',    name:'Guevara, Francisco',    nick:'Franki',   team:'g', hdc:22.2},
+  {id:'dipaola',    name:'Dipaola, Martín',       nick:'Martín',   team:'g', hdc:26.0},
+  {id:'gatto',      name:'Gatto, Mariano',        nick:'Mariano',  team:'r', hdc:9.1},
+  {id:'elizalde',   name:'Elizalde, Juan Pedro',  nick:'Juancho',  team:'r', hdc:12.5},
+  {id:'canonico',   name:'Canónico, Agustín',     nick:'Agus',     team:'r', hdc:15.7},
+  {id:'vogelius',   name:'Vogelius, Nicolás',     nick:'Nico',     team:'r', hdc:17.7},
+  {id:'mendez',     name:'Méndez, Gastón',        nick:'Pato',     team:'r', hdc:18.7},
+  {id:'molinario',  name:'Molinario, Andrés',     nick:'Andy',     team:'r', hdc:20.2},
+  {id:'scapparone', name:'Scapparone, Nicolás',   nick:'Nico',     team:'r', hdc:22.4},
+  {id:'fernandez',  name:'Fernandez, Lucas',      nick:'Lucas',    team:'r', hdc:24.7},
 ];
 
 // fechas: array de objetos por fecha jugada
@@ -667,7 +669,7 @@ let SUPLENTE_ESPECIAL_ID = 'gatto_ale'; // Suplente oficial especial — configu
 
 // Registro de suplentes conocidos
 const SUPLENTES_CONOCIDOS = [
-  {id:'gatto_ale', name:'Gatto, Ale', esOficialEspecial:true, hdc:20},
+  {id:'gatto_ale', name:'Gatto, Alejandro', nick:'Ale', esOficialEspecial:true, hdc:20},
 ];
 
 // PAR del campo (CUBA Fátima) — verificar contra tarjeta real

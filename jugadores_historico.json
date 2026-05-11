@@ -1,15 +1,15 @@
 {
   "players": {
     "elizalde": {
-      "nombre": "Elizalde, Juancho",
+      "nombre": "Elizalde, Juan Pedro",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 90.4,
-          "avgNeto": 55.0,
+          "mejorPosicion": 4,
+          "avgGross": 98.7,
+          "avgNeto": null,
           "posicionFinal": null
         },
         "2017": {
@@ -79,14 +79,14 @@
       }
     },
     "vogelius": {
-      "nombre": "Vogelius, Nico",
+      "nombre": "Vogelius, Nicolás",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 101.5,
+          "mejorPosicion": 2,
+          "avgGross": 106.7,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -157,14 +157,14 @@
       }
     },
     "canonico": {
-      "nombre": "Canónico, Agus",
+      "nombre": "Canónico, Agustín",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 97.2,
+          "mejorPosicion": 2,
+          "avgGross": 95.3,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -239,11 +239,11 @@
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 98.9,
-          "avgNeto": 58.0,
+          "fechasJugadas": 4,
+          "fechasGanadas": 1,
+          "mejorPosicion": 1,
+          "avgGross": 100.7,
+          "avgNeto": null,
           "posicionFinal": null
         },
         "2017": {
@@ -261,11 +261,11 @@
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 94.3,
-          "avgNeto": 64.0,
+          "fechasJugadas": 4,
+          "fechasGanadas": 1,
+          "mejorPosicion": 1,
+          "avgGross": 97.5,
+          "avgNeto": null,
           "posicionFinal": null
         },
         "2017": {
@@ -335,14 +335,14 @@
       }
     },
     "benegas": {
-      "nombre": "Benegas, Pancho",
+      "nombre": "Benegas, Francisco",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 108.5,
+          "mejorPosicion": 1,
+          "avgGross": 105.0,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -413,14 +413,14 @@
       }
     },
     "pannullo": {
-      "nombre": "Pannullo, Tincho",
+      "nombre": "Pannullo, Martín",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 113.0,
+          "mejorPosicion": 8,
+          "avgGross": 124.0,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -491,14 +491,14 @@
       }
     },
     "mendez": {
-      "nombre": "Mendez, Pato",
+      "nombre": "Méndez, Gastón",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
-          "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 102.8,
+          "fechasJugadas": 4,
+          "fechasGanadas": 1,
+          "mejorPosicion": 1,
+          "avgGross": 103.3,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -569,14 +569,14 @@
       }
     },
     "guevara": {
-      "nombre": "Guevara, Franki",
+      "nombre": "Guevara, Francisco",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 110.4,
+          "mejorPosicion": 6,
+          "avgGross": 112.3,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -647,14 +647,14 @@
       }
     },
     "zunino": {
-      "nombre": "Zunino, Javi",
+      "nombre": "Zunino, Javier",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 102.5,
+          "mejorPosicion": 7,
+          "avgGross": null,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -721,10 +721,10 @@
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 107.6,
+          "mejorPosicion": 6,
+          "avgGross": 108.3,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -739,14 +739,14 @@
       }
     },
     "molinario": {
-      "nombre": "Molinario, Andy",
+      "nombre": "Molinario, Andrés",
       "foto": null,
       "años": {
         "2016": {
-          "fechasJugadas": 1,
+          "fechasJugadas": 4,
           "fechasGanadas": 0,
-          "mejorPosicion": null,
-          "avgGross": 118.4,
+          "mejorPosicion": 3,
+          "avgGross": 117.0,
           "avgNeto": null,
           "posicionFinal": null
         },
@@ -859,7 +859,7 @@
       }
     },
     "dipaola": {
-      "nombre": "Dipaola, Martin",
+      "nombre": "Dipaola, Martín",
       "foto": null,
       "años": {
         "2017": {
@@ -1136,7 +1136,7 @@
       }
     },
     "gonzalez": {
-      "nombre": "Gonzalez, Agus",
+      "nombre": "Gonzalez, Agustín",
       "foto": null,
       "años": {
         "2022": {
@@ -1238,7 +1238,7 @@
       }
     },
     "scapparone": {
-      "nombre": "Scapparone, Nico",
+      "nombre": "Scapparone, Nicolás",
       "foto": null,
       "años": {
         "2023": {
@@ -1452,5 +1452,5 @@
       "totalJugadores": 19
     }
   },
-  "_version": "2026-04-14-rebuild-v1"
+  "_version": "2026-04-14-fullnames-v1"
 }
