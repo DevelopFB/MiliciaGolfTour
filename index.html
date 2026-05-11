@@ -5830,11 +5830,13 @@ function _aplicarJsonPegado() {
   // Re-armar grid con par actualizado
   scBuildGrid();
 
-  // ── Cargar scores ──
+  // ── Cargar scores en AMBOS formularios admin (Carga Scorecard + Cargar Fecha legacy) ──
   let loadedCount = 0, unknowns = [], skipped = [];
   data.scorecard.forEach(sc => {
     if(!sc.id || sc.id === '_unknown') { unknowns.push(sc.name || sc.nombre || '?'); return; }
     if(!sc.hoyos || sc.gross == null) { skipped.push(sc.id); return; }
+
+    // Form Carga Scorecard (grid hoyo por hoyo)
     const hdcInput = document.querySelector(`.sc-hdc[data-pid="${sc.id}"]`);
     if(hdcInput && sc.hdcp != null) hdcInput.value = Math.round(sc.hdcp);
     if(sc.hoyos && sc.hoyos.length === 18) {
@@ -5842,8 +5844,17 @@ function _aplicarJsonPegado() {
         const inp = document.querySelector(`.sc-hole[data-pid="${sc.id}"][data-hole="${i+1}"]`);
         if(inp && v != null) inp.value = v;
       });
-      loadedCount++;
     }
+
+    // Form Cargar Fecha (legacy: HDCP/Neto/Gross totales)
+    const admHdcp  = document.getElementById(`adm-hdcp-${sc.id}`);
+    const admNeto  = document.getElementById(`adm-neto-${sc.id}`);
+    const admGross = document.getElementById(`adm-gross-${sc.id}`);
+    if(admHdcp && sc.hdcp != null) admHdcp.value = sc.hdcp;
+    if(admNeto && sc.neto != null) admNeto.value = sc.neto;
+    if(admGross && sc.gross != null) admGross.value = sc.gross;
+
+    loadedCount++;
   });
   scRecalc();
 
@@ -5858,31 +5869,74 @@ function _aplicarJsonPegado() {
     }));
   }
 
-  // ── Cargar matchs ──
-  // Acepta formatos: {gris/rojo,difHoyos} o {g/r,dif}
+  // ── Cargar matchs en AMBOS formularios ──
   let matchsCount = 0;
   if(Array.isArray(data.matchs) && data.matchs.length > 0) {
-    // Limpiar blocks previos
+    // 1) Form Carga Scorecard (blocks dinámicos)
     const blocks = byId('sc-match-blocks');
     if(blocks) blocks.innerHTML = '';
     _scMatchCount = 0;
 
-    data.matchs.forEach(m => {
+    data.matchs.forEach((m, i) => {
       const gris = m.gris || m.g || m.gristeam || [];
       const rojo = m.rojo || m.r || m.rojoteam || [];
       const dif = m.difHoyos ?? m.dif ?? 0;
+
+      // Bloque scorecard tab
       scAddMatch();
-      // El bloque recién agregado es el último de sc-match-blocks
       const blocksList = byId('sc-match-blocks');
       const block = blocksList?.lastElementChild;
-      if(!block) return;
-      block.querySelector('.sc-match-tipo').value = m.tipo || 'ind';
-      block.querySelector('.sc-match-gris').value = gris.join(', ');
-      block.querySelector('.sc-match-rojo').value = rojo.join(', ');
-      block.querySelector('.sc-match-ganador').value = m.ganador || 'g';
-      block.querySelector('.sc-match-dif').value = Math.abs(dif);
+      if(block) {
+        block.querySelector('.sc-match-tipo').value = m.tipo || 'ind';
+        block.querySelector('.sc-match-gris').value = gris.join(', ');
+        block.querySelector('.sc-match-rojo').value = rojo.join(', ');
+        block.querySelector('.sc-match-ganador').value = m.ganador || 'g';
+        block.querySelector('.sc-match-dif').value = Math.abs(dif);
+      }
+
+      // 2) Form legacy Cargar Fecha (selects fijos por fecha)
+      const setOrAddOption = (selId, val) => {
+        const sel = document.getElementById(selId);
+        if(!sel || !val) return;
+        if(![...sel.options].some(o => o.value === val)) {
+          const opt = document.createElement('option');
+          opt.value = val;
+          opt.text = '★ ' + val;
+          opt.style.color = 'var(--gold)';
+          sel.appendChild(opt);
+        }
+        sel.value = val;
+      };
+      setOrAddOption(`adm-m${i}-g1`, gris[0]);
+      setOrAddOption(`adm-m${i}-g2`, gris[1]);
+      setOrAddOption(`adm-m${i}-r1`, rojo[0]);
+      setOrAddOption(`adm-m${i}-r2`, rojo[1]);
+      const gan = document.getElementById(`adm-m${i}-gan`); if(gan && m.ganador) gan.value = m.ganador;
+      const admDif = document.getElementById(`adm-m${i}-dif`); if(admDif) admDif.value = Math.abs(dif);
+
       matchsCount++;
     });
+  }
+
+  // ── Cargar suplentes en form legacy también ──
+  if(typeof adminBuildSuplentesList === 'function' && window._scSuplentesParsed?.length) {
+    adminBuildSuplentesList(window._scSuplentesParsed);
+  }
+  // ── Ausentes en form legacy ──
+  if(typeof PLAYERS !== 'undefined') {
+    PLAYERS.forEach(p => {
+      const cb = document.getElementById(`aus-${p.id}`);
+      if(cb) cb.checked = ausentesAuto.includes(p.id);
+    });
+  }
+  // ── Comentario en form legacy ──
+  if(data.comentario) {
+    const admCom = document.getElementById('adm-comentario');
+    if(admCom) admCom.value = data.comentario;
+  }
+  if(data.organizadores) {
+    const admOrg = document.getElementById('adm-organizadores');
+    if(admOrg) admOrg.value = byId('sc-org')?.value || '';
   }
 
   // ── Status ──
