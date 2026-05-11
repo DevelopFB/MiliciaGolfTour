@@ -18,30 +18,32 @@ Desplegado en GitHub Pages desde repo `DevelopFB/MiliciaGolfTour`.
 
 ### Oficiales del Tour 2026 (16)
 
-| ID interno | Display | Equipo | Hdcp |
-|---|---|---|---|
-| `gonzalez` | Gonzalez, Agus | Gris | 7.7 |
-| `tarasido` | Tarasido, Gonzalo | Gris | 10.3 |
-| `zunino` | Zunino, Javi | Gris | 14.2 |
-| `basaldua` | Basaldua, Ignacio | Gris | 16.1 |
-| `pannullo` | Pannullo, Tincho | Gris | 17.7 |
-| `benegas` | Benegas, Pancho | Gris | 21.2 |
-| `guevara` | Guevara, Franki | Gris | 22.2 |
-| `dipaola` | Dipaola, Martin | Gris | 26.0 |
-| `gatto` | **Gatto, Mariano** | Rojo | 9.1 |
-| `elizalde` | Elizalde, Juancho | Rojo | 12.5 |
-| `canonico` | Canónico, Agus | Rojo | 15.7 |
-| `vogelius` | Vogelius, Nico | Rojo | 17.7 |
-| `mendez` | Mendez, Pato | Rojo | 18.7 |
-| `molinario` | Molinario, Andy | Rojo | 20.2 |
-| `scapparone` | Scapparone, Nico | Rojo | 22.4 |
-| `fernandez` | Fernandez, Lucas | Rojo | 24.7 |
+| ID interno | Display | Equipo |
+|---|---|---|
+| `gonzalez` | Gonzalez, Agus | Gris |
+| `tarasido` | Tarasido, Gonzalo | Gris |
+| `zunino` | Zunino, Javi | Gris |
+| `basaldua` | Basaldua, Ignacio | Gris |
+| `pannullo` | Pannullo, Tincho | Gris |
+| `benegas` | Benegas, Pancho | Gris |
+| `guevara` | Guevara, Franki | Gris |
+| `dipaola` | Dipaola, Martin | Gris |
+| `gatto` | **Gatto, Mariano** | Rojo |
+| `elizalde` | Elizalde, Juancho | Rojo |
+| `canonico` | Canónico, Agus | Rojo |
+| `vogelius` | Vogelius, Nico | Rojo |
+| `mendez` | Mendez, Pato | Rojo |
+| `molinario` | Molinario, Andy | Rojo |
+| `scapparone` | Scapparone, Nico | Rojo |
+| `fernandez` | Fernandez, Lucas | Rojo |
+
+> **Nota Hdcp**: el hdcp de cada jugador es **dinámico** y cambia de fecha a fecha según evolución. Se lee de la tarjeta del día. Lo que figura en `PLAYERS[].hdc` del `index.html` son valores semilla (default) usados solo si no hay tarjeta cargada todavía; se sobrescriben al cargar cada fecha.
 
 ### Suplente Oficial (única excepción permitida en match)
 
 | ID | Display | Notas |
 |---|---|---|
-| `gatto_ale` | **Gatto, Alejandro** | Suplente oficial especial. Acumula pts de match para el equipo que representa cuando entra. |
+| `gatto_ale` | **Gatto, Alejandro** | Suplente oficial especial. Acumula pts de match para el equipo que representa cuando entra. Hdcp también dinámico por tarjeta. |
 
 ### Jugadores históricos / no activos (no se ven en la web)
 
