@@ -718,6 +718,21 @@ function findPlayerOrSuplente(id) {
   return null;
 }
 
+// Helper: nombre display de un jugador en una fecha concreta.
+// Resuelve: oficial → name; suplente oficial conocido → name;
+// suplente externo cargado en f.suplentes → su name del registro de fecha; sino id.
+function getDisplayName(id, fecha) {
+  const oficial = PLAYERS.find(p=>p.id===id);
+  if(oficial) return oficial.name;
+  const supConocido = SUPLENTES_CONOCIDOS.find(s=>s.id===id);
+  if(supConocido) return supConocido.name;
+  if(fecha?.suplentes) {
+    const supFecha = fecha.suplentes.find(s=>s.id===id);
+    if(supFecha?.name) return supFecha.name;
+  }
+  return id;
+}
+
 // Helper: determinar si un id es suplente en una fecha concreta
 function getSustitutoInfo(id, fecha) {
   if(!fecha.suplentes) return null;
@@ -2271,9 +2286,11 @@ function renderFechaDetail(num) {
       const nameOf = id => {
         const oficial = PLAYERS.find(p=>p.id===id);
         if(oficial) return oficial.name.split(',')[0];
-        const sup = SUPLENTES_CONOCIDOS.find(s=>s.id===id);
-        if(sup) return `<span style="color:var(--gold);font-weight:600">${sup.name.split(',')[0]}*</span>`;
-        return id;
+        // Suplente: mostrar nombre completo (Apellido, Nombre) en dorado para
+        // distinguir, p.ej. Gatto Mariano vs Gatto Ale. Aplica también a
+        // suplentes externos cargados en f.suplentes.
+        const fullName = getDisplayName(id, f);
+        return `<span style="color:var(--gold);font-weight:600">${fullName}*</span>`;
       };
       const gNames = (m.gris||[]).map(nameOf).join(' + ');
       const rNames = (m.rojo||[]).map(nameOf).join(' + ');
@@ -2337,8 +2354,7 @@ function renderFechaDetail(num) {
           <tbody>
             ${medalSorted.map(m=>{
               const p = PLAYERS.find(x=>x.id===m.id);
-              const sup = SUPLENTES_CONOCIDOS.find(s=>s.id===m.id);
-              const nombre = p?.name || sup?.name || m.id;
+              const nombre = getDisplayName(m.id, f);
               const equipoDisplay = m.esSuplente
                 ? `<span style="color:var(--gold);font-size:0.7rem">${m.equipoRepresenta==='g'?'GRIS*':'ROJO*'}</span>`
                 : teamLabel(p?.team||'g');
