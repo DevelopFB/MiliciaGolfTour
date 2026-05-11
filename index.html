@@ -2250,24 +2250,91 @@ function getOrganizadoresFecha(num) {
   return map[num] || null;
 }
 
-async function editarCanchaFecha(num) {
+function editarCanchaFecha(num) {
   const f = fechas.find(x => x.num === num);
   if(!f) return;
-  const nueva = prompt(`Cancha actual: ${f.cancha || '—'}\n\nIngresá la nueva cancha:`, f.cancha || '');
-  if(nueva == null || nueva.trim() === '' || nueva === f.cancha) return;
-  f.cancha = nueva.trim();
+  const parActual = (f.par && f.par.length === 18) ? [...f.par] : [...PAR];
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.onclick = (ev) => { if(ev.target===overlay) overlay.remove(); };
+  const parInputs = parActual.map((p,i) => `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+      <span style="font-size:0.6rem;color:var(--muted);font-family:'DM Mono',monospace">H${i+1}</span>
+      <input type="number" id="ef-par-${i}" value="${p}" min="3" max="6" style="width:38px;text-align:center;font-weight:700;color:var(--gold-dark);font-size:0.85rem">
+    </div>`).join('');
+  overlay.innerHTML = `<div style="background:var(--navy-deep);border:1px solid var(--gold);border-radius:12px;padding:20px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px">
+    <div style="font-size:1rem;font-weight:700;color:var(--gold)">Editar fecha F${num}</div>
+
+    <div class="admin-field">
+      <label>Cancha</label>
+      <input type="text" id="ef-cancha" value="${f.cancha || ''}" placeholder="CUBA Fátima, SHA (Hebraica), Olivos, ..." style="width:100%">
+    </div>
+
+    <div>
+      <div style="font-size:0.75rem;color:var(--muted-light);margin-bottom:8px">PAR por hoyo (3 a 6) — usá los valores reales de la cancha</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:space-between">${parInputs}</div>
+      <div style="margin-top:8px;font-size:0.72rem;color:var(--muted)">Total: <span id="ef-par-total" style="color:var(--gold);font-weight:700">${parActual.reduce((a,b)=>a+b,0)}</span></div>
+    </div>
+
+    <div id="ef-status" style="font-size:0.78rem;min-height:18px"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="admin-btn secondary" onclick="this.closest('div[style*=z-index]').remove()">Cancelar</button>
+      <button class="admin-btn primary" style="background:var(--green);color:#fff;border-color:var(--green)" onclick="_aplicarEditarFecha(${num})">Guardar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+
+  // Auto-recalc total
+  for(let i=0;i<18;i++){
+    const inp = overlay.querySelector(`#ef-par-${i}`);
+    if(inp) inp.addEventListener('input', () => {
+      let total = 0;
+      for(let j=0;j<18;j++){ total += parseInt(overlay.querySelector(`#ef-par-${j}`)?.value) || 0; }
+      overlay.querySelector('#ef-par-total').textContent = total;
+    });
+  }
+}
+
+async function _aplicarEditarFecha(num) {
+  const f = fechas.find(x => x.num === num);
+  if(!f) return;
+  const nuevaCancha = byId('ef-cancha')?.value?.trim() || f.cancha;
+  const nuevoPar = [];
+  for(let i=0;i<18;i++){
+    const v = parseInt(byId(`ef-par-${i}`)?.value);
+    if(!(v>=3 && v<=6)) { byId('ef-status').textContent = `❌ Par H${i+1} inválido (debe ser 3-6)`; byId('ef-status').style.color = 'var(--rojo-light)'; return; }
+    nuevoPar.push(v);
+  }
+  f.cancha = nuevaCancha;
+  f.par = nuevoPar;
+  // Recalcular f.stats (eagles/birdies/etc) con el nuevo par
+  if(f.scorecard && f.scorecard.length) {
+    const autoStats = calcStatsFromScorecard(f);
+    if(autoStats) f.stats = autoStats;
+  }
   invalidateAccum();
-  // Sync a Supabase
+  const st = byId('ef-status');
+  if(st) { st.textContent = '⏳ Guardando en Supabase...'; st.style.color = 'var(--gold)'; }
   const client = getSupabaseClient();
   if(client) {
     try {
-      const { error } = await client.from('fechas').update({ cancha: f.cancha, updated_at: new Date().toISOString() }).eq('num', num);
-      if(error) { console.warn('Error actualizando cancha en Supabase', error); alert('Cancha actualizada localmente, pero falló sync a Supabase: ' + error.message); }
-    } catch(e) { console.warn(e); }
+      const { error } = await client.from('fechas').update({
+        cancha: f.cancha, par: f.par, stats: f.stats || null,
+        updated_at: new Date().toISOString()
+      }).eq('num', num);
+      if(error) { if(st){st.textContent='⚠ Local OK, Supabase falló: '+error.message; st.style.color='var(--gold)';} }
+      else { if(st){st.textContent='✓ Guardado en todos los dispositivos'; st.style.color='var(--green)';} }
+    } catch(e) { if(st){st.textContent='⚠ Local OK, Supabase falló'; st.style.color='var(--gold)';} }
+  } else {
+    if(st) { st.textContent='✓ Guardado local (Supabase no disponible)'; st.style.color='var(--green)'; }
   }
   persistfechas && persistfechas();
-  // Re-render dashboard
-  renderFechaDetail(num);
+  setTimeout(() => {
+    const ov = byId('ef-cancha')?.closest('div[style*="z-index"]');
+    if(ov) ov.remove();
+    renderFechaDetail(num);
+  }, 1200);
 }
 
 function renderFechaDetail(num) {
@@ -2481,7 +2548,7 @@ function renderGross(acc) {
     const nameStyle = m.esSupOficial ? 'style="color:var(--gold);font-weight:600" title="Suplente oficial"' : '';
     const supBadge = m.esSupOficial ? `<span style="font-size:0.55rem;color:var(--gold);margin-left:6px;font-family:'DM Mono',monospace;letter-spacing:1px">★ SUP</span>` : '';
     // marcar la mejor con ★ y los scores en el grupo de bestN con fondo sutil
-    const sortedScores = [...m.scoresByF || {}].length ? Object.values(m.scoresByF).sort((a,b)=>a-b) : [];
+    const sortedScores = Object.values(m.scoresByF || {}).sort((a,b)=>a-b);
     const bestNSet = new Set(sortedScores.slice(0, BEST_N));
     const fechaCells = fechasJugadas.map(f => {
       const s = m.scoresByF[f.num];
