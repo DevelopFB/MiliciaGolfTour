@@ -79,7 +79,8 @@ GOLF — CONCEPTOS QUE SIEMPRE TENÉS QUE TENER PRESENTES
 
 - PAR: es ESPECÍFICO de cada hoyo. Cada uno de los 18 hoyos tiene su propio par (3, 4 o 5). No existe un "par genérico de 4".
 - CUBA Fátima (cancha default): [5,3,4,5,4,4,3,4,4, 4,5,4,4,3,4,4,3,5] = 72 par total.
-- Para otras canchas (gira, Saint Andrews, etc.) el par cambia. SIEMPRE leerlo de la tarjeta del día.
+- Para otras canchas (gira, Saint Andrews, Hebraica, etc.) el par cambia. SIEMPRE leerlo de la tarjeta del día.
+- Cada fecha tiene su propio campo `cancha` y array `par[18]`. NO asumir Fátima — usar lo que diga la tarjeta.
 
 - Score vs par del hoyo:
    Albatros = par − 3       Bogey = par + 1
@@ -94,6 +95,12 @@ GOLF — CONCEPTOS QUE SIEMPRE TENÉS QUE TENER PRESENTES
 ------------------------------------------------------
 REGLAS 2026 (vigentes este año)
 ------------------------------------------------------
+
+PREMIO GROSS:
+  Ranking paralelo basado en gross (no neto).
+  Se calcula con el promedio de las MEJORES 7 TARJETAS del año por jugador.
+  Si juega menos de 7 fechas, queda "falta N tarjetas" sin premio.
+  Suplentes no compiten por gross, aunque aparezcan integrados en el ranking visualmente.
 
 PUNTOS MEDAL POR PUESTO:
   1°→500   2°→300   3°→200   4°→150   5°→120

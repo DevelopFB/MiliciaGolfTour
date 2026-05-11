@@ -78,11 +78,13 @@ Si en un Excel viejo ves "Gatto" sin primer nombre, mirá la fila completa o pre
 
 ## 3. GOLF — CONCEPTOS BÁSICOS
 
-### Par
+### Par y cancha
 
 - El **par** es **específico de cada hoyo**, no un número fijo. Cada hoyo tiene par 3, 4 ó 5.
-- Cancha CUBA Fátima 2026: `[5,3,4,5,4,4,3,4,4, 4,5,4,4,3,4,4,3,5]` → front 36 + back 36 = **72 par total**.
-- Para otras canchas (GIRA, etc.) el par cambia. Siempre verificar contra tarjeta.
+- Cancha default CUBA Fátima 2026: `[5,3,4,5,4,4,3,4,4, 4,5,4,4,3,4,4,3,5]` → front 36 + back 36 = **72 par total**.
+- **Cada fecha tiene su propio `cancha` y `par[18]`**: cuando se juega en otra cancha (gira, otro club), se carga el par real al armar la fecha. La webapp tiene la cancha editable inline desde el detalle de fecha (botón ✏️) y el par editable desde el grid del backoffice.
+- En reportes/charts: si se comparan varias fechas en distintas canchas, el par mostrado es **promedio por hoyo** entre canchas. Con 1 sola fecha → par exacto de esa cancha.
+- Siempre verificar el par contra la tarjeta del día.
 
 ### Tipos de score (relativo al par del hoyo)
 
@@ -153,6 +155,14 @@ Multiplicador F9 = ×1.5, F10 = ×2 (sobre los puntos base).
 
 ### Empates entre oficiales
 - Para **fechas ganadas (stats)**: todos los oficiales empatados en pos 1 (neto mínimo) suman +1 fecha ganada.
+
+### Premio Gross — mejor promedio bruto
+
+- Ranking paralelo al medal, basado en **gross** (no neto).
+- Premio se calcula con el **promedio de las mejores 7 tarjetas** del año por jugador (`avgBestN`, BEST_N = 7).
+- Si un jugador jugó menos de 7 fechas, queda como "falta N tarjetas" sin posibilidad de premio.
+- Suplentes (incluido Gatto Alejandro) **no compiten** por el premio gross, aunque aparezcan integrados en el ranking visualmente para referencia.
+- Mejor tarjeta individual del año se trackea aparte por jugador (marcada con ★).
 
 ### Fecha vacante
 - Si **NINGÚN oficial** está en el neto mínimo de la fecha → fecha **vacante**: nadie suma fecha ganada.
