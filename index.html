@@ -1276,8 +1276,9 @@ function buildAccum() {
             <button type="button" onclick="adminAddSuplente()" style="margin-top:8px;background:none;border:1px dashed rgba(201,168,76,0.4);color:var(--gold);padding:7px 14px;border-radius:7px;font-size:0.78rem;cursor:pointer">+ Agregar Suplente</button>
           </div>
           <div class="admin-field" style="grid-column:1/-1">
-            <label>Comentario / Highlight del día</label>
-            <textarea id="adm-comentario" placeholder="Podés usar &lt;strong&gt;negrita&lt;/strong&gt; para nombres..."></textarea>
+            <label>Comentario / Narrativa del día</label>
+            <textarea id="adm-comentario" rows="8" placeholder="Resumen de la fecha (3-5 oraciones): contexto, ganador del día, batallas cerradas, sorpresas, comentarios sobre la cancha. Podés usar &lt;strong&gt;negrita&lt;/strong&gt; para nombres."
+              style="min-height:160px;font-family:'DM Sans',sans-serif;font-size:0.85rem;line-height:1.6;resize:vertical;width:100%"></textarea>
           </div>
         </div>
       </div>
@@ -1371,16 +1372,15 @@ function buildAccum() {
 
       <!-- Workflow Claude Project (recomendado) -->
       <div style="margin:12px 0;border:2px solid var(--gold);border-radius:8px;padding:12px;background:rgba(201,168,76,0.08)">
-        <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:8px">⭐ Workflow recomendado: Chat del proyecto "La Milicia"</div>
-        <ol style="font-size:0.74rem;color:var(--muted-light);line-height:1.7;margin:0 0 10px 18px;padding:0">
-          <li>Hacé click en <strong>Copiar prompt</strong> → se copia al portapapeles con la fecha N rellenada.</li>
-          <li>Abrí un chat nuevo en el proyecto "La Milicia" → pegá el prompt + adjuntá todas las tarjetas (screenshots).</li>
-          <li>Contá: ausentes, suplentes, cancha (si no es Fátima), resultado de matchs.</li>
-          <li>Claude devuelve un JSON listo → click en <strong>Pegar JSON</strong> abajo para autocompletar el form.</li>
-        </ol>
+        <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:8px">⭐ Workflow recomendado</div>
+        <div style="font-size:0.78rem;color:var(--muted-light);line-height:1.6;margin-bottom:8px">
+          Para cargar una fecha completa con tarjetas + matchs + suplentes + comentario:
+          <strong style="color:var(--gold)">usá la tab "Cargar Fecha"</strong> arriba — tiene una caja grande para pegar el JSON
+          de Claude y permite editar todo antes de guardar (suplentes con scores, comentario amplio, etc.).
+        </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="admin-btn primary" onclick="copiarPromptCargaFecha()" style="background:var(--gold);color:#080d18;border-color:var(--gold);font-weight:700">📋 Copiar prompt para Claude</button>
-          <button class="admin-btn secondary" onclick="pegarJsonAutoFill()">📥 Pegar JSON de Claude</button>
+          <span style="font-size:0.72rem;color:var(--muted);align-self:center">(esta tab queda solo para carga hoyo-por-hoyo manual sin tarjetas)</span>
           <span id="prompt-copy-status" style="font-size:0.75rem;color:var(--green);align-self:center"></span>
         </div>
       </div>
@@ -3011,19 +3011,33 @@ function adminPastePreview() {
 
   // Suplentes
   adminBuildSuplentesList(obj.suplentes||[]);
-  // Populate reemplaza selects from JSON
+  // Populate reemplaza selects from JSON (acepta ID o nombre)
   const supRows = document.getElementById('adm-suplentes-list')?.querySelectorAll('[id^="sup-row-"]') || [];
   const supData = obj.suplentes||[];
-  // Match gatto_ale first
+  let extIdx = 0;
   supRows.forEach(row => {
     const idx = row.dataset.idx;
     const isGatto = row.dataset.isGatto === '1';
-    const matchData = isGatto ? supData.find(s=>s.id===SUPLENTE_ESPECIAL_ID) : supData[parseInt(idx)];
+    let matchData;
+    if(isGatto) {
+      matchData = supData.find(s => s.id === SUPLENTE_ESPECIAL_ID);
+    } else {
+      const externos = supData.filter(s => s.id !== SUPLENTE_ESPECIAL_ID);
+      matchData = externos[extIdx++];
+    }
     if(matchData) {
       const reemplazaEl = document.getElementById(`sup-reemplaza-${idx}`);
       const equipoEl = document.getElementById(`sup-equipo-${idx}`);
-      if(reemplazaEl && matchData.reemplaza) reemplazaEl.value = matchData.reemplaza;
-      if(equipoEl && matchData.equipo) equipoEl.value = matchData.equipo;
+      if(reemplazaEl && matchData.reemplaza) {
+        // Convertir ID a nombre si vino como ID (el select usa nombres como value)
+        const reempl = PLAYERS.find(p => p.id === matchData.reemplaza || p.name === matchData.reemplaza);
+        reemplazaEl.value = reempl?.name || matchData.reemplaza;
+      }
+      if(equipoEl && matchData.equipo) {
+        const e = String(matchData.equipo).toLowerCase();
+        equipoEl.value = e.startsWith('g') || e.includes('gri') ? 'g' :
+                          e.startsWith('r') || e.includes('roj') ? 'r' : matchData.equipo;
+      }
     }
   });
 
@@ -3041,34 +3055,53 @@ function adminPastePreview() {
     document.getElementById('adm-dobles').value   = obj.stats.dobles||0;
   }
 
-  // Medal scores — fill hdcp/neto/gross per player
+  // Medal scores — fill hdcp/neto/gross per player desde medal Y scorecard (lo que tenga)
+  const fillScore = (id, hdcp, neto, gross) => {
+    const hdcpEl  = document.getElementById(`adm-hdcp-${id}`);
+    const netoEl  = document.getElementById(`adm-neto-${id}`);
+    const grossEl = document.getElementById(`adm-gross-${id}`);
+    if(hdcpEl && hdcp != null && !hdcpEl.value) hdcpEl.value = hdcp;
+    if(netoEl && neto != null && !netoEl.value) netoEl.value = neto;
+    if(grossEl && gross != null && !grossEl.value) grossEl.value = gross;
+  };
   if(obj.medal) {
-    obj.medal.forEach(m=>{
-      const hdcpEl  = document.getElementById(`adm-hdcp-${m.id}`);
-      const netoEl  = document.getElementById(`adm-neto-${m.id}`);
-      const grossEl = document.getElementById(`adm-gross-${m.id}`);
-      if(hdcpEl && m.hdcp!=null) hdcpEl.value = m.hdcp;
-      if(netoEl)  netoEl.value  = m.neto;
-      if(grossEl) grossEl.value = m.gross;
+    obj.medal.forEach(m => fillScore(m.id, m.hdcp, m.neto, m.gross));
+  }
+  // Fallback / completar desde scorecard (suplentes con id sup_xxx que solo aparecen en scorecard)
+  if(obj.scorecard) {
+    obj.scorecard.forEach(s => {
+      if(s.hoyos != null && s.gross != null) {
+        fillScore(s.id, s.hdcp, s.neto, s.gross);
+      }
     });
   }
 
   // Matchs — fill selectors and results
   if(obj.matchs) {
-    // Need to wait for adminBuildMatchBlocks to finish (it's sync, so immediate)
+    // Helper: si la id no está en el select, la agrega como option dorada (suplente externo)
+    const ensureOption = (sel, val) => {
+      if(!sel || !val) return;
+      if(![...sel.options].some(o => o.value === val)) {
+        const opt = document.createElement('option');
+        opt.value = val;
+        // Buscar nombre amigable en suplentes
+        const supEntry = (obj.suplentes||[]).find(s => s.id === val);
+        opt.textContent = '★ ' + (supEntry?.name || supEntry?.nombre || val);
+        opt.style.color = 'var(--gold)';
+        sel.appendChild(opt);
+      }
+      sel.value = val;
+    };
     obj.matchs.forEach((m,i)=>{
-      const g1El  = document.getElementById(`adm-m${i}-g1`);
-      const g2El  = document.getElementById(`adm-m${i}-g2`);
-      const r1El  = document.getElementById(`adm-m${i}-r1`);
-      const r2El  = document.getElementById(`adm-m${i}-r2`);
-      const ganEl = document.getElementById(`adm-m${i}-gan`);
-      const difEl = document.getElementById(`adm-m${i}-dif`);
-      if(g1El && m.gris?.[0]) g1El.value = m.gris[0];
-      if(g2El && m.gris?.[1]) g2El.value = m.gris[1];
-      if(r1El && m.rojo?.[0]) r1El.value = m.rojo[0];
-      if(r2El && m.rojo?.[1]) r2El.value = m.rojo[1];
-      if(ganEl) ganEl.value = m.ganador||'g';
-      if(difEl) difEl.value = m.difHoyos||0;
+      const gris = m.gris || m.g || [];
+      const rojo = m.rojo || m.r || [];
+      const dif  = m.difHoyos ?? m.dif ?? 0;
+      ensureOption(document.getElementById(`adm-m${i}-g1`), gris[0]);
+      ensureOption(document.getElementById(`adm-m${i}-g2`), gris[1]);
+      ensureOption(document.getElementById(`adm-m${i}-r1`), rojo[0]);
+      ensureOption(document.getElementById(`adm-m${i}-r2`), rojo[1]);
+      const ganEl = document.getElementById(`adm-m${i}-gan`); if(ganEl) ganEl.value = m.ganador||'g';
+      const difEl = document.getElementById(`adm-m${i}-dif`); if(difEl) difEl.value = Math.abs(dif);
     });
   }
 
@@ -3227,14 +3260,18 @@ function adminAddSuplente(data) {
   const isGatto = data?.esGatto || data?.id === SUPLENTE_ESPECIAL_ID;
   const selReemplaza = data?.reemplaza || '';
   const selEquipo = data?.equipo || (isGatto ? 'r' : 'g');
+  // ID interno del suplente: si es Gatto Ale, su id fijo; sino sup_<idx> o el id pasado (p.ej. sup_alfonso)
+  const supId = isGatto ? SUPLENTE_ESPECIAL_ID : (data?.id || `sup_${idx}`);
 
   const row = document.createElement('div');
   row.id = 'sup-row-' + idx;
   row.dataset.isGatto = isGatto ? '1' : '0';
   row.dataset.idx = idx;
+  row.dataset.supId = supId;
+  // Grid con cols extra para HDCP/Neto/Gross
   row.style.cssText = [
     'display:grid',
-    'grid-template-columns:28px 1fr 160px 100px' + (isGatto ? '' : ' 36px'),
+    'grid-template-columns:28px 1fr 130px 90px 50px 60px 60px' + (isGatto ? '' : ' 32px'),
     'gap:8px',
     'align-items:center',
     'padding:10px 12px',
@@ -3360,11 +3397,64 @@ function adminAddSuplente(data) {
   row.appendChild(col3);
   row.appendChild(col4);
 
-  // Col 5: remove button (only for non-Gatto)
+  // Col 5: HDCP — scores del día (para que participe del medal scoring)
+  const col5 = document.createElement('div');
+  col5.style.cssText = 'display:flex;flex-direction:column;gap:3px';
+  const lbl5 = document.createElement('span');
+  lbl5.style.cssText = 'font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-align:center';
+  lbl5.textContent = 'HDCP';
+  const inp5 = document.createElement('input');
+  inp5.type = 'number';
+  inp5.id = 'adm-hdcp-' + supId;
+  inp5.step = '0.1';
+  inp5.min = '0';
+  inp5.max = '54';
+  inp5.placeholder = '—';
+  inp5.style.cssText = 'background:var(--navy-mid);border:1px solid '+(isGatto?'rgba(201,168,76,0.35)':'var(--border)')+';color:'+(isGatto?'var(--gold)':'var(--white)')+';padding:5px 6px;border-radius:6px;font-size:0.78rem;text-align:center;outline:none;width:100%';
+  if(data?.hdcp != null) inp5.value = data.hdcp;
+  col5.appendChild(lbl5);
+  col5.appendChild(inp5);
+  row.appendChild(col5);
+
+  // Col 6: NETO
+  const col6 = document.createElement('div');
+  col6.style.cssText = 'display:flex;flex-direction:column;gap:3px';
+  const lbl6 = document.createElement('span');
+  lbl6.style.cssText = 'font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-align:center';
+  lbl6.textContent = 'NETO';
+  const inp6 = document.createElement('input');
+  inp6.type = 'number';
+  inp6.id = 'adm-neto-' + supId;
+  inp6.min = '50'; inp6.max = '140';
+  inp6.placeholder = 'Neto';
+  inp6.style.cssText = 'background:var(--navy-mid);border:1px solid '+(isGatto?'rgba(201,168,76,0.35)':'var(--border)')+';color:'+(isGatto?'var(--gold)':'var(--white)')+';padding:5px 6px;border-radius:6px;font-size:0.78rem;text-align:center;outline:none;width:100%';
+  if(data?.neto != null) inp6.value = data.neto;
+  col6.appendChild(lbl6);
+  col6.appendChild(inp6);
+  row.appendChild(col6);
+
+  // Col 7: GROSS
+  const col7 = document.createElement('div');
+  col7.style.cssText = 'display:flex;flex-direction:column;gap:3px';
+  const lbl7 = document.createElement('span');
+  lbl7.style.cssText = 'font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-align:center';
+  lbl7.textContent = 'GROSS';
+  const inp7 = document.createElement('input');
+  inp7.type = 'number';
+  inp7.id = 'adm-gross-' + supId;
+  inp7.min = '60'; inp7.max = '160';
+  inp7.placeholder = 'Gross';
+  inp7.style.cssText = 'background:var(--navy-mid);border:1px solid '+(isGatto?'rgba(201,168,76,0.35)':'var(--border)')+';color:'+(isGatto?'var(--gold)':'var(--white)')+';padding:5px 6px;border-radius:6px;font-size:0.78rem;text-align:center;outline:none;width:100%';
+  if(data?.gross != null) inp7.value = data.gross;
+  col7.appendChild(lbl7);
+  col7.appendChild(inp7);
+  row.appendChild(col7);
+
+  // Col 8: remove button (only for non-Gatto)
   if(!isGatto) {
     const btn = document.createElement('button');
     btn.textContent = '✕';
-    btn.style.cssText = 'background:none;border:1px solid rgba(224,48,48,0.3);color:var(--rojo-light);padding:5px 9px;border-radius:6px;cursor:pointer;font-size:0.75rem;align-self:center';
+    btn.style.cssText = 'background:none;border:1px solid rgba(224,48,48,0.3);color:var(--rojo-light);padding:5px 8px;border-radius:6px;cursor:pointer;font-size:0.75rem;align-self:center';
     btn.onclick = () => row.remove();
     row.appendChild(btn);
   }
@@ -3383,16 +3473,31 @@ function adminGetSuplentes() {
     const reemplaza = document.getElementById(`sup-reemplaza-${idx}`)?.value || '';
     const equipo = document.getElementById(`sup-equipo-${idx}`)?.value || 'r';
     if(!reemplaza) return; // skip rows without a player selected
-    const id = isGatto ? SUPLENTE_ESPECIAL_ID : (`sup-ext-${idx}`);
-    const nombre = isGatto ? (SUPLENTES_CONOCIDOS.find(s=>s.id===SUPLENTE_ESPECIAL_ID)?.name || 'Suplente Oficial') : (document.getElementById(`sup-nombre-${idx}`)?.value || '');
+    const id = row.dataset.supId || (isGatto ? SUPLENTE_ESPECIAL_ID : `sup-ext-${idx}`);
+    const nombre = isGatto
+      ? (SUPLENTES_CONOCIDOS.find(s=>s.id===SUPLENTE_ESPECIAL_ID)?.name || 'Suplente Oficial')
+      : (document.getElementById(`sup-nombre-${idx}`)?.value || '');
     const acumulaPuntos = isGatto ? true : (document.getElementById(`sup-acumula-${idx}`)?.checked || false);
-    result.push({id, equipo, reemplaza, nombre: isGatto ? undefined : nombre, acumulaPuntos});
+    // Scores del día (pueden estar vacíos si no jugó)
+    const hdcp  = parseFloat(document.getElementById(`adm-hdcp-${id}`)?.value);
+    const neto  = parseInt(document.getElementById(`adm-neto-${id}`)?.value);
+    const gross = parseInt(document.getElementById(`adm-gross-${id}`)?.value);
+    result.push({
+      id, equipo, reemplaza,
+      nombre: isGatto ? undefined : nombre,
+      acumulaPuntos,
+      hdcp: isNaN(hdcp) ? null : hdcp,
+      neto: isNaN(neto) ? null : neto,
+      gross: isNaN(gross) ? null : gross
+    });
   });
   return result;
 }
 
 function adminBuildMedalRows() {
   const cont = document.getElementById('adm-medal-rows');
+  // Solo oficiales — los suplentes (incl. Ale Gatto) tienen sus HDCP/Neto/Gross
+  // dentro del bloque 'Suplentes' arriba para evitar duplicar IDs.
   const oficialRows = PLAYERS.map(p=>`
     <div id="medal-row-${p.id}" style="display:grid;grid-template-columns:1fr 60px 70px 70px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);transition:opacity 0.2s">
       <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem">
@@ -3407,27 +3512,7 @@ function adminBuildMedalRows() {
       <input type="number" id="adm-gross-${p.id}" placeholder="Gross" min="60" max="140"
         style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
     </div>`).join('');
-
-  // Fila separada para Gatto Alejandro (suplente oficial especial)
-  const supEsp = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
-  const supEspRow = supEsp ? `
-    <div style="border-top:1px dashed rgba(201,168,76,0.3);margin-top:6px;padding-top:6px">
-      <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;color:var(--gold);margin-bottom:4px">★ SUPLENTE OFICIAL — solo completar si jugó</div>
-      <div style="display:grid;grid-template-columns:1fr 60px 70px 70px;gap:6px;align-items:center;padding:5px 0">
-        <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem">
-          <div class="dot" style="background:var(--gold)"></div>
-          <span style="color:var(--gold)">${supEsp.name}</span>
-        </div>
-        <input type="number" id="adm-hdcp-${supEsp.id}" placeholder="HDC" step="0.1" min="0" max="54"
-          style="background:var(--navy-mid);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
-        <input type="number" id="adm-neto-${supEsp.id}" placeholder="Neto" min="55" max="120"
-          style="background:var(--navy-mid);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
-        <input type="number" id="adm-gross-${supEsp.id}" placeholder="Gross" min="60" max="140"
-          style="background:var(--navy-mid);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 8px;border-radius:6px;font-size:0.82rem;text-align:center;width:100%;outline:none">
-      </div>
-    </div>` : '';
-
-  cont.innerHTML = oficialRows + supEspRow;
+  cont.innerHTML = oficialRows + `<div style="margin-top:10px;padding:10px 12px;background:rgba(201,168,76,0.06);border:1px dashed rgba(201,168,76,0.3);border-radius:6px;font-size:0.72rem;color:var(--muted-light)">💡 Los <strong style="color:var(--gold)">suplentes</strong> cargan su HDCP / Neto / Gross arriba en la sección <strong>Suplentes</strong>. Aparecen en el ranking de la fecha y afectan los pts que reparten los oficiales (no acumulan al tour).</div>`;
 }
 
 function adminBuildMatchBlocks(fechaNum) {
@@ -3627,7 +3712,7 @@ function adminGenerate() {
   const ausentes = adminGetAusentes();
   const comentario = document.getElementById('adm-comentario').value.trim();
 
-  // Medal — oficiales + suplente especial si jugó
+  // Medal — oficiales + suplentes (especial y externos) que jugaron
   const medal = PLAYERS.map(p=>{
     const hdcp  = parseFloat(document.getElementById(`adm-hdcp-${p.id}`)?.value||'');
     const neto  = parseInt(document.getElementById(`adm-neto-${p.id}`)?.value||'');
@@ -3635,12 +3720,13 @@ function adminGenerate() {
     if(isNaN(neto)||isNaN(gross)) return null;
     return {id:p.id, hdcp:isNaN(hdcp)?null:hdcp, neto, gross};
   }).filter(Boolean);
-  // Agregar suplente oficial especial si completó score
-  SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial).forEach(s=>{
-    const hdcp  = parseFloat(document.getElementById(`adm-hdcp-${s.id}`)?.value||'');
-    const neto  = parseInt(document.getElementById(`adm-neto-${s.id}`)?.value||'');
-    const gross = parseInt(document.getElementById(`adm-gross-${s.id}`)?.value||'');
-    if(!isNaN(neto)&&!isNaN(gross)) medal.push({id:s.id, hdcp:isNaN(hdcp)?null:hdcp, neto, gross});
+  // Suplentes (Ale Gatto + externos): leer scores desde adm-hdcp/-neto/-gross con su supId.
+  // Si tienen scores (neto+gross definidos), entran al medal para ocupar puesto y afectar pts.
+  const supList = adminGetSuplentes();
+  supList.forEach(s => {
+    if(s.neto != null && s.gross != null) {
+      medal.push({id: s.id, hdcp: s.hdcp, neto: s.neto, gross: s.gross});
+    }
   });
 
   // Stats
@@ -3679,7 +3765,11 @@ function adminGenerate() {
     }
   }
 
-  const suplentes = adminGetSuplentes();
+  // Reusar supList (ya leído arriba para medal). Limpiar scores que ya están en medal.
+  const suplentes = supList.map(s => ({
+    id: s.id, equipo: s.equipo, reemplaza: s.reemplaza,
+    nombre: s.nombre, acumulaPuntos: s.acumulaPuntos
+  }));
 
   const newFecha = {
     num, fecha:f.fecha, cancha:f.cancha||'CUBA Fátima',
