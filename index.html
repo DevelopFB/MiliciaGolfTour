@@ -1451,9 +1451,25 @@ function buildAccum() {
         </div>
       </div>
 
+      <!-- Workflow Claude Project (recomendado) -->
+      <div style="margin:12px 0;border:2px solid var(--gold);border-radius:8px;padding:12px;background:rgba(201,168,76,0.08)">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:8px">⭐ Workflow recomendado: Chat del proyecto "La Milicia"</div>
+        <ol style="font-size:0.74rem;color:var(--muted-light);line-height:1.7;margin:0 0 10px 18px;padding:0">
+          <li>Hacé click en <strong>Copiar prompt</strong> → se copia al portapapeles con la fecha N rellenada.</li>
+          <li>Abrí un chat nuevo en el proyecto "La Milicia" → pegá el prompt + adjuntá todas las tarjetas (screenshots).</li>
+          <li>Contá: ausentes, suplentes, cancha (si no es Fátima), resultado de matchs.</li>
+          <li>Claude devuelve un JSON listo → click en <strong>Pegar JSON</strong> abajo para autocompletar el form.</li>
+        </ol>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="admin-btn primary" onclick="copiarPromptCargaFecha()" style="background:var(--gold);color:#080d18;border-color:var(--gold);font-weight:700">📋 Copiar prompt para Claude</button>
+          <button class="admin-btn secondary" onclick="pegarJsonAutoFill()">📥 Pegar JSON de Claude</button>
+          <span id="prompt-copy-status" style="font-size:0.75rem;color:var(--green);align-self:center"></span>
+        </div>
+      </div>
+
       <!-- OCR Section (collapsible) -->
       <details style="margin:12px 0;border:1px solid var(--border-gold);border-radius:8px;padding:0">
-        <summary style="padding:10px 14px;cursor:pointer;font-size:0.8rem;font-weight:600;color:var(--gold-dark)">🤖 Extraer desde imagen (Claude API — opcional)</summary>
+        <summary style="padding:10px 14px;cursor:pointer;font-size:0.8rem;font-weight:600;color:var(--gold-dark)">🤖 Alternativa: extraer desde imagen con Claude API (1 tarjeta a la vez)</summary>
         <div style="padding:12px 14px">
           <div class="admin-field" style="margin-bottom:8px">
             <label>API Key de Anthropic</label>
@@ -5501,6 +5517,230 @@ function scApplyDirect() {
 
   const status = byId('sc-action-status');
   if(status) { status.textContent = `Fecha ${data.num} aplicada y guardada`; status.style.color='var(--green)'; }
+}
+
+// ── Workflow Claude Project: copiar prompt + pegar JSON ──
+
+function _construirPromptCargaFecha() {
+  const num = parseInt(byId('sc-num')?.value) || 0;
+  const f = fechas.find(x => x.num === num);
+  const fxData = (typeof fixtureData !== 'undefined' && fixtureData.length) ? fixtureData.find(x => x.num === num) : null;
+  const fechaTxt = (f?.fecha) || (fxData?.fecha) || '(completar fecha)';
+  const canchaTxt = byId('sc-cancha')?.value || 'CUBA Fátima';
+  const orgTxt = byId('sc-org')?.value || fxData?.organizadores || '(completar)';
+  const modTxt = fxData?.modalidad || '(completar)';
+
+  const oficiales = PLAYERS.map(p => `- ${p.id}: ${p.name} (${p.team==='g'?'Gris':'Rojo'})`).join('\n');
+  const suplentes = SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial).map(s => `- ${s.id}: ${s.name} (suplente oficial)`).join('\n');
+
+  return `Antes de responder, leé el archivo CLAUDE.md del proyecto para contexto completo (jugadores canónicos, reglas, formato).
+
+Te paso las tarjetas de **Fecha ${num || '[N]'}** del Milicia Golf Tour.
+
+**Datos del día**:
+- Fecha jugada: ${fechaTxt}
+- Cancha: ${canchaTxt} (confirmá el par leyendo las tarjetas)
+- Modalidad: ${modTxt}
+- Organizadores: ${orgTxt}
+
+**Jugadores oficiales** (16) — usar exactamente estos IDs:
+${oficiales}
+
+**Suplente oficial**:
+${suplentes}
+
+**Adjunto las tarjetas** (screenshots de shagolf.com.ar o fotos de papel).
+
+**Información adicional** (completar antes de mandar):
+- Ausentes: [si hubo alguno, listalos]
+- Suplentes externos: [si hubo, nombre y a quién reemplazó]
+- Cancha confirmada: [confirmá la cancha si no era Fátima]
+- Resultado de matchs: [pasame las parejas y ganadores]
+
+---
+
+## Trabajo a realizar
+
+Extraé de cada tarjeta:
+- Nombre del jugador → mapear al ID canónico de arriba (formato display "Apellido, Nombre")
+- Hdcp del día (el que figura en la tarjeta, antes del cap del tour)
+- Gross total (suma de los 18 hoyos)
+- Neto total
+- Score por hoyo (18 valores)
+- Par por hoyo (18 valores) — debe ser el mismo para todas las tarjetas de la fecha
+
+**Reglas obligatorias**:
+- Si ves "Gatto" sin primer nombre, pediime aclaración (Mariano vs Alejandro vs Hector).
+- El gross debe ser igual a la suma de los 18 hoyos. Si no, marcá ⚠️.
+- Neto = Gross − Hdcp del día (sin cap todavía). Si no coincide, marcá ⚠️.
+- Si un jugador no figura en la lista de IDs canónicos, marcalo como "_unknown".
+
+---
+
+## Devolveme estos 3 outputs en este orden
+
+### 1. RESUMEN EJECUTIVO (texto plano)
+
+\`\`\`
+Fecha ${num || '[N]'} — ${fechaTxt} — ${canchaTxt}
+Par total: [N]
+Jugadores: [N] oficiales [+ N suplentes]
+
+Top 5 Neto:
+1° Apellido, Nombre — Neto [N] (Gross [N] / Hcp [N])
+2° ...
+
+Ganador de fecha: Apellido, Nombre   ó   VACANTE (si ganó suplente/no-oficial)
+Mejor Gross: Apellido, Nombre — [N]
+Eagles: [N]   Birdies: [N]
+Discrepancias: [si hubo, listar]
+\`\`\`
+
+### 2. JSON PARA BACKOFFICE
+
+Bloque JSON exacto (sin comentarios), listo para pegar en "Pegar JSON de Claude":
+
+\`\`\`json
+{
+  "num": ${num || 0},
+  "fecha": "${fechaTxt}",
+  "cancha": "${canchaTxt}",
+  "par": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  "organizadores": "${orgTxt}",
+  "ausentes": [],
+  "suplentes": [],
+  "comentario": "",
+  "scorecard": [
+    {
+      "id": "...",
+      "name": "Apellido, Nombre",
+      "hdcp": 0,
+      "hoyos": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      "gross": 0,
+      "neto": 0
+    }
+  ],
+  "matchs": []
+}
+\`\`\`
+
+Llená los matchs si te pasé el resultado arriba; sino dejá array vacío.
+
+### 3. RESUMEN PDF DE LA FECHA
+
+Generá un PDF (1-2 páginas A4) con:
+- Header: número de fecha, fecha, cancha, organizadores
+- Tabla de ranking medal (pos, jugador, gross, hcp, neto, pts)
+- Sección match (parejas, resultados, ganador del día)
+- Stats de la fecha (eagles, birdies, mejor gross, mejor neto)
+- Comentario corto
+
+Dame el PDF como archivo descargable.
+
+---
+
+**Importante**: no inventes datos. Si una tarjeta es borrosa o falta un hoyo, marcá con null y avisame. No apliques reglas de tour (vacante, pts medal) — eso lo calcula el backoffice.`;
+}
+
+async function copiarPromptCargaFecha() {
+  const prompt = _construirPromptCargaFecha();
+  const st = byId('prompt-copy-status');
+  try {
+    await navigator.clipboard.writeText(prompt);
+    if(st) { st.textContent = '✓ Prompt copiado al portapapeles'; st.style.color = 'var(--green)'; setTimeout(()=>{st.textContent='';}, 4000); }
+  } catch(e) {
+    // Fallback: mostrar en modal
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    overlay.onclick = (ev) => { if(ev.target===overlay) overlay.remove(); };
+    overlay.innerHTML = `<div style="background:var(--navy-deep);border:1px solid var(--gold);border-radius:12px;padding:20px;max-width:800px;width:100%;max-height:80vh;display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:0.85rem;font-weight:700;color:var(--gold)">No pude copiar automáticamente. Copialo manualmente:</div>
+      <textarea readonly style="flex:1;min-height:400px;font-family:'DM Mono',monospace;font-size:0.7rem;background:#1a2233;color:#aab8d0;border:1px solid var(--border);border-radius:6px;padding:10px;resize:vertical">${prompt}</textarea>
+      <button class="admin-btn primary" style="align-self:flex-end" onclick="this.parentElement.parentElement.remove()">Cerrar</button>
+    </div>`;
+    document.body.appendChild(overlay);
+    const ta = overlay.querySelector('textarea'); ta.select();
+  }
+}
+
+function pegarJsonAutoFill() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.onclick = (ev) => { if(ev.target===overlay) overlay.remove(); };
+  overlay.innerHTML = `<div style="background:var(--navy-deep);border:1px solid var(--gold);border-radius:12px;padding:20px;max-width:800px;width:100%;max-height:85vh;display:flex;flex-direction:column;gap:10px">
+    <div style="font-size:0.95rem;font-weight:700;color:var(--gold)">Pegar JSON de Claude</div>
+    <div style="font-size:0.72rem;color:var(--muted-light)">Pegá el bloque JSON que devolvió Claude. Se autocompleta: cancha, par, scores, organizadores, etc. Matchs y resumen los podés revisar abajo.</div>
+    <textarea id="paste-json-area" placeholder='{ "num": ..., "scorecard": [...] }' style="flex:1;min-height:300px;font-family:'DM Mono',monospace;font-size:0.72rem;background:#1a2233;color:#aab8d0;border:1px solid var(--border);border-radius:6px;padding:10px;resize:vertical"></textarea>
+    <div id="paste-json-status" style="font-size:0.78rem;min-height:18px"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="admin-btn secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Cancelar</button>
+      <button class="admin-btn primary" onclick="_aplicarJsonPegado()" style="background:var(--green);color:#fff;border-color:var(--green)">Aplicar al form</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+function _aplicarJsonPegado() {
+  const ta = byId('paste-json-area');
+  const st = byId('paste-json-status');
+  if(!ta) return;
+  let data;
+  try { data = JSON.parse(ta.value); }
+  catch(e) { st.textContent = '❌ JSON inválido: ' + e.message; st.style.color = 'var(--rojo-light)'; return; }
+
+  // Validar estructura mínima
+  if(!data.scorecard || !Array.isArray(data.scorecard)) {
+    st.textContent = '❌ Falta scorecard (array)'; st.style.color = 'var(--rojo-light)'; return;
+  }
+
+  // Setear fecha en selector
+  if(data.num) {
+    const sel = byId('sc-num');
+    if(sel) { sel.value = data.num; scLoadFechaInfo(); }
+  }
+  if(data.fecha) byId('sc-fecha').value = data.fecha;
+  if(data.cancha) byId('sc-cancha').value = data.cancha;
+  if(data.organizadores) byId('sc-org').value = data.organizadores;
+  if(data.comentario) byId('sc-comentario').value = data.comentario;
+
+  // Par editable
+  if(data.par && data.par.length === 18) {
+    SC_PAR_ACTUAL = [...data.par];
+  }
+
+  // Ausentes: detectar IDs faltantes en scorecard
+  const pIds = data.scorecard.map(s => s.id);
+  const ausentes = PLAYERS.filter(p => !pIds.includes(p.id)).map(p => p.id);
+  if(ausentes.length > 0 && !byId('sc-ausentes').value) byId('sc-ausentes').value = ausentes.join(', ');
+
+  // Re-armar grid con par actualizado
+  scBuildGrid();
+
+  // Cargar scores por jugador
+  let loadedCount = 0, unknowns = [];
+  data.scorecard.forEach(sc => {
+    if(!sc.id || sc.id === '_unknown') { unknowns.push(sc.name || '?'); return; }
+    const hdcInput = document.querySelector(`.sc-hdc[data-pid="${sc.id}"]`);
+    if(hdcInput && sc.hdcp != null) hdcInput.value = Math.round(sc.hdcp);
+    if(sc.hoyos && sc.hoyos.length === 18) {
+      sc.hoyos.forEach((v, i) => {
+        const inp = document.querySelector(`.sc-hole[data-pid="${sc.id}"][data-hole="${i+1}"]`);
+        if(inp && v != null) inp.value = v;
+      });
+      loadedCount++;
+    }
+  });
+
+  // Recalc
+  scRecalc();
+
+  let msg = `✓ Cargados ${loadedCount} jugadores. Revisá el grid y agregá los matchs antes de guardar.`;
+  if(unknowns.length) msg += ` ⚠️ Sin match: ${unknowns.join(', ')}`;
+  st.textContent = msg;
+  st.style.color = unknowns.length ? 'var(--gold)' : 'var(--green)';
+
+  // Cerrar modal después de 2 seg si todo OK
+  if(!unknowns.length) setTimeout(()=>{ const ov = ta.closest('[style*="z-index:9999"]'); if(ov) ov.remove(); }, 1800);
 }
 
 // OCR functions
