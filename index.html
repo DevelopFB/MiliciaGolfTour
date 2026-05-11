@@ -2091,8 +2091,20 @@ function renderMedal(acc) {
     fechasJugadas.forEach(f=>{
       ptsPerF['F'+f.num] = getMedalEntryForFecha(f, id, false);
     });
-    return {id, name:p?.name, team:p?.team, pts:v.pts, positions:v.positions, ptsPerF};
-  }).sort((a,b)=>b.pts-a.pts);
+    return {id, name:p?.name, team:p?.team, pts:v.pts, positions:v.positions, ptsPerF, esSupOficial:false};
+  });
+
+  // Suplente oficial (Ale Gatto) integrado al ranking según sus pts
+  if(acc.matchSupEspecial) {
+    const se = acc.matchSupEspecial;
+    const ptsPerF = {};
+    fechasJugadas.forEach(f=>{
+      ptsPerF['F'+f.num] = getMedalEntryForFecha(f, se.id, true);
+    });
+    rank.push({id:se.id, name:se.name, team:null, pts:se.medalPts, positions:se.medalPos||[], ptsPerF, esSupOficial:true});
+  }
+
+  rank.sort((a,b)=>b.pts-a.pts);
 
   const fCols = fechasJugadas.map(f=>`<th class="cen">F${f.num}</th>`).join('');
   const rows = rank.map((r,i)=>{
@@ -2100,40 +2112,20 @@ function renderMedal(acc) {
       const entry = r.ptsPerF['F'+f.num];
       return `<td class="cen">${medalDateBadge(entry)}</td>`;
     }).join('');
+    const dot = r.esSupOficial
+      ? `<div class="dot" style="background:var(--gold)"></div>`
+      : `<div class="dot ${r.team}"></div>`;
+    const nameStyle = r.esSupOficial ? 'style="color:var(--gold);font-weight:600" title="Suplente oficial"' : '';
+    const supBadge = r.esSupOficial ? `<span style="font-size:0.55rem;color:var(--gold);margin-left:6px;font-family:'DM Mono',monospace;letter-spacing:1px">★ SUP</span>` : '';
     return `<tr>
       <td><span class="rank-num ${i<3?'r'+(i+1):''}">${i+1}</span></td>
-      <td><div class="player-name-cell"><div class="dot ${r.team}"></div><span>${r.name}</span></div></td>
+      <td><div class="player-name-cell">${dot}<span ${nameStyle}>${r.name}</span>${supBadge}</div></td>
       ${pfCells}
       <td class="cen"><span class="pts-badge total-badge">${fmtPts(r.pts)}</span></td>
     </tr>`;
   }).join('');
 
-  let supEspRow = '';
-  if(acc.matchSupEspecial) {
-    const se = acc.matchSupEspecial;
-    const fechasJugoSup = fechasJugadas.filter(f=>{
-      const ptsData = calcMedalPts(f);
-      return ptsData.some(x=>x.id===se.id && x.esSuplente);
-    });
-    const ptsPerFCells = fechasJugadas.map(f=>{
-      const found = getMedalEntryForFecha(f, se.id, true);
-      const content = found ? `<span class="pts-badge date-badge${found.pos===1?' pos-1':(found.pos===2||found.pos===3)?' pos-2':''}" style="color:var(--gold)">(${fmtPts(found.pts)})</span>` : '<span style="color:var(--muted)">—</span>';
-      return `<td class="cen">${content}</td>`;
-    }).join('');
-    const fechasLabel = fechasJugoSup.length > 0
-      ? `<span style="font-size:0.62rem;color:var(--muted);margin-left:6px">${fechasJugoSup.length} fecha${fechasJugoSup.length>1?'s':''}</span>`
-      : `<span style="font-size:0.62rem;color:var(--muted);margin-left:6px">sin fechas</span>`;
-    supEspRow = `<tr style="border-top:2px dashed rgba(201,168,76,0.35)">
-      <td><span style="color:var(--gold);font-size:0.65rem;font-family:'DM Mono',monospace;letter-spacing:1px">SUP★</span></td>
-      <td><div class="player-name-cell"><div class="dot" style="background:var(--gold)"></div>
-        <span style="color:var(--gold);font-weight:600">${se.name}</span>${fechasLabel}
-      </div></td>
-      ${ptsPerFCells}
-      <td class="cen"><span style="color:var(--gold);font-family:'DM Mono',monospace;font-weight:600">(${se.medalPts})</span></td>
-    </tr>`;
-  }
-
-  byId('tbl-medal-full').innerHTML = `<thead><tr><th>#</th><th>Jugador</th>${fCols}<th class="cen">Total</th></tr></thead><tbody>${rows}${supEspRow}</tbody>`;
+  byId('tbl-medal-full').innerHTML = `<thead><tr><th>#</th><th>Jugador</th>${fCols}<th class="cen">Total</th></tr></thead><tbody>${rows}</tbody>`;
 
   destroyChart('medal-bar');
   charts['medal-bar'] = new Chart(byId('chart-medal-bar'),{
@@ -2143,7 +2135,7 @@ function renderMedal(acc) {
       datasets:[{
         label:'Puntos Medal',
         data:rank.map(r=>r.pts),
-        backgroundColor:rank.map(r=>r.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)'),
+        backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(r.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)')),
         borderRadius:5
       }]
     },
@@ -2416,18 +2408,40 @@ function renderGross(acc) {
   fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
     f.medal.forEach(m=>{ if(grossMap[m.id]){ grossMap[m.id].scores.push(m.gross); grossMap[m.id].dates.push('F'+f.num); }});
   });
+
+  // Sumar suplente oficial al ranking general (sus scores cuando jugó)
+  const supEspG = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
+  if(supEspG) {
+    grossMap[supEspG.id] = {scores:[], dates:[], esSupOficial:true};
+    fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
+      f.medal.forEach(m=>{
+        if(m.id === supEspG.id && getSustitutoInfo(m.id, f) && m.gross) {
+          grossMap[supEspG.id].scores.push(m.gross);
+          grossMap[supEspG.id].dates.push('F'+f.num);
+        }
+      });
+    });
+  }
+
   const rank = Object.entries(grossMap).map(([id,v])=>{
     const avg = v.scores.length?(v.scores.reduce((a,b)=>a+b,0)/v.scores.length).toFixed(1):null;
     const best = v.scores.length?Math.min(...v.scores):null;
-    return {id, avg, best, tarjetas:v.scores.length};
+    return {id, avg, best, tarjetas:v.scores.length, esSupOficial:!!v.esSupOficial};
   }).filter(x=>x.avg!==null).sort((a,b)=>a.avg-b.avg);
 
   const rows = rank.map((m,i)=>{
-    const p=PLAYERS.find(x=>x.id===m.id);
-    const premio = m.tarjetas>=7?'<span style="color:var(--green);font-size:0.7rem">★ en carrera</span>':'<span style="color:var(--muted);font-size:0.7rem">falta '+( 7-m.tarjetas)+' tarj.</span>';
+    const p = m.esSupOficial ? supEspG : PLAYERS.find(x=>x.id===m.id);
+    const premio = m.esSupOficial
+      ? '<span style="color:var(--muted);font-size:0.7rem">no compite ★</span>'
+      : (m.tarjetas>=7?'<span style="color:var(--green);font-size:0.7rem">★ en carrera</span>':'<span style="color:var(--muted);font-size:0.7rem">falta '+( 7-m.tarjetas)+' tarj.</span>');
+    const dot = m.esSupOficial
+      ? '<div class="dot" style="background:var(--gold)"></div>'
+      : `<div class="dot ${p?.team}"></div>`;
+    const nameStyle = m.esSupOficial ? 'style="color:var(--gold);font-weight:600" title="Suplente oficial"' : '';
+    const supBadge = m.esSupOficial ? `<span style="font-size:0.55rem;color:var(--gold);margin-left:6px;font-family:'DM Mono',monospace;letter-spacing:1px">★ SUP</span>` : '';
     return `<tr>
       <td><span class="rank-num ${i<3?'r'+(i+1):''}">${i+1}</span></td>
-      <td><div class="player-name-cell"><div class="dot ${p?.team}"></div><span>${p?.name}</span></div></td>
+      <td><div class="player-name-cell">${dot}<span ${nameStyle}>${p?.name}</span>${supBadge}</div></td>
       <td class="num" style="color:var(--gold)">${m.avg}</td>
       <td class="num">${m.best}</td>
       <td class="num">${m.tarjetas}</td>
@@ -2435,41 +2449,14 @@ function renderGross(acc) {
     </tr>`;
   }).join('');
 
-  // Fila especial Gatto al final
-  const supEspG = SUPLENTES_CONOCIDOS.find(s=>s.esOficialEspecial);
-  let gattoGross = {scores:[], dates:[]};
-  if(supEspG) {
-    fechas.filter(f=>!f.pendiente&&f.medal).forEach(f=>{
-      f.medal.forEach(m=>{
-        if(m.id === SUPLENTE_ESPECIAL_ID && getSustitutoInfo(m.id, f) && m.gross) {
-          gattoGross.scores.push(m.gross);
-          gattoGross.dates.push('F'+f.num);
-        }
-      });
-    });
-  }
-  let gattoGrossRow = '';
-  if(supEspG && gattoGross.scores.length > 0) {
-    const avg = (gattoGross.scores.reduce((a,b)=>a+b,0)/gattoGross.scores.length).toFixed(1);
-    const best = Math.min(...gattoGross.scores);
-    gattoGrossRow = `<tr style="border-top:1px dashed rgba(201,168,76,0.3);opacity:0.85">
-      <td><span style="color:var(--gold);font-size:0.65rem;font-family:'DM Mono',monospace">★</span></td>
-      <td><div class="player-name-cell"><div class="dot" style="background:var(--gold)"></div><span style="color:var(--gold)">${supEspG.name}</span><span style="font-size:0.6rem;color:var(--muted);margin-left:6px">suplente oficial</span></div></td>
-      <td class="num" style="color:var(--gold)">${avg}</td>
-      <td class="num" style="color:var(--muted-light)">${best}</td>
-      <td class="num" style="color:var(--muted-light)">${gattoGross.scores.length}</td>
-      <td><span style="color:var(--muted);font-size:0.7rem">no compite</span></td>
-    </tr>`;
-  }
-
-  byId('tbl-gross').innerHTML = `<thead><tr><th>#</th><th>Jugador</th><th>Avg Gross</th><th>Mejor</th><th>Tarjetas</th><th>Premio</th></tr></thead><tbody>${rows}${gattoGrossRow}</tbody>`;
+  byId('tbl-gross').innerHTML = `<thead><tr><th>#</th><th>Jugador</th><th>Avg Gross</th><th>Mejor</th><th>Tarjetas</th><th>Premio</th></tr></thead><tbody>${rows}</tbody>`;
 
   destroyChart('gross-bar');
   charts['gross-bar'] = new Chart(byId('chart-gross-bar'),{
     type:'bar',
     data:{
-      labels:rank.map(r=>PLAYERS.find(p=>p.id===r.id)?.name.split(',')[0]),
-      datasets:[{label:'Avg Gross',data:rank.map(r=>parseFloat(r.avg)),backgroundColor:rank.map(r=>PLAYERS.find(p=>p.id===r.id)?.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)'),borderRadius:5}]
+      labels:rank.map(r=>(r.esSupOficial?supEspG.name:PLAYERS.find(p=>p.id===r.id)?.name).split(',')[0]),
+      datasets:[{label:'Avg Gross',data:rank.map(r=>parseFloat(r.avg)),backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(PLAYERS.find(p=>p.id===r.id)?.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)')),borderRadius:5}]
     },
     options:{...CHART_BASE,plugins:{legend:{display:false}},scales:{...CHART_BASE.scales,y:{...CHART_BASE.scales.y,min:60}}}
   });
