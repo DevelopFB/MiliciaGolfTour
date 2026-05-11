@@ -741,71 +741,39 @@ function calcMedalPts(fecha) {
   }));
   const mult = fecha.num === 9 ? F9_MULT : fecha.num === 10 ? F10_MULT : 1;
 
-  // Separar oficiales y suplentes
-  const oficiales = fecha.medal.filter(m => {
-    const sup = getSustitutoInfo(m.id, fecha);
-    if(sup) return false; // es suplente en esta fecha
-    return PLAYERS.find(p=>p.id===m.id); // solo oficiales
-  });
-  const suplentesEnFecha = fecha.medal.filter(m => {
-    const sup = getSustitutoInfo(m.id, fecha);
-    return !!sup;
-  });
+  // Regla 2026: rankear a TODOS los que jugaron (oficiales + suplentes + invitados).
+  // Los suplentes/invitados ocupan puestos y se llevan su porción de pts en empates,
+  // lo que afecta los pts que reciben los oficiales (no se "saltan"). Los pts del
+  // suplente se muestran en el resumen de la fecha pero NO acumulan al tour
+  // (esa filtro la hace buildAccum vía esSuplente=true).
+  const todos = fecha.medal.filter(m => m.neto != null && !isNaN(m.neto));
+  const sorted = [...todos].sort((a,b) => a.neto - b.neto);
 
-  // Ordenar SOLO oficiales para asignar puntos reales
-  const sorted = [...oficiales].sort((a,b) => a.neto - b.neto);
-  const result = [];
+  const finalResult = [];
   let i = 0;
   while(i < sorted.length) {
     let j = i;
     while(j < sorted.length - 1 && sorted[j].neto === sorted[j+1].neto) j++;
+    // Posiciones ocupadas i+1..j+1. Sumar pts del rango y repartir entre el grupo.
     let totalPts = 0;
     for(let k=i;k<=j;k++) totalPts += (MEDAL_PTS[k+1]||0);
     const pts = Math.round((totalPts/(j-i+1)) * mult);
-    for(let k=i;k<=j;k++) result.push({
-      id:sorted[k].id, hdcp:sorted[k].hdcp, neto:sorted[k].neto, gross:sorted[k].gross,
-      pos:i+1, pts, esSuplente:false
-    });
+    for(let k=i;k<=j;k++) {
+      const m = sorted[k];
+      const sup = getSustitutoInfo(m.id, fecha);
+      const supInfo = SUPLENTES_CONOCIDOS.find(s=>s.id===m.id);
+      const isOficial = !sup && !!PLAYERS.find(p=>p.id===m.id);
+      finalResult.push({
+        id: m.id, hdcp: m.hdcp, neto: m.neto, gross: m.gross,
+        pos: i+1, pts,
+        esSuplente: !isOficial,
+        esOficialEspecial: supInfo?.esOficialEspecial || false,
+        acumulaPuntos: sup?.acumulaPuntos || false,
+        equipoRepresenta: sup?.equipo || null
+      });
+    }
     i = j+1;
   }
-
-  // Ahora insertar suplentes en la tabla de fecha (pos visual, pero pts=0 para acumulado)
-  // Su posición visual se calcula mezclando con oficiales
-  const allSorted = [...fecha.medal].sort((a,b) => a.neto - b.neto);
-  const resultConSup = [];
-  const posMap = {}; // id -> pos visual real
-  let posIdx = 0;
-  let pos = 1;
-  while(posIdx < allSorted.length) {
-    let j = posIdx;
-    while(j < allSorted.length - 1 && allSorted[j].neto === allSorted[j+1].neto) j++;
-    for(let k=posIdx; k<=j; k++) posMap[allSorted[k].id] = pos;
-    posIdx = j+1;
-    pos = posIdx+1;
-  }
-
-  // Reconstruir resultado final para tabla de fecha
-  const finalResult = [];
-  allSorted.forEach(m => {
-    const sup = getSustitutoInfo(m.id, fecha);
-    if(sup) {
-      // suplente: pts visuales calculados sobre toda la tabla, pero pts acumulados = 0
-      // Calcular pts visuales (lo que "habría ganado")
-      const posVisual = posMap[m.id];
-      const ptsVisuales = Math.round((MEDAL_PTS[posVisual]||0) * mult);
-      const esEspecial = SUPLENTES_CONOCIDOS.find(s=>s.id===m.id)?.esOficialEspecial || sup.acumulaPuntos || false;
-      finalResult.push({
-        id:m.id, hdcp:m.hdcp, neto:m.neto, gross:m.gross,
-        pos:posVisual, pts:ptsVisuales,
-        esSuplente:true, esOficialEspecial:esEspecial, acumulaPuntos: sup.acumulaPuntos || false,
-        equipoRepresenta: sup.equipo || null
-      });
-    } else {
-      // oficial — usar pts ya calculados
-      const found = result.find(r=>r.id===m.id);
-      if(found) finalResult.push(found);
-    }
-  });
 
   return finalResult;
 }
@@ -6136,15 +6104,17 @@ function calcStats2026(playerId) {
     fechasJugadas++;
 
     // Ganador de fecha: el neto mínimo de TODA la scorecard (incl. suplentes).
-    // - Empate en 1er puesto → todos los oficiales empatados suman fecha ganada.
-    // - Si el neto mínimo lo tiene un suplente o no-oficial → vacante (nadie suma).
+    // - Si NINGÚN oficial está en el neto mínimo → vacante (nadie suma fecha ganada).
+    // - Si al menos un oficial empata el neto mínimo → ese/esos oficiales suman.
+    //   (Empates múltiples entre oficiales: todos suman; un sup + oficial empatados:
+    //    el oficial sí gana la fecha porque alcanzó el neto mínimo.)
     const minNeto = Math.min(...f.medal.map(m => m.neto));
-    const supOMirador = f.medal.some(m => {
+    const hayOficialEnMin = f.medal.some(m => {
       if(m.neto !== minNeto) return false;
       const sup = getSustitutoInfo(m.id, f);
-      return !!sup || !PLAYERS.find(p => p.id === m.id);
+      return !sup && !!PLAYERS.find(p => p.id === m.id);
     });
-    if(!supOMirador && !entry.esSuplente && entry.neto === minNeto) fechasGanadas++;
+    if(hayOficialEnMin && !entry.esSuplente && entry.neto === minNeto) fechasGanadas++;
 
     if(entry.pos < mejorPos) mejorPos = entry.pos;
     if(entry.gross > 0) { grossSum += entry.gross; netoSum += entry.neto; grossCount++; }

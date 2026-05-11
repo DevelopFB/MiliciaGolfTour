@@ -97,17 +97,26 @@ PUNTOS MEDAL POR PUESTO:
   11° a 14° → 20 c/u   15° y 16° → 0
   F9 multiplica × 1.5     F10 multiplica × 2
 
-EMPATES EN POSICIÓN:
-  Los puntos de los puestos ocupados se SUMAN y se PROMEDIAN entre los empatados.
-  Ejemplo: 3 empatados en 1° → cada uno recibe (500+300+200)/3 = 333 pts.
-  Para "fechas ganadas" en stats: todos los empatados en pos 1 suman +1 fecha ganada.
+RANKING DE PTS — TODOS OCUPAN PUESTO:
+  Las posiciones se asignan ordenando por neto a TODOS los que jugaron (oficiales + suplentes + invitados).
+  Los suplentes ocupan puestos y reciben su parte de los pts en empates.
+  En el resumen de fecha los pts del suplente se muestran entre paréntesis.
+  Pero el suplente NO acumula al tour (filtrado en acumulado).
+  IMPORTANTE: los oficiales reciben pts según su posición REAL (que incluye suplentes delante).
+  NO se "saltan" suplentes para que el oficial siguiente reciba pts de la posición vacía.
+
+EMPATES:
+  Los pts de los puestos ocupados se SUMAN y PROMEDIAN entre los empatados.
+  Ejemplos:
+    - Sup solo en 1° → sup recibe 500 (visual). Oficial 2° recibe 300 (su posición real).
+    - Sup + Oficial empatados en 1° → ambos comparten (500+300)/2 = 400 pts c/u.
+    - Sup + 2 Oficiales empatados en 10° → comparten (70+20+20)/3 ≈ 37 pts c/u.
+  Para "fechas ganadas" en stats: todos los oficiales empatados al neto mínimo suman +1.
 
 FECHA VACANTE:
-  Si el ganador de la fecha (neto mínimo entre TODOS los que jugaron, incluyendo suplentes/invitados) es:
-    - un suplente o
-    - un no-oficial (invitado)
-  Entonces la fecha queda VACANTE: ningún oficial suma "fecha ganada".
-  (Importante: NO es "el mejor oficial gana"; nadie gana.)
+  Vacante SOLO si NINGÚN oficial está en el neto mínimo.
+  Si al menos un oficial empata el neto mínimo (aunque haya suplentes empatados ahí también),
+  ese/esos oficiales SÍ ganan la fecha.
 
 SUPLENTES (regla 2026, NUEVA):
   - El suplente SUMA pts para el COLOR (equipo) que representa, igual que un oficial.

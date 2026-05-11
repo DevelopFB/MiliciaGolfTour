@@ -130,13 +130,32 @@ Tabla por puesto:
 
 Multiplicador F9 = ×1.5, F10 = ×2 (sobre los puntos base).
 
-### Empates en posición
-- **Si hay empate**, los puntos de los puestos ocupados se **suman y promedian** entre los empatados. Ej: si 3 empatan en pos 1, recibirán `(500+300+200)/3 = 333` puntos cada uno.
-- **Para fechas ganadas (stats)**: todos los oficiales empatados en pos 1 suman +1 fecha ganada.
+### Ranking de pts medal — TODOS los que jugaron ocupan puesto
+
+- Las posiciones se asignan ordenando por neto a **todos los que jugaron** (oficiales + suplentes + invitados). Los suplentes **ocupan puestos** y reciben su parte de los pts si hay empate.
+- En el resumen de fecha se muestran los pts del suplente entre paréntesis (visual).
+- Pero los suplentes **NO acumulan** al tour: filtrado posterior en `buildAccum` por `esSuplente`.
+- **Esto importa**: si un suplente está delante de un oficial, los oficiales reciben los pts de su posición REAL (que incluye al suplente). NO se "saltan" suplentes para premiar al oficial siguiente.
+
+**Ejemplo 1** — Suplente solo en pos 1:
+- Sup neto 70 → pos 1 → "se lleva" 500 pts (visual)
+- Oficial neto 72 → pos 2 → 300 pts (NO 500)
+
+**Ejemplo 2** — Suplente + Oficial empatados en pos 1:
+- Ambos neto 70 → comparten pos 1-2 → `(500+300)/2 = 400` pts cada uno
+- Oficial acumula 400 al tour; suplente muestra 400 visual
+
+**Ejemplo 3** — Suplente + 2 Oficiales empatados en pos 10:
+- 3 jugadores neto 80 → comparten pos 10-11-12 → `(70+20+20)/3 = 36.67` pts cada uno
+- Los 2 oficiales acumulan ~37 al tour
+
+### Empates entre oficiales
+- Para **fechas ganadas (stats)**: todos los oficiales empatados en pos 1 (neto mínimo) suman +1 fecha ganada.
 
 ### Fecha vacante
-- Si el ganador de una fecha (neto mínimo) es **suplente** o **jugador no-oficial / invitado**, la fecha queda **vacante**: ningún oficial suma fecha ganada, aunque haya un oficial que salió "primero entre oficiales".
-- **Excepción**: el suplente oficial especial (`gatto_ale`) acumula match para el equipo que representa, pero NO suma medal personal (su puesto en medal es ignorado para fechas ganadas).
+- Si **NINGÚN oficial** está en el neto mínimo de la fecha → fecha **vacante**: nadie suma fecha ganada.
+- Si al menos UN oficial empata el neto mínimo (aunque haya suplentes también empatados ahí) → ese/esos oficiales SÍ ganan la fecha.
+- **Excepción**: el suplente oficial especial (`gatto_ale`) puede ocupar pos 1 sin invalidarla — pero el oficial que esté empatado con él gana normalmente.
 
 ### Sustitutos (no oficiales) — Regla 2026
 
