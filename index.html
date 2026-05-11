@@ -1370,18 +1370,27 @@ function buildAccum() {
         </div>
       </div>
 
-      <!-- Workflow Claude Project (recomendado) -->
-      <div style="margin:12px 0;border:2px solid var(--gold);border-radius:8px;padding:12px;background:rgba(201,168,76,0.08)">
-        <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:8px">⭐ Workflow recomendado</div>
-        <div style="font-size:0.78rem;color:var(--muted-light);line-height:1.6;margin-bottom:8px">
-          Para cargar una fecha completa con tarjetas + matchs + suplentes + comentario:
-          <strong style="color:var(--gold)">usá la tab "Cargar Fecha"</strong> arriba — tiene una caja grande para pegar el JSON
-          de Claude y permite editar todo antes de guardar (suplentes con scores, comentario amplio, etc.).
+      <!-- Workflow Claude Project: PASTE INLINE (no popup) -->
+      <div style="margin:12px 0;border:2px solid var(--gold);border-radius:8px;padding:14px;background:rgba(201,168,76,0.08)">
+        <div style="font-size:0.85rem;font-weight:700;color:var(--gold);margin-bottom:6px">⭐ Workflow: Tarjetas → Chat → Pegar JSON → Validar grid</div>
+        <ol style="font-size:0.74rem;color:var(--muted-light);line-height:1.7;margin:0 0 12px 18px;padding:0">
+          <li>Click <strong>Copiar prompt</strong> → abrí chat del proyecto "La Milicia" → pegá el prompt + adjuntá las tarjetas.</li>
+          <li>Claude te devuelve un JSON. Pegalo en la caja de abajo y click <strong>Aplicar al grid</strong>.</li>
+          <li>Se autocompleta TODO: par por hoyo, scores hoyo-por-hoyo, matchs, suplentes (con sus hoyos también).</li>
+          <li>Validá visualmente el grid → click <strong>⚡ Aplicar al Dashboard</strong> al final.</li>
+        </ol>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="admin-btn primary" onclick="copiarPromptCargaFecha()" style="background:var(--gold);color:#080d18;border-color:var(--gold);font-weight:700">📋 Copiar prompt para Claude</button>
+          <span id="prompt-copy-status" style="font-size:0.75rem;color:var(--green);align-self:center"></span>
+        </div>
+        <div class="admin-field" style="margin-bottom:8px">
+          <label style="font-size:0.72rem;color:var(--gold-dark)">JSON de Claude</label>
+          <textarea id="sc-paste-json" placeholder='Pegá el JSON acá. Soporta cualquier formato (gris/g, difHoyos/dif, etc).'
+            style="width:100%;min-height:140px;font-family:'DM Mono',monospace;font-size:0.72rem;line-height:1.5;background:#1a2233;color:#aab8d0;border:1px solid var(--border-gold);border-radius:8px;padding:10px;resize:vertical"></textarea>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="admin-btn primary" onclick="copiarPromptCargaFecha()" style="background:var(--gold);color:#080d18;border-color:var(--gold);font-weight:700">📋 Copiar prompt para Claude</button>
-          <span style="font-size:0.72rem;color:var(--muted);align-self:center">(esta tab queda solo para carga hoyo-por-hoyo manual sin tarjetas)</span>
-          <span id="prompt-copy-status" style="font-size:0.75rem;color:var(--green);align-self:center"></span>
+          <button class="admin-btn primary" onclick="pegarJsonInlineApply()" style="background:var(--green);color:#fff;border-color:var(--green)">📥 Aplicar al grid</button>
+          <span id="sc-paste-status" style="font-size:0.78rem;align-self:center"></span>
         </div>
       </div>
 
@@ -1416,6 +1425,10 @@ function buildAccum() {
             <thead id="sc-grid-thead"></thead>
             <tbody id="sc-grid-tbody"></tbody>
           </table>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-wrap:wrap">
+          <button onclick="scAddSuplenteExtPrompt()" style="background:none;border:1px dashed rgba(201,168,76,0.4);color:var(--gold);padding:7px 14px;border-radius:7px;font-size:0.78rem;cursor:pointer">+ Agregar suplente externo (con hoyos)</button>
+          <span style="font-size:0.7rem;color:var(--muted)">Los suplentes ocupan puesto en el medal y afectan los pts que se reparten.</span>
         </div>
         <div id="sc-stats-auto" style="font-size:0.75rem;color:var(--muted);margin-bottom:12px"></div>
       </div>
@@ -5475,7 +5488,7 @@ function scBuildGrid() {
   hdr += `<td id="sc-par-f">${parF}</td><td id="sc-par-b">${parB}</td><td id="sc-par-total">${parF+parB}</td><td></td></tr>`;
   thead.innerHTML = hdr;
 
-  // Player rows
+  // Player rows: oficiales + suplente especial Ale Gatto + suplentes externos cargados
   const allPlayers = [...PLAYERS, ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial)];
   const ausentes = (byId('sc-ausentes')?.value || '').split(',').map(s=>s.trim()).filter(Boolean);
 
@@ -5495,11 +5508,75 @@ function scBuildGrid() {
     rows += `<td class="sc-neto" data-pid="${p.id}" style="font-weight:700;color:#2563eb">—</td>`;
     rows += '</tr>';
   });
+  // Suplentes externos: filas dinámicas con name input + equipo + 18 hoyos
+  if(window._scExtraSuplentes && window._scExtraSuplentes.length > 0) {
+    rows += '<tr><td colspan="23" style="padding-top:10px;color:var(--gold);font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:2px;text-align:left;border-top:1px dashed rgba(201,168,76,0.3)">★ SUPLENTES EXTERNOS</td></tr>';
+    window._scExtraSuplentes.forEach(sup => {
+      rows += `<tr data-pid="${sup.id}" data-sup-ext="1">`;
+      rows += `<td style="text-align:left;white-space:nowrap"><span style="color:var(--gold);font-weight:700">★</span> <input type="text" class="sc-sup-name" data-pid="${sup.id}" value="${sup.name||''}" placeholder="Nombre completo" style="background:none;border:none;border-bottom:1px dotted var(--gold);color:var(--gold);font-size:0.78rem;padding:1px 3px;min-width:140px"> <span style="font-size:0.6rem;color:var(--muted);margin-left:4px">→ ${sup.equipo==='g'?'GRIS':'ROJO'} · reemplaza ${sup.reemplaza||'—'}</span> <button onclick="scRemoveSuplente('${sup.id}')" style="background:none;border:none;color:var(--rojo-light);cursor:pointer;font-size:0.75rem;margin-left:4px" title="Quitar">✕</button></td>`;
+      rows += `<td><input type="number" class="sc-input sc-hdc" data-pid="${sup.id}" value="${sup.hdcp||''}" min="0" max="36" style="width:36px" onchange="scRecalc()"></td>`;
+      for(let h=1;h<=18;h++) {
+        const val = sup.hoyos?.[h-1] ?? '';
+        rows += `<td style="${h===10?'border-left:2px solid var(--gold)':''}"><input type="number" class="sc-input sc-hole" data-pid="${sup.id}" data-hole="${h}" value="${val}" min="1" max="15" style="width:30px" onchange="scRecalc()"></td>`;
+      }
+      rows += `<td class="sc-f9" data-pid="${sup.id}" style="font-weight:600">—</td>`;
+      rows += `<td class="sc-b9" data-pid="${sup.id}" style="font-weight:600">—</td>`;
+      rows += `<td class="sc-gross" data-pid="${sup.id}" style="font-weight:700;color:var(--gold-dark)">—</td>`;
+      rows += `<td class="sc-neto" data-pid="${sup.id}" style="font-weight:700;color:#2563eb">—</td>`;
+      rows += '</tr>';
+    });
+  }
   tbody.innerHTML = rows;
 }
 
+// Helpers para suplentes externos en el grid
+window._scExtraSuplentes = window._scExtraSuplentes || [];
+
+function scAddSuplenteExt(data) {
+  if(!window._scExtraSuplentes) window._scExtraSuplentes = [];
+  const id = data?.id || `sup_ext_${Date.now()}`;
+  window._scExtraSuplentes.push({
+    id,
+    name: data?.name || data?.nombre || '',
+    equipo: data?.equipo || 'r',
+    reemplaza: data?.reemplaza || '',
+    hdcp: data?.hdcp || null,
+    hoyos: data?.hoyos || []
+  });
+  scBuildGrid();
+}
+
+function scRemoveSuplente(id) {
+  window._scExtraSuplentes = (window._scExtraSuplentes || []).filter(s => s.id !== id);
+  scBuildGrid();
+}
+
+function scAddSuplenteExtPrompt() {
+  const nombre = prompt('Nombre completo del suplente (formato "Apellido, Nombre"):');
+  if(!nombre || !nombre.trim()) return;
+  const equipo = prompt('Equipo que representa (G = Gris, R = Rojo):', 'R');
+  if(!equipo) return;
+  const eq = equipo.toLowerCase().startsWith('g') ? 'g' : 'r';
+  const reemplOpts = PLAYERS.filter(p => p.team === eq).map(p => `${p.id}: ${p.name.split(',')[0]}`).join('\n');
+  const reempl = prompt(`A quién reemplaza? (escribí el ID de la lista)\n\nOficiales ${eq==='g'?'Gris':'Rojo'}:\n${reemplOpts}`);
+  if(!reempl) return;
+  const id = 'sup_' + nombre.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-z]/g,'').slice(0,12);
+  scAddSuplenteExt({
+    id,
+    name: nombre.trim(),
+    equipo: eq,
+    reemplaza: reempl.trim(),
+    hdcp: null,
+    hoyos: []
+  });
+}
+
 function scRecalc() {
-  const allPlayers = [...PLAYERS, ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial)];
+  const allPlayers = [
+    ...PLAYERS,
+    ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial),
+    ...(window._scExtraSuplentes || []).map(s => ({id: s.id, name: s.name, team: s.equipo, hdc: s.hdcp || 0}))
+  ];
   let eagles=0, birdies=0, pares=0, bogeys=0, dobles=0;
   let grossSum=0, netoSum=0, count=0;
 
@@ -5587,7 +5664,11 @@ function scCollectData() {
   const num = parseInt(byId('sc-num')?.value);
   if(!num) { alert('Seleccioná un número de fecha'); return null; }
 
-  const allPlayers = [...PLAYERS, ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial)];
+  const allPlayers = [
+    ...PLAYERS,
+    ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial),
+    ...(window._scExtraSuplentes || []).map(s => ({id: s.id, name: s.name || s.id, team: s.equipo, hdc: s.hdcp || 0, _isExtraSup: true}))
+  ];
   const ausentes = (byId('sc-ausentes')?.value || '').split(',').map(s=>s.trim()).filter(Boolean);
 
   const medal = [];
@@ -5606,11 +5687,12 @@ function scCollectData() {
     if(!hasData) return;
 
     const hdcInput = document.querySelector(`.sc-hdc[data-pid="${p.id}"]`);
-    const hdc = Math.min(parseInt(hdcInput?.value) || 0, 26);
+    const rawHdc = parseInt(hdcInput?.value) || 0;
+    const hdc = Math.min(rawHdc, 26);
     const gross = holes.reduce((a,b)=>a+b, 0);
     const neto = gross - hdc;
 
-    medal.push({ id: p.id, hdcp: hdc, neto, gross });
+    medal.push({ id: p.id, hdcp: rawHdc, neto, gross });
     scorecard.push({ id: p.id, holes });
   });
 
@@ -5639,10 +5721,32 @@ function scCollectData() {
     }
   });
 
-  // Suplentes: tomar los parseados desde JSON pegado (si los hay)
-  const suplentes = (window._scSuplentesParsed && window._scSuplentesParsed.length)
-    ? [...window._scSuplentesParsed]
-    : [];
+  // Suplentes: combinar los conocidos (Ale Gatto si jugó) + los externos cargados en el grid
+  const suplentes = [];
+  // Si Gatto Ale tiene datos cargados en el grid → registrarlo como suplente
+  const supEsp = SUPLENTES_CONOCIDOS.find(s => s.esOficialEspecial);
+  if(supEsp && medal.some(m => m.id === supEsp.id)) {
+    // Buscar a quién reemplaza desde _scSuplentesParsed si vino del JSON
+    const fromJson = (window._scSuplentesParsed || []).find(s => s.id === supEsp.id);
+    suplentes.push({
+      id: supEsp.id,
+      name: supEsp.name,
+      equipo: fromJson?.equipo || 'r',
+      reemplaza: fromJson?.reemplaza || ''
+    });
+  }
+  // Suplentes externos: usar los del grid (sus inputs name están en .sc-sup-name)
+  (window._scExtraSuplentes || []).forEach(sup => {
+    // Tomar el name actualizado del input (puede haberse editado)
+    const nameInput = document.querySelector(`.sc-sup-name[data-pid="${sup.id}"]`);
+    const name = nameInput?.value || sup.name || sup.id;
+    suplentes.push({
+      id: sup.id,
+      name,
+      equipo: sup.equipo,
+      reemplaza: sup.reemplaza
+    });
+  });
 
   return {
     num,
@@ -5838,6 +5942,115 @@ async function copiarPromptCargaFecha() {
     </div>`;
     document.body.appendChild(overlay);
     const ta = overlay.querySelector('textarea'); ta.select();
+  }
+}
+
+// Inline paste: lee del textarea sc-paste-json en la misma tab y aplica al grid
+function pegarJsonInlineApply() {
+  const ta = byId('sc-paste-json');
+  const st = byId('sc-paste-status');
+  if(!ta) return;
+  let data;
+  try { data = JSON.parse(ta.value); }
+  catch(e) { if(st){ st.textContent = '❌ JSON inválido: ' + e.message; st.style.color = 'var(--rojo-light)'; } return; }
+  if(!data.scorecard || !Array.isArray(data.scorecard)) {
+    if(st){ st.textContent = '❌ Falta scorecard (array)'; st.style.color = 'var(--rojo-light)'; }
+    return;
+  }
+
+  // Header
+  if(data.num) { const sel = byId('sc-num'); if(sel) { sel.value = data.num; scLoadFechaInfo(); } }
+  if(data.fecha) byId('sc-fecha').value = data.fecha;
+  if(data.cancha) byId('sc-cancha').value = data.cancha;
+  if(data.organizadores) {
+    const org = Array.isArray(data.organizadores)
+      ? data.organizadores.map(id => PLAYERS.find(p=>p.id===id)?.name || id).join(' + ')
+      : data.organizadores;
+    byId('sc-org').value = org;
+  }
+  if(data.comentario) byId('sc-comentario').value = data.comentario;
+  if(data.par && data.par.length === 18) SC_PAR_ACTUAL = [...data.par];
+
+  // Ausentes: oficiales sin tarjeta
+  const officialIds = PLAYERS.map(p=>p.id);
+  const playedIds = data.scorecard.filter(s => s.hoyos && s.gross != null).map(s => s.id);
+  const ausentesAuto = officialIds.filter(id => !playedIds.includes(id) && !data.scorecard.some(s => s.id === id));
+  if(ausentesAuto.length > 0) byId('sc-ausentes').value = ausentesAuto.join(', ');
+
+  // Suplentes: separar especial Ale Gatto de externos
+  const supJson = data.suplentes || [];
+  window._scSuplentesParsed = supJson.map(s => ({
+    id: s.id,
+    name: s.name || s.nombre || s.id,
+    equipo: _normEquipo(s.equipo || s.team),
+    reemplaza: _normReemplaza(s.reemplaza)
+  }));
+  // Suplentes externos (no Ale Gatto): cargarlos como filas en el grid
+  window._scExtraSuplentes = [];
+  supJson.filter(s => s.id !== SUPLENTE_ESPECIAL_ID).forEach(s => {
+    // Encontrar su scorecard entry para tomar hoyos
+    const scEntry = data.scorecard.find(sc => sc.id === s.id);
+    window._scExtraSuplentes.push({
+      id: s.id,
+      name: s.name || s.nombre || s.id,
+      equipo: _normEquipo(s.equipo || s.team),
+      reemplaza: _normReemplaza(s.reemplaza),
+      hdcp: scEntry?.hdcp ?? null,
+      hoyos: scEntry?.hoyos || []
+    });
+  });
+
+  // Re-armar grid con par actualizado + suplentes externos
+  scBuildGrid();
+
+  // Cargar scores en grid
+  let loadedCount = 0, skipped = [];
+  data.scorecard.forEach(sc => {
+    if(!sc.id || !sc.hoyos || sc.gross == null) { if(sc.id) skipped.push(sc.id); return; }
+    const hdcInput = document.querySelector(`.sc-hdc[data-pid="${sc.id}"]`);
+    if(hdcInput && sc.hdcp != null) hdcInput.value = sc.hdcp;
+    if(sc.hoyos.length === 18) {
+      sc.hoyos.forEach((v, i) => {
+        const inp = document.querySelector(`.sc-hole[data-pid="${sc.id}"][data-hole="${i+1}"]`);
+        if(inp && v != null) inp.value = v;
+      });
+      loadedCount++;
+    }
+  });
+
+  // Matchs
+  let matchsCount = 0;
+  if(Array.isArray(data.matchs) && data.matchs.length > 0) {
+    const blocks = byId('sc-match-blocks');
+    if(blocks) blocks.innerHTML = '';
+    _scMatchCount = 0;
+    data.matchs.forEach(m => {
+      const gris = m.gris || m.g || [];
+      const rojo = m.rojo || m.r || [];
+      const dif = m.difHoyos ?? m.dif ?? 0;
+      scAddMatch();
+      const block = byId('sc-match-blocks')?.lastElementChild;
+      if(block) {
+        block.querySelector('.sc-match-tipo').value = m.tipo || 'ind';
+        block.querySelector('.sc-match-gris').value = gris.join(', ');
+        block.querySelector('.sc-match-rojo').value = rojo.join(', ');
+        block.querySelector('.sc-match-ganador').value = m.ganador || 'g';
+        block.querySelector('.sc-match-dif').value = Math.abs(dif);
+        matchsCount++;
+      }
+    });
+  }
+
+  scRecalc();
+
+  // Status
+  const parts = [`✓ ${loadedCount} oficiales`];
+  if(window._scExtraSuplentes?.length) parts.push(`${window._scExtraSuplentes.length} sup ext`);
+  if(matchsCount > 0) parts.push(`${matchsCount} matchs`);
+  if(skipped.length) parts.push(`(${skipped.length} sin tarjeta: ${skipped.join(', ')})`);
+  if(st) {
+    st.textContent = parts.join(' · ') + '. Revisá el grid y aplicá al dashboard.';
+    st.style.color = 'var(--green)';
   }
 }
 
