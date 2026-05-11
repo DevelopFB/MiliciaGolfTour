@@ -859,14 +859,19 @@ function buildAccum() {
           if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.pts += pts;
         });
 
-        // Dif hoyos individual
+        // Dif hoyos — normalizar a magnitud + signo según `ganador`.
+        // Convención (2026): difHoyos siempre positivo, el ganador define el signo.
+        // Compat con datos viejos: si dif viene negativo, |dif| es la magnitud.
+        const magDif = Math.abs(dif);
+        const gristDif = ganador === 'g' ? magDif : ganador === 'r' ? -magDif : 0;
+        const rojoDif = -gristDif;
         [...(m.gris||[])].forEach(id => {
-          if(match[id]) match[id].difHoyos += dif;
-          if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.difHoyos += dif;
+          if(match[id]) match[id].difHoyos += gristDif;
+          if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.difHoyos += gristDif;
         });
         [...(m.rojo||[])].forEach(id => {
-          if(match[id]) match[id].difHoyos -= dif;
-          if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.difHoyos -= dif;
+          if(match[id]) match[id].difHoyos += rojoDif;
+          if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.difHoyos += rojoDif;
         });
 
         // Pts de equipo — el resultado del match cuenta normalmente para el color
@@ -876,8 +881,8 @@ function buildAccum() {
         teamMatch.g.pts += g_won;
         teamMatch.r.pts += r_won;
 
-        teamMatch.g.dif += dif;
-        teamMatch.r.dif -= dif;
+        teamMatch.g.dif += gristDif;
+        teamMatch.r.dif += rojoDif;
       });
     }
   });
@@ -2050,8 +2055,11 @@ function renderOverview(acc) {
     (f.matchs||[]).forEach(m=>{
       gp += m.ganador==='g'?1:m.ganador==='empate'?0.5:0;
       rp += m.ganador==='r'?1:m.ganador==='empate'?0.5:0;
-      gd += m.difHoyos||0;
-      rd -= m.difHoyos||0;
+      // Dif normalizado: usar magnitud + ganador (tolera convenciones viejas con dif negativo)
+      const mag = Math.abs(m.difHoyos || 0);
+      const gd_match = m.ganador === 'g' ? mag : m.ganador === 'r' ? -mag : 0;
+      gd += gd_match;
+      rd -= gd_match;
     });
     gAcc+=gp;rAcc+=rp;gdAcc+=gd;rdAcc+=rd;
     gPtsPerF.push(gAcc);rPtsPerF.push(rAcc);
@@ -2384,7 +2392,11 @@ function renderFechaDetail(num) {
     let gPts=0, rPts=0, gDif=0;
     matchHTML = f.matchs.map((m,i)=>{
       const gw = m.ganador==='g', rw=m.ganador==='r', tie=m.ganador==='empate';
-      gPts += gw?1:tie?0.5:0; rPts += rw?1:tie?0.5:0; gDif+=m.difHoyos||0;
+      gPts += gw?1:tie?0.5:0; rPts += rw?1:tie?0.5:0;
+      // Dif normalizado por ganador (compat con conv. vieja con signo)
+      const mag = Math.abs(m.difHoyos||0);
+      const gd = gw ? mag : rw ? -mag : 0;
+      gDif += gd;
       const nameOf = id => {
         const oficial = PLAYERS.find(p=>p.id===id);
         if(oficial) return oficial.name.split(',')[0];
@@ -2407,7 +2419,7 @@ function renderFechaDetail(num) {
           ${supNota}
         </div>
         <span class="match-winner ${gw?'gw':rw?'rw':'tie'}">${gw?'GRIS':rw?'ROJO':'EMPATE'}</span>
-        <span class="match-dif">${fmtDif(m.difHoyos||0)} hoyos</span>
+        <span class="match-dif">+${Math.abs(m.difHoyos||0)} hoyos</span>
       </div>`;
     }).join('');
     matchHTML = `<div style="margin-bottom:8px">${matchHTML}</div>
