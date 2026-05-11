@@ -852,8 +852,9 @@
         ws.getCell(row, 9).value = m.dif != null ? m.dif : '';
         ws.getCell(row, 9).alignment = { horizontal: 'center' };
 
-        // Pts por equipo (regla simple 1 pt al ganador, 0.5 c/u empate)
-        // TODO: ajustar reglas con suplentes (1v1 0.5, etc.).
+        // Pts por equipo (regla 2026: 1 pt al ganador, 0.5 c/u empate)
+        // Los suplentes ahora suman para el color que representan; misma regla
+        // siempre, haya o no suplente en el match.
         let pg = 0, pr = 0;
         if (m.ganador === 'g') pg = 1;
         else if (m.ganador === 'r') pr = 1;

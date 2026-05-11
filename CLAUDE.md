@@ -128,17 +128,16 @@ Multiplicador F9 = ×1.5, F10 = ×2 (sobre los puntos base).
 - Si el ganador de una fecha (neto mínimo) es **suplente** o **jugador no-oficial / invitado**, la fecha queda **vacante**: ningún oficial suma fecha ganada, aunque haya un oficial que salió "primero entre oficiales".
 - **Excepción**: el suplente oficial especial (`gatto_ale`) acumula match para el equipo que representa, pero NO suma medal personal (su puesto en medal es ignorado para fechas ganadas).
 
-### Sustitutos (no oficiales)
+### Sustitutos (no oficiales) — Regla 2026
+
 - Si un oficial no puede jugar una fecha, puede entrar un suplente externo en su lugar.
-- El suplente no acumula medal personal para el tour.
-- Reglas de match con suplente (1v1):
-  - Suplente gana → nadie suma pts equipo.
-  - Empate → oficial rival suma 0.5.
-  - Suplente pierde → oficial rival suma 1 pt normal.
-- Reglas 2v2 (suplente en equipo X):
-  - Equipo del suplente gana → oficial del mismo equipo 0.5, rival 0.
-  - Empate → 0.25 cada equipo.
-  - Equipo del suplente pierde → rival oficial 0.5.
+- **El suplente suma pts para el COLOR (equipo) que representa**, igual que un oficial. El resultado del match cuenta normalmente para Gris o Rojo.
+- El suplente NO acumula medal individual personal para el tour.
+- El oficial al que reemplaza tampoco recibe esos pts (jugó otro).
+- **Excepción**: el suplente oficial especial (Gatto, Alejandro) acumula stats individuales en un cuadro separado (no compite con los 16 oficiales en el ranking principal pero sí tiene su propio totalizador).
+- **Vacante del medal**: si el ganador de la fecha (neto mínimo) es un suplente, la fecha queda vacante para el medal individual y ningún oficial suma fecha ganada.
+
+**Regla histórica (años anteriores a 2026)**: los pts de equipo con suplente se ajustaban (1v1: nadie suma si gana sup; 2v2: pts a la mitad). **Eliminado en 2026.**
 
 ### Marca `(*)` en Excel viejos
 - En los Excel `RESUMEN de Resultados YYYY.xlsx`, algunos nombres aparecen con `(*)`.

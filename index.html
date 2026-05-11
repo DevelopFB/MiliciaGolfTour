@@ -645,26 +645,23 @@ const MEDAL_PTS = {
 const F9_MULT = 1.5, F10_MULT = 2;
 
 // ════════════════════════════════════════════════════════════
-// SUPLENTES
-// esOficialEspecial: true  → acumula pts match para el equipo que representa,
-//                            aparece siempre en última línea de tablas acumuladas
-// esOficialEspecial: false → no acumula nada en el torneo; en fecha aparece con score
+// SUPLENTES — REGLA 2026
+// Los suplentes SUMAN para el color (equipo) que representan, igual que un
+// oficial. El resultado del match cuenta normalmente en teamMatch[color].pts
+// haya jugado un oficial o un suplente.
 //
-// En MATCHS, para indicar que un jugador es suplente en ese match específico:
-//   suplente_en: {id: 'juani', equipo: 'g'/'r'}   (en el objeto match)
+// - Stats INDIVIDUALES (medal pts personal, match pts personal) NO se asignan
+//   al suplente regular: él no figura en el ranking individual del tour.
+//   El oficial al que reemplaza tampoco recibe esos pts (jugó otro).
+// - El suplente OFICIAL ESPECIAL (Gatto, Alejandro) sí acumula stats individuales
+//   en su propio cuadro (matchSupEspecial), separado del ranking principal.
+// - Para la regla de "fecha vacante" del medal individual: si el ganador (neto
+//   mínimo) es un suplente, la fecha queda vacante y ningún oficial suma fecha
+//   ganada.
 //
-// Reglas de puntos con suplente en match:
-//  1vs1:
-//    suplente gana  → nadie suma
-//    suplente empata → oficial rival suma 0.5 (mitad del 1pt)
-//    suplente pierde → oficial rival suma 1pt normal
-//  2vs2 (suplente en equipo X):
-//    equipo con suplente gana  → oficial del mismo equipo suma 0.5, rival no suma
-//    empate                    → oficial mismo equipo 0.25, rival 0.25
-//    equipo con suplente pierde → rival oficial suma 0.5 normal
-//
-// El suplente NUNCA acumula pts de match en el torneo (excepto esOficialEspecial).
-// El suplente oficial especial (Gatto, Ale) sí acumula match para el equipo que le toca.
+// Histórica (años anteriores a 2026):
+//   Los pts de equipo con suplente se ajustaban (1v1: nadie suma si gana sup;
+//   2v2: pts a la mitad). Eliminado en 2026.
 
 let SUPLENTE_ESPECIAL_ID = 'gatto_ale'; // Suplente oficial especial — configurable desde admin
 
@@ -861,108 +858,38 @@ function buildAccum() {
       }
     });
 
-    // Match
+    // Match — regla 2026: los suplentes suman para el color que representan.
+    // Se aplica la misma lógica haya o no suplentes en el match.
     if(f.matchs) {
       f.matchs.forEach(m => {
         const dif = m.difHoyos || 0;
         const ganador = m.ganador; // 'g','r','empate'
 
-        // Detectar si hay suplente en este match
-        const supEnGris = (m.gris||[]).find(id => getSustitutoInfo(id, f));
-        const supEnRojo  = (m.rojo||[]).find(id => getSustitutoInfo(id, f));
-        const haySupEnMatch = supEnGris || supEnRojo;
+        // Pts individuales por jugador. Los suplentes no tienen match[id] así que
+        // sus pts se descartan silenciosamente (no acumulan stats individuales),
+        // pero el suplente oficial especial sí acumula vía matchSupEspecial.
+        const allPts = {...(m.pts_g||{}), ...(m.pts_r||{})};
+        Object.entries(allPts).forEach(([id,pts]) => {
+          if(match[id]) match[id].pts += pts;
+          if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.pts += pts;
+        });
 
-        if(!haySupEnMatch) {
-          // — Match normal sin suplentes —
-          const allPts = {...(m.pts_g||{}), ...(m.pts_r||{})};
-          Object.entries(allPts).forEach(([id,pts]) => {
-            if(match[id]) match[id].pts += pts;
-          });
-          [...(m.gris||[])].forEach(id => { if(match[id]) match[id].difHoyos += dif; });
-          [...(m.rojo||[])].forEach(id => { if(match[id]) match[id].difHoyos -= dif; });
-          const g_won = ganador==='g'?1:ganador==='empate'?0.5:0;
-          const r_won = ganador==='r'?1:ganador==='empate'?0.5:0;
-          teamMatch.g.pts += g_won;
-          teamMatch.r.pts += r_won;
+        // Dif hoyos individual
+        [...(m.gris||[])].forEach(id => {
+          if(match[id]) match[id].difHoyos += dif;
+          if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.difHoyos += dif;
+        });
+        [...(m.rojo||[])].forEach(id => {
+          if(match[id]) match[id].difHoyos -= dif;
+          if(matchSupEspecial && id === matchSupEspecial.id) matchSupEspecial.difHoyos -= dif;
+        });
 
-        } else {
-          // — Match con suplente —
-          const tipo = m.tipo; // 'fb'=2v2, 'ind'=1v1
-
-          // Equipo del suplente
-          const supId = supEnGris || supEnRojo;
-          const supEquipo = supEnGris ? 'g' : 'r';
-          const rivEquipo = supEquipo === 'g' ? 'r' : 'g';
-
-          // ¿Es el suplente especial o tiene acumulaPuntos activado?
-          const supInfo = SUPLENTES_CONOCIDOS.find(s=>s.id===supId);
-          const supFechaInfo = getSustitutoInfo(supId, f);
-          const esEspecial = supInfo?.esOficialEspecial || supFechaInfo?.acumulaPuntos || false;
-
-          if(tipo==='ind') {
-            // 1vs1: el suplente juega solo en su lado
-            // - suplente gana → nadie suma
-            // - suplente empata → rival oficial suma 0.5
-            // - suplente pierde → rival oficial suma 1
-            const rivId = [...(supEquipo==='g' ? (m.rojo||[]) : (m.gris||[]))].find(id=>!getSustitutoInfo(id,f));
-            if(ganador==='empate') {
-              if(match[rivId]) match[rivId].pts += 0.5;
-            } else if(ganador===rivEquipo) {
-              if(match[rivId]) match[rivId].pts += 1;
-            }
-            // dif hoyos al rival también
-            if(match[rivId]) {
-              match[rivId].difHoyos += (supEquipo==='g' ? -dif : dif);
-            }
-            // suplente especial acumula su propio pts
-            if(esEspecial && matchSupEspecial) {
-              const supPts = ganador===supEquipo?1:ganador==='empate'?0.5:0;
-              matchSupEspecial.pts += supPts;
-              matchSupEspecial.difHoyos += (supEquipo==='g' ? dif : -dif);
-            }
-          } else {
-            // 2vs2: suplente está en un equipo con un oficial
-            const supTeamIds = supEquipo==='g' ? (m.gris||[]) : (m.rojo||[]);
-            const rivTeamIds = supEquipo==='g' ? (m.rojo||[]) : (m.gris||[]);
-            const oficialSameTeam = supTeamIds.find(id=>id!==supId && PLAYERS.find(p=>p.id===id));
-            const oficialRiv1 = rivTeamIds[0];
-            const oficialRiv2 = rivTeamIds[1];
-
-            if(ganador===supEquipo) {
-              // equipo con suplente gana → oficial mismo equipo 0.5, rivales 0
-              if(match[oficialSameTeam]) match[oficialSameTeam].pts += 0.5;
-              // rivales no cobran
-            } else if(ganador==='empate') {
-              // empate → oficial mismo equipo 0.25, rivales 0.25 cada uno
-              if(match[oficialSameTeam]) match[oficialSameTeam].pts += 0.25;
-              if(match[oficialRiv1]) match[oficialRiv1].pts += 0.25;
-              if(match[oficialRiv2]) match[oficialRiv2].pts += 0.25;
-            } else {
-              // equipo con suplente pierde → rivales cobran normal 0.5
-              if(match[oficialRiv1]) match[oficialRiv1].pts += 0.5;
-              if(match[oficialRiv2]) match[oficialRiv2].pts += 0.5;
-            }
-            // dif hoyos para todos los involucrados
-            [...supTeamIds].forEach(id => {
-              if(id!==supId && match[id]) match[id].difHoyos += (supEquipo==='g' ? dif : -dif);
-            });
-            [...rivTeamIds].forEach(id => {
-              if(match[id]) match[id].difHoyos += (supEquipo==='g' ? -dif : dif);
-            });
-            // suplente especial acumula
-            if(esEspecial && matchSupEspecial) {
-              const supPts = ganador===supEquipo?0.5:ganador==='empate'?0.25:0;
-              matchSupEspecial.pts += supPts;
-              matchSupEspecial.difHoyos += (supEquipo==='g' ? dif : -dif);
-            }
-          }
-
-          // Puntos de equipo (siempre suman independiente del suplente)
-          const g_won = ganador==='g'?1:ganador==='empate'?0.5:0;
-          const r_won = ganador==='r'?1:ganador==='empate'?0.5:0;
-          teamMatch.g.pts += g_won;
-          teamMatch.r.pts += r_won;
-        }
+        // Pts de equipo — el resultado del match cuenta normalmente para el color
+        // ganador, esté o no jugado por suplentes.
+        const g_won = ganador==='g'?1:ganador==='empate'?0.5:0;
+        const r_won = ganador==='r'?1:ganador==='empate'?0.5:0;
+        teamMatch.g.pts += g_won;
+        teamMatch.r.pts += r_won;
 
         teamMatch.g.dif += dif;
         teamMatch.r.dif -= dif;
