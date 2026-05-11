@@ -1442,7 +1442,7 @@ function buildAccum() {
             </select>
           </div>
           <div class="admin-field"><label>Fecha</label><input type="text" id="sc-fecha" placeholder="14 Mar 2026"></div>
-          <div class="admin-field"><label>Cancha</label><input type="text" id="sc-cancha" value="CUBA Fátima"></div>
+          <div class="admin-field"><label>Cancha ✏️</label><input type="text" id="sc-cancha" placeholder="CUBA Fátima, Saint Andrews, Olivos..." value="CUBA Fátima" title="Editá si la fecha se jugó en otra cancha (ej: gira)"></div>
           <div class="admin-field"><label>Organizadores</label><input type="text" id="sc-org" placeholder="Jugador1, Jugador2"></div>
         </div>
         <div class="admin-grid" style="margin-top:8px">
@@ -5252,6 +5252,9 @@ fixtureLoadLocal();
 let _scImageBase64 = null;
 let _scMatchCount = 0;
 
+// PAR actualmente cargado en el admin grid (puede diferir del PAR global de Fátima)
+let SC_PAR_ACTUAL = [...PAR];
+
 function scLoadFechaInfo() {
   const num = parseInt(byId('sc-num')?.value);
   if(!num) return;
@@ -5260,8 +5263,24 @@ function scLoadFechaInfo() {
     byId('sc-fecha').value = f.fecha || '';
     byId('sc-cancha').value = f.cancha || 'CUBA Fátima';
     byId('sc-org').value = f.organizadores || '';
+    // Cargar par de la fecha si existe, sino default Fátima
+    SC_PAR_ACTUAL = (f.par && f.par.length===18) ? [...f.par] : [...PAR];
   }
   scBuildGrid();
+}
+
+function scOnParChange(idx, val) {
+  const v = parseInt(val);
+  if(v >= 3 && v <= 6) {
+    SC_PAR_ACTUAL[idx] = v;
+    // Recalcular totales front/back
+    const parF = SC_PAR_ACTUAL.slice(0,9).reduce((a,b)=>a+b,0);
+    const parB = SC_PAR_ACTUAL.slice(9).reduce((a,b)=>a+b,0);
+    const totEl = byId('sc-par-total'); if(totEl) totEl.textContent = parF+parB;
+    const fEl = byId('sc-par-f'); if(fEl) fEl.textContent = parF;
+    const bEl = byId('sc-par-b'); if(bEl) bEl.textContent = parB;
+    scRecalc();
+  }
 }
 
 function scBuildGrid() {
@@ -5274,12 +5293,14 @@ function scBuildGrid() {
   for(let i=1;i<=18;i++) hdr += `<th style="width:30px;${i===10?'border-left:2px solid var(--gold)':''}">${i}</th>`;
   hdr += '<th>F9</th><th>B9</th><th style="color:var(--gold)">Gross</th><th style="color:#2563eb">Neto</th></tr>';
 
-  // PAR row
-  hdr += '<tr style="background:var(--navy-light);font-weight:700;font-size:0.65rem"><td>PAR</td><td></td>';
-  const parF = PAR.slice(0,9).reduce((a,b)=>a+b,0);
-  const parB = PAR.slice(9).reduce((a,b)=>a+b,0);
-  PAR.forEach((p,i) => { hdr += `<td style="${i===9?'border-left:2px solid var(--gold)':''}">${p}</td>`; });
-  hdr += `<td>${parF}</td><td>${parB}</td><td>${parF+parB}</td><td></td></tr>`;
+  // PAR row (editable)
+  hdr += '<tr style="background:var(--navy-light);font-weight:700;font-size:0.65rem"><td title="Editá si la cancha no es Fátima" style="color:var(--gold-dark)">PAR ✏️</td><td></td>';
+  const parF = SC_PAR_ACTUAL.slice(0,9).reduce((a,b)=>a+b,0);
+  const parB = SC_PAR_ACTUAL.slice(9).reduce((a,b)=>a+b,0);
+  SC_PAR_ACTUAL.forEach((p,i) => {
+    hdr += `<td style="${i===9?'border-left:2px solid var(--gold)':''}"><input type="number" class="sc-input sc-par" data-idx="${i}" value="${p}" min="3" max="6" style="width:28px;font-weight:700;color:var(--gold-dark);text-align:center" onchange="scOnParChange(${i}, this.value)"></td>`;
+  });
+  hdr += `<td id="sc-par-f">${parF}</td><td id="sc-par-b">${parB}</td><td id="sc-par-total">${parF+parB}</td><td></td></tr>`;
   thead.innerHTML = hdr;
 
   // Player rows
@@ -5343,7 +5364,7 @@ function scRecalc() {
       grossSum += gross; netoSum += neto; count++;
       holes.forEach((s,i) => {
         if(s <= 0) return;
-        const diff = s - PAR[i];
+        const diff = s - SC_PAR_ACTUAL[i];
         if(diff <= -2) eagles++;
         else if(diff === -1) birdies++;
         else if(diff === 0) pares++;
@@ -5445,6 +5466,7 @@ function scCollectData() {
     num,
     fecha: byId('sc-fecha')?.value || '',
     cancha: byId('sc-cancha')?.value || 'CUBA Fátima',
+    par: [...SC_PAR_ACTUAL],
     organizadores: byId('sc-org')?.value || '',
     pendiente: false,
     ausentes: ausentes.map(id => { const p=findPlayerOrSuplente(id); return p?.name||id; }),
