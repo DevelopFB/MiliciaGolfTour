@@ -8,7 +8,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="./scripts/master_excel_generator.js" defer></script>
 <style>
 :root {
   /* Fondo blanco puro */
@@ -1409,10 +1411,14 @@ function buildAccum() {
     <div id="admin-tab-view" style="display:none">
       <div class="admin-notice">JSON completo de cualquier fecha ya cargada. Usalo como referencia o para copiar y corregir.</div>
       <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="admin-btn primary" onclick="exportExcelBackup()" style="background:linear-gradient(135deg,#1d6f42,#2d9a5f);color:#fff">
-          ⬇ Backup Excel (.xlsx)
+        <button class="admin-btn primary" onclick="descargarMasterExcel()" style="background:linear-gradient(135deg,#c9a84c,#f0d080);color:#080d18;font-weight:700">
+          📊 Descargar Excel Master
+        </button>
+        <button class="admin-btn secondary" onclick="exportExcelBackup()">
+          ⬇ Backup Excel simple
         </button>
         <button class="admin-btn secondary" onclick="exportConsolidadoPDF()">📄 PDF Estado Temporada</button>
+        <span id="master-excel-status" style="font-size:0.78rem;align-self:center"></span>
       </div>
       <div class="admin-field" style="margin-bottom:12px">
         <label>Ver JSON de una Fecha</label>
@@ -4805,6 +4811,22 @@ function exportDashboardSummaryPDF() {
   txt(`Generado: ${new Date().toLocaleDateString('es-AR')} — Milicia Golf Tour 2026`, W/2, H-8, {size:6, color:T.muted, align:{align:'center'}});
 
   doc.save(`MGT2026_Resumen_F${latest.num}_${new Date().toISOString().slice(0,10)}.pdf`);
+}
+
+async function descargarMasterExcel() {
+  const st = byId('master-excel-status');
+  if(typeof ExcelJS === 'undefined' || typeof generateMasterExcel !== 'function') {
+    if(st) { st.textContent = '❌ Librería no cargada. Refrescá la página.'; st.style.color = 'var(--rojo-light)'; }
+    return;
+  }
+  if(st) { st.textContent = '⏳ Generando Excel Master...'; st.style.color = 'var(--gold)'; }
+  try {
+    await generateMasterExcel();
+    if(st) { st.textContent = '✓ Excel descargado'; st.style.color = 'var(--green)'; setTimeout(()=>{st.textContent='';}, 4000); }
+  } catch(e) {
+    console.error('Error generando Master Excel', e);
+    if(st) { st.textContent = '❌ Error: ' + e.message; st.style.color = 'var(--rojo-light)'; }
+  }
 }
 
 function exportExcelBackup() {
