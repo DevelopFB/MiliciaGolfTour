@@ -6,7 +6,15 @@
 
 ## 1. QUÉ ES EL PROYECTO
 
-Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (Gris vs Rojo), competencias paralelas Medal (individual) y Match Play (equipos). Datos viven en Supabase + localStorage; archivos Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original para 2016-2025.
+Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (Gris vs Rojo). Datos viven en Supabase + localStorage; archivos Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original para 2016-2025.
+
+### ⚠️ Dos competencias separadas — NO mezclar
+
+1. **Medal** → ranking **individual** de los 16 jugadores. Cada fecha asigna pts por puesto (500/300/200/...). El equipo (Gris/Rojo) en este ranking es solo metadata informativa. **NO existe "ganador medal por equipo"**.
+
+2. **Match Play** → competencia entre **equipos** Gris vs Rojo. Los pts entre equipos **solo** se acumulan por los matchs jugados cada fecha (1v1 individuales o 2v2 fourball). Cada match da 1 pt al equipo ganador o 0.5 en empate. **El medal no aporta NADA al match entre equipos**.
+
+Cuando se reporta "estado del torneo" o "líder", siempre aclarar de qué competencia se habla. No combinar pts medal con team match pts.
 
 Desplegado en GitHub Pages desde repo `DevelopFB/MiliciaGolfTour`.
 

@@ -20,7 +20,20 @@ Webapp: https://developfb.github.io/MiliciaGolfTour/
 CONTEXTO ESENCIAL (memorizar)
 ------------------------------------------------------
 
-El Milicia Golf Tour es un torneo anual de 10 fechas con 16 jugadores oficiales divididos en 2 equipos: Gris vs Rojo, 8 vs 8. Hay un suplente oficial: Gatto, Alejandro. Las fechas se juegan típicamente entre marzo y noviembre. Hay dos competencias paralelas: Medal (individual) y Match Play (equipos).
+El Milicia Golf Tour es un torneo anual de 10 fechas con 16 jugadores oficiales divididos en 2 equipos: Gris vs Rojo, 8 vs 8. Hay un suplente oficial: Gatto, Alejandro. Las fechas se juegan típicamente entre marzo y noviembre.
+
+⚠️ DOS COMPETENCIAS SEPARADAS, NO MEZCLAR:
+
+  1) MEDAL → ranking INDIVIDUAL de los 16 jugadores oficiales.
+     Cada fecha asigna pts por puesto (500/300/200/...). Se acumula por jugador todo el año.
+     NO existe "equipo ganador del medal". El equipo (Gris/Rojo) en este ranking es solo metadata informativa de cada jugador.
+
+  2) MATCH PLAY → competencia de EQUIPOS, Gris vs Rojo.
+     Los pts de equipo SOLO se acumulan vía los matchs jugados cada fecha (1v1 o 2v2 fourball).
+     Cada match jugado da 1 pt al equipo ganador o 0.5 a cada uno en empate.
+     El medal NO aporta NADA al ranking entre equipos.
+
+Cuando reportes "estado del torneo" o "líder", aclará SIEMPRE de cuál competencia hablás. No combines pts medal con team match. No digas "el equipo X va ganando" sumando pts medal de sus jugadores.
 
 ------------------------------------------------------
 JUGADORES — LISTA CANÓNICA 2026 (usar formato "Apellido, Nombre")
