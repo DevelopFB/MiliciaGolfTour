@@ -1010,11 +1010,11 @@ function buildAccum() {
 
     <div class="g2">
       <div class="card">
-        <div class="kpi-label">Puntos por fecha — Gris vs Rojo</div>
+        <div class="kpi-label">Evolución puntos — Gris vs Rojo (acumulado)</div>
         <div class="ch ch-200"><canvas id="chart-team-pts"></canvas></div>
       </div>
       <div class="card">
-        <div class="kpi-label">Diferencia de hoyos acumulada por equipo</div>
+        <div class="kpi-label">Evolución diferencial de hoyos (+ Rojo lidera / − Gris lidera)</div>
         <div class="ch ch-200"><canvas id="chart-team-dif"></canvas></div>
       </div>
     </div>
@@ -1898,20 +1898,24 @@ function renderMatchTeamSummary(acc) {
   const g = acc.teamMatch.g, r = acc.teamMatch.r;
   const leader = g.pts===r.pts ? 'EMPATE' : (g.pts > r.pts ? 'GRIS' : 'ROJO');
   const leaderColor = g.pts===r.pts ? 'var(--gold)' : (g.pts > r.pts ? 'var(--gris-color)' : 'var(--rojo-light)');
+  // Diferencial absoluto a favor del equipo que lidera (no duplicar negativo en el otro)
+  const difLeader = Math.abs(r.dif); // r.dif > 0 = Rojo lidera, < 0 = Gris lidera
+  const gDifTxt = r.dif < 0 ? `+${difLeader}` : r.dif > 0 ? '—' : '0';
+  const rDifTxt = r.dif > 0 ? `+${difLeader}` : r.dif < 0 ? '—' : '0';
   byId('match-team-summary').innerHTML = `
     <div class="team-vs">
       <div class="team-box gris">
         <div class="tlabel">⬜ GRIS</div>
         <div class="tpts">${fmtPts(g.pts)}</div>
         <div class="tsub">puntos acumulados de equipo</div>
-        <div class="tdif">Dif. Hoyos: ${g.dif>0?'+':''}${g.dif}</div>
+        <div class="tdif">Dif. Hoyos: ${gDifTxt}</div>
       </div>
       <div class="vs-mid">VS</div>
       <div class="team-box rojo">
         <div class="tlabel">🟥 ROJO</div>
         <div class="tpts">${fmtPts(r.pts)}</div>
         <div class="tsub">puntos acumulados de equipo</div>
-        <div class="tdif">Dif. Hoyos: ${r.dif>0?'+':''}${r.dif}</div>
+        <div class="tdif">Dif. Hoyos: ${rDifTxt}</div>
       </div>
     </div>
     <div style="margin-top:-4px;text-align:center;font-size:0.78rem;color:var(--muted-light)">
@@ -2027,22 +2031,25 @@ function renderOverview(acc) {
   const lastPlayed = [...fechas].reverse().find(f=>!f.pendiente&&f.comentario);
   byId('last-comment').innerHTML = lastPlayed ? `<div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">★ F${lastPlayed.num} — ${lastPlayed.fecha}</div>${lastPlayed.comentario}` : '<span style="color:var(--muted)">Aún no hay fechas jugadas.</span>';
 
-  // Team VS block
+  // Team VS block — diferencial solo a favor del equipo líder
   const g=acc.teamMatch.g, r=acc.teamMatch.r;
+  const difAbs = Math.abs(r.dif);
+  const gDifT = r.dif < 0 ? `+${difAbs}` : r.dif > 0 ? '—' : '0';
+  const rDifT = r.dif > 0 ? `+${difAbs}` : r.dif < 0 ? '—' : '0';
   byId('team-vs-block').innerHTML = `
     <div class="team-vs">
       <div class="team-box gris">
         <div class="tlabel">⬜ GRIS</div>
         <div class="tpts">${fmtPts(g.pts)}</div>
         <div class="tsub">puntos de equipo</div>
-        <div class="tdif">Dif. Hoyos: ${g.dif>0?'+':''}${g.dif}</div>
+        <div class="tdif">Dif. Hoyos: ${gDifT}</div>
       </div>
       <div class="vs-mid">VS</div>
       <div class="team-box rojo">
         <div class="tlabel">🟥 ROJO</div>
         <div class="tpts">${fmtPts(r.pts)}</div>
         <div class="tsub">puntos de equipo</div>
-        <div class="tdif">Dif. Hoyos: ${r.dif>0?'+':''}${r.dif}</div>
+        <div class="tdif">Dif. Hoyos: ${rDifT}</div>
       </div>
     </div>`;
 
@@ -2078,13 +2085,22 @@ function renderOverview(acc) {
   });
 
   destroyChart('team-dif');
+  // Una sola serie: el diferencial. Positivo = Rojo lidera, Negativo = Gris lidera.
+  // Color del bar según signo.
+  const difDelta = gDifPerF.map((g, i) => rDifPerF[i] - g >= 0 ? rDifPerF[i] - g : (rDifPerF[i] - g));
+  // Simplificado: rDifPerF ya es positivo cuando Rojo gana, así que usar rDif directamente.
+  // Si Rojo lidera por N → +N. Si Gris lidera → -N (lo mismo que rDif que ya viene negativo).
   charts['team-dif'] = new Chart(byId('chart-team-dif'),{
     type:'bar',
     data:{labels,datasets:[
-      {label:'GRIS',data:gDifPerF,backgroundColor:'rgba(200,205,214,0.6)',borderRadius:4},
-      {label:'ROJO',data:rDifPerF,backgroundColor:'rgba(224,48,48,0.6)',borderRadius:4},
+      {
+        label:'Diferencial acumulado (+ Rojo / − Gris)',
+        data: rDifPerF,
+        backgroundColor: rDifPerF.map(v => v >= 0 ? 'rgba(224,48,48,0.6)' : 'rgba(200,205,214,0.6)'),
+        borderRadius:4
+      },
     ]},
-    options:{...CHART_BASE,plugins:{legend:{labels:{color:'rgba(26,34,51,0.7)',font:{family:'DM Sans',size:11}}}},scales:CHART_BASE.scales}
+    options:{...CHART_BASE,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y;return v>0?`Rojo +${v} hoyos`:v<0?`Gris +${Math.abs(v)} hoyos`:'Empate';}}}},scales:CHART_BASE.scales}
   });
 }
 
