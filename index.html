@@ -5527,7 +5527,7 @@ function scCollectData() {
   // Sort medal by neto
   medal.sort((a,b) => a.neto - b.neto);
 
-  // Collect matchs
+  // Collect matchs + pre-calc pts_g/pts_r para acumulado
   const matchs = [];
   document.querySelectorAll('.sc-match-block').forEach(block => {
     const tipo = block.querySelector('.sc-match-tipo')?.value || 'fb';
@@ -5536,13 +5536,23 @@ function scCollectData() {
     const ganador = block.querySelector('.sc-match-ganador')?.value || 'empate';
     const difHoyos = parseInt(block.querySelector('.sc-match-dif')?.value) || 0;
     if(gris.length && rojo.length) {
-      matchs.push({ tipo, gris, rojo, ganador, difHoyos });
+      // pts individuales — 1v1: ganador 1pt, empate 0.5; 2v2: cada uno 0.5 si gana su equipo, 0.25 empate
+      const pts_g = {}, pts_r = {};
+      if(tipo === 'ind') {
+        gris.forEach(id => pts_g[id] = ganador==='g'?1:ganador==='empate'?0.5:0);
+        rojo.forEach(id => pts_r[id] = ganador==='r'?1:ganador==='empate'?0.5:0);
+      } else {
+        gris.forEach(id => pts_g[id] = ganador==='g'?0.5:ganador==='empate'?0.25:0);
+        rojo.forEach(id => pts_r[id] = ganador==='r'?0.5:ganador==='empate'?0.25:0);
+      }
+      matchs.push({ tipo, gris, rojo, ganador, difHoyos, pts_g, pts_r });
     }
   });
 
-  // Suplentes
-  const suplentes = [];
-  // TODO: add suplente UI if needed
+  // Suplentes: tomar los parseados desde JSON pegado (si los hay)
+  const suplentes = (window._scSuplentesParsed && window._scSuplentesParsed.length)
+    ? [...window._scSuplentesParsed]
+    : [];
 
   return {
     num,
@@ -5596,8 +5606,8 @@ function _construirPromptCargaFecha() {
   const orgTxt = byId('sc-org')?.value || fxData?.organizadores || '(completar)';
   const modTxt = fxData?.modalidad || '(completar)';
 
-  const oficiales = PLAYERS.map(p => `- ${p.id}: ${p.name} (${p.team==='g'?'Gris':'Rojo'})`).join('\n');
-  const suplentes = SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial).map(s => `- ${s.id}: ${s.name} (suplente oficial)`).join('\n');
+  const oficiales = PLAYERS.map(p => `- ${p.id}: ${p.name} (nick: ${p.nick}, equipo ${p.team==='g'?'Gris':'Rojo'})`).join('\n');
+  const supEsp = SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial).map(s => `- ${s.id}: ${s.name} (nick: ${s.nick||'Ale'}, suplente oficial)`).join('\n');
 
   return `Antes de responder, leé el archivo CLAUDE.md del proyecto para contexto completo (jugadores canónicos, reglas, formato).
 
@@ -5605,66 +5615,78 @@ Te paso las tarjetas de **Fecha ${num || '[N]'}** del Milicia Golf Tour.
 
 **Datos del día**:
 - Fecha jugada: ${fechaTxt}
-- Cancha: ${canchaTxt} (confirmá el par leyendo las tarjetas)
+- Cancha: ${canchaTxt} (confirmá leyendo las tarjetas)
 - Modalidad: ${modTxt}
 - Organizadores: ${orgTxt}
 
-**Jugadores oficiales** (16) — usar exactamente estos IDs:
+**Jugadores oficiales (16)** — usar EXACTAMENTE estos IDs en el JSON:
 ${oficiales}
 
 **Suplente oficial**:
-${suplentes}
+${supEsp}
 
 **Adjunto las tarjetas** (screenshots de shagolf.com.ar o fotos de papel).
 
-**Información adicional** (completar antes de mandar):
-- Ausentes: [si hubo alguno, listalos]
-- Suplentes externos: [si hubo, nombre y a quién reemplazó]
-- Cancha confirmada: [confirmá la cancha si no era Fátima]
-- Resultado de matchs: [pasame las parejas y ganadores]
+**Información adicional que te paso aparte**:
+- Ausentes: [listar]
+- Suplentes externos: [nombre completo, a quién reemplazó, color del equipo]
+- Cancha confirmada: [si no era Fátima]
+- Resultado de matchs: [parejas y ganadores con dif de hoyos]
 
 ---
 
 ## Trabajo a realizar
 
-Extraé de cada tarjeta:
-- Nombre del jugador → mapear al ID canónico de arriba (formato display "Apellido, Nombre")
-- Hdcp del día (el que figura en la tarjeta, antes del cap del tour)
-- Gross total (suma de los 18 hoyos)
-- Neto total
-- Score por hoyo (18 valores)
-- Par por hoyo (18 valores) — debe ser el mismo para todas las tarjetas de la fecha
+Extraé de cada tarjeta: Nombre → mapear al ID canónico. Hdcp del día (sin cap). Gross total. Neto total. Score por hoyo (18 valores). Par por hoyo (18 valores) — mismo para todas las tarjetas.
 
 **Reglas obligatorias**:
-- Si ves "Gatto" sin primer nombre, pediime aclaración (Mariano vs Alejandro vs Hector).
-- El gross debe ser igual a la suma de los 18 hoyos. Si no, marcá ⚠️.
-- Neto = Gross − Hdcp del día (sin cap todavía). Si no coincide, marcá ⚠️.
-- Si un jugador no figura en la lista de IDs canónicos, marcalo como "_unknown".
+- "Gatto" sin primer nombre → pediime aclaración (Mariano vs Alejandro vs Hector).
+- Gross debe ser igual a la suma de los 18 hoyos. Si no, ⚠️.
+- Neto = Gross − Hdcp día (sin cap). Si no coincide, ⚠️.
+- Si un jugador jugó match pero no entregó tarjeta, ponelo en el scorecard con \`hoyos: null, gross: null, neto: null\` (no inventes datos).
 
 ---
 
-## Devolveme estos 3 outputs en este orden
+## DEVOLVEME 3 OUTPUTS EN ESTE ORDEN EXACTO:
 
-### 1. RESUMEN EJECUTIVO (texto plano)
+### 1. RESUMEN EJECUTIVO (texto plano detallado)
 
 \`\`\`
-Fecha ${num || '[N]'} — ${fechaTxt} — ${canchaTxt}
-Par total: [N]
-Jugadores: [N] oficiales [+ N suplentes]
+═══════════════════════════════════════════
+FECHA ${num || '[N]'} — ${fechaTxt} — ${canchaTxt}
+═══════════════════════════════════════════
 
-Top 5 Neto:
-1° Apellido, Nombre — Neto [N] (Gross [N] / Hcp [N])
+Modalidad: [N], Organizadores: [nombres completos]
+Par total cancha: [N], Jugadores oficiales: [N], Suplentes: [N]
+
+🏆 PODIO MEDAL
+1° Apellido, Nombre Completo — Neto [N] (Gross [N] / Hcp [N])
 2° ...
+3° ...
+[seguir hasta los empatados o top 5]
 
-Ganador de fecha: Apellido, Nombre   ó   VACANTE (si ganó suplente/no-oficial)
-Mejor Gross: Apellido, Nombre — [N]
-Eagles: [N]   Birdies: [N]
-Discrepancias: [si hubo, listar]
+🎯 Ganador de fecha: [Apellido, Nombre Completo] (o VACANTE si ganó suplente solo)
+🏌️ Mejor Gross: [Apellido, Nombre Completo] — [N]
+📈 Peor Gross: [Apellido, Nombre Completo] — [N]
+
+🦅 ESTADÍSTICAS DEL GRUPO
+Eagles: [N] · Birdies: [N] · Pares: [N] · Bogeys: [N] · Dobles+: [N]
+Avg Gross: [N.N] · Avg Neto: [N.N]
+
+⚔️ MATCH PLAY (Gris vs Rojo)
+[lista de matchs: jugador1 vs jugador2 → ganador (dif hoyos)]
+GRIS: [N] pts · ROJO: [N] pts · Dif Hoyos acumulado: [+/-N]
+
+📝 NARRATIVA DEL DÍA (3-5 oraciones — cómo se dio la fecha,
+   quién brilló, sorpresas, batallas cerradas, momentos destacados,
+   contexto de la cancha si aplica. Tono editorial, no formal.)
+
+⚠️ Discrepancias detectadas: [si hubo, listar]
 \`\`\`
 
 ### 2. JSON PARA BACKOFFICE
 
-Bloque JSON exacto (sin comentarios), listo para pegar en "Pegar JSON de Claude":
+Bloque JSON listo para pegar en "Pegar JSON de Claude". **Formato EXACTO**:
 
 \`\`\`json
 {
@@ -5672,40 +5694,40 @@ Bloque JSON exacto (sin comentarios), listo para pegar en "Pegar JSON de Claude"
   "fecha": "${fechaTxt}",
   "cancha": "${canchaTxt}",
   "par": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  "organizadores": "${orgTxt}",
-  "ausentes": [],
-  "suplentes": [],
-  "comentario": "",
+  "organizadores": "Apellido + Apellido",
+  "comentario": "narrativa del día (la misma que pongas en el resumen)",
   "scorecard": [
-    {
-      "id": "...",
-      "name": "Apellido, Nombre",
-      "hdcp": 0,
-      "hoyos": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      "gross": 0,
-      "neto": 0
-    }
+    {"id": "fernandez", "hdcp": 22, "hoyos": [6,6,5,...18 valores], "gross": 90, "neto": 69},
+    ...
   ],
-  "matchs": []
+  "suplentes": [
+    {"id": "gatto_ale", "name": "Gatto, Alejandro", "equipo": "g", "reemplaza": "zunino"},
+    {"id": "sup_alfonso", "name": "Alfonso, Juan Ignacio", "equipo": "r", "reemplaza": "scapparone"}
+  ],
+  "matchs": [
+    {"tipo": "ind", "gris": ["benegas"], "rojo": ["elizalde"], "ganador": "r", "difHoyos": 2},
+    {"tipo": "fb", "gris": ["g1","g2"], "rojo": ["r1","r2"], "ganador": "g", "difHoyos": 3}
+  ]
 }
 \`\`\`
 
-Llená los matchs si te pasé el resultado arriba; sino dejá array vacío.
+**REGLAS DEL JSON — CUMPLIR EXACTO**:
+- \`organizadores\`: **STRING** (no array), formato "Apellido + Apellido".
+- \`matchs[].gris\` y \`matchs[].rojo\`: arrays de IDs (NO usar 'g'/'r' como nombre de campo).
+- \`matchs[].difHoyos\`: número positivo (no usar 'dif' ni negativos).
+- \`matchs[].tipo\`: "ind" para 1v1, "fb" para 2v2 fourball.
+- \`suplentes[].equipo\`: "g" o "r" (lowercase, una letra).
+- \`suplentes[].reemplaza\`: ID del oficial reemplazado (no nombre).
+- NO incluyas un campo \`medal\`: el backoffice lo calcula del scorecard.
+- Para un jugador que jugó match pero NO entregó tarjeta: incluilo en scorecard con \`"hoyos": null, "gross": null, "neto": null, "hdcp": null\`.
 
 ### 3. RESUMEN PDF DE LA FECHA
 
-Generá un PDF (1-2 páginas A4) con:
-- Header: número de fecha, fecha, cancha, organizadores
-- Tabla de ranking medal (pos, jugador, gross, hcp, neto, pts)
-- Sección match (parejas, resultados, ganador del día)
-- Stats de la fecha (eagles, birdies, mejor gross, mejor neto)
-- Comentario corto
-
-Dame el PDF como archivo descargable.
+Generá un HTML/PDF descargable (formato F[N]_Resumen.html) con header dorado/navy, podio, stats, match, narrativa. Diseño tipo Portfolio Analyst (sin gridlines, tipografía Playfair Display + DM Sans, paleta navy-deep + gold).
 
 ---
 
-**Importante**: no inventes datos. Si una tarjeta es borrosa o falta un hoyo, marcá con null y avisame. No apliques reglas de tour (vacante, pts medal) — eso lo calcula el backoffice.`;
+**Importante**: No inventes datos. No apliques reglas de tour (vacante, pts medal): eso lo calcula el backoffice. Tu trabajo es extraer datos crudos + escribir una narrativa editorial.`;
 }
 
 async function copiarPromptCargaFecha() {
@@ -5746,6 +5768,27 @@ function pegarJsonAutoFill() {
   document.body.appendChild(overlay);
 }
 
+// Helpers para tolerar variaciones de campo del chat
+function _normEquipo(e) {
+  if(!e) return null;
+  const s = String(e).toLowerCase();
+  if(s.startsWith('g') || s.includes('gri')) return 'g';
+  if(s.startsWith('r') || s.includes('roj')) return 'r';
+  return e;
+}
+function _normReemplaza(reempl) {
+  if(!reempl) return null;
+  // Si es un id ya conocido, devolverlo
+  if(PLAYERS.find(p => p.id === reempl)) return reempl;
+  // Buscar por nombre completo o apellido
+  const s = String(reempl).toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+  const found = PLAYERS.find(p => {
+    const n = p.name.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'');
+    return n === s || n.startsWith(s.split(',')[0]?.trim()) || s.includes(p.id);
+  });
+  return found?.id || reempl;
+}
+
 function _aplicarJsonPegado() {
   const ta = byId('paste-json-area');
   const st = byId('paste-json-status');
@@ -5754,38 +5797,44 @@ function _aplicarJsonPegado() {
   try { data = JSON.parse(ta.value); }
   catch(e) { st.textContent = '❌ JSON inválido: ' + e.message; st.style.color = 'var(--rojo-light)'; return; }
 
-  // Validar estructura mínima
   if(!data.scorecard || !Array.isArray(data.scorecard)) {
     st.textContent = '❌ Falta scorecard (array)'; st.style.color = 'var(--rojo-light)'; return;
   }
 
-  // Setear fecha en selector
+  // ── Header de la fecha ──
   if(data.num) {
     const sel = byId('sc-num');
     if(sel) { sel.value = data.num; scLoadFechaInfo(); }
   }
   if(data.fecha) byId('sc-fecha').value = data.fecha;
   if(data.cancha) byId('sc-cancha').value = data.cancha;
-  if(data.organizadores) byId('sc-org').value = data.organizadores;
+  if(data.organizadores) {
+    const org = Array.isArray(data.organizadores)
+      ? data.organizadores.map(id => PLAYERS.find(p=>p.id===id)?.name || id).join(', ')
+      : data.organizadores;
+    byId('sc-org').value = org;
+  }
   if(data.comentario) byId('sc-comentario').value = data.comentario;
 
-  // Par editable
+  // Par editable — si trae nuevo par, usarlo
   if(data.par && data.par.length === 18) {
     SC_PAR_ACTUAL = [...data.par];
   }
 
-  // Ausentes: detectar IDs faltantes en scorecard
-  const pIds = data.scorecard.map(s => s.id);
-  const ausentes = PLAYERS.filter(p => !pIds.includes(p.id)).map(p => p.id);
-  if(ausentes.length > 0 && !byId('sc-ausentes').value) byId('sc-ausentes').value = ausentes.join(', ');
+  // ── Ausentes / suplentes ──
+  // scorecard con hoyos null o gross null = jugador sin tarjeta (probablemente jugó match pero no entregó tarjeta o se ausentó)
+  const playedIds = data.scorecard.filter(s => s.hoyos && s.gross != null).map(s => s.id);
+  const ausentesAuto = PLAYERS.filter(p => !playedIds.includes(p.id)).map(p => p.id);
+  if(ausentesAuto.length > 0 && !byId('sc-ausentes').value) byId('sc-ausentes').value = ausentesAuto.join(', ');
 
   // Re-armar grid con par actualizado
   scBuildGrid();
 
-  // Cargar scores por jugador
-  let loadedCount = 0, unknowns = [];
+  // ── Cargar scores ──
+  let loadedCount = 0, unknowns = [], skipped = [];
   data.scorecard.forEach(sc => {
-    if(!sc.id || sc.id === '_unknown') { unknowns.push(sc.name || '?'); return; }
+    if(!sc.id || sc.id === '_unknown') { unknowns.push(sc.name || sc.nombre || '?'); return; }
+    if(!sc.hoyos || sc.gross == null) { skipped.push(sc.id); return; }
     const hdcInput = document.querySelector(`.sc-hdc[data-pid="${sc.id}"]`);
     if(hdcInput && sc.hdcp != null) hdcInput.value = Math.round(sc.hdcp);
     if(sc.hoyos && sc.hoyos.length === 18) {
@@ -5796,17 +5845,57 @@ function _aplicarJsonPegado() {
       loadedCount++;
     }
   });
-
-  // Recalc
   scRecalc();
 
-  let msg = `✓ Cargados ${loadedCount} jugadores. Revisá el grid y agregá los matchs antes de guardar.`;
+  // ── Cargar suplentes ──
+  if(Array.isArray(data.suplentes) && data.suplentes.length > 0) {
+    // Limpiar y rebuild si existe UI; sino guardar para el save final
+    window._scSuplentesParsed = data.suplentes.map(s => ({
+      id: s.id,
+      name: s.name || s.nombre || s.id,
+      equipo: _normEquipo(s.equipo || s.team),
+      reemplaza: _normReemplaza(s.reemplaza)
+    }));
+  }
+
+  // ── Cargar matchs ──
+  // Acepta formatos: {gris/rojo,difHoyos} o {g/r,dif}
+  let matchsCount = 0;
+  if(Array.isArray(data.matchs) && data.matchs.length > 0) {
+    // Limpiar blocks previos
+    const blocks = byId('sc-match-blocks');
+    if(blocks) blocks.innerHTML = '';
+    _scMatchCount = 0;
+
+    data.matchs.forEach(m => {
+      const gris = m.gris || m.g || m.gristeam || [];
+      const rojo = m.rojo || m.r || m.rojoteam || [];
+      const dif = m.difHoyos ?? m.dif ?? 0;
+      scAddMatch();
+      // El bloque recién agregado es el último de sc-match-blocks
+      const blocksList = byId('sc-match-blocks');
+      const block = blocksList?.lastElementChild;
+      if(!block) return;
+      block.querySelector('.sc-match-tipo').value = m.tipo || 'ind';
+      block.querySelector('.sc-match-gris').value = gris.join(', ');
+      block.querySelector('.sc-match-rojo').value = rojo.join(', ');
+      block.querySelector('.sc-match-ganador').value = m.ganador || 'g';
+      block.querySelector('.sc-match-dif').value = Math.abs(dif);
+      matchsCount++;
+    });
+  }
+
+  // ── Status ──
+  const parts = [`✓ Cargados ${loadedCount} jugadores`];
+  if(matchsCount > 0) parts.push(`${matchsCount} matchs`);
+  if(window._scSuplentesParsed?.length) parts.push(`${window._scSuplentesParsed.length} suplentes`);
+  if(skipped.length) parts.push(`(${skipped.length} sin tarjeta: ${skipped.join(', ')})`);
+  let msg = parts.join(' · ');
   if(unknowns.length) msg += ` ⚠️ Sin match: ${unknowns.join(', ')}`;
-  st.textContent = msg;
+  st.textContent = msg + '. Revisá y guardá.';
   st.style.color = unknowns.length ? 'var(--gold)' : 'var(--green)';
 
-  // Cerrar modal después de 2 seg si todo OK
-  if(!unknowns.length) setTimeout(()=>{ const ov = ta.closest('[style*="z-index:9999"]'); if(ov) ov.remove(); }, 1800);
+  if(!unknowns.length) setTimeout(()=>{ const ov = ta.closest('[style*="z-index:9999"]'); if(ov) ov.remove(); }, 2500);
 }
 
 // OCR functions
