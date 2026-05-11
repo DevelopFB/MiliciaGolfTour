@@ -2250,6 +2250,26 @@ function getOrganizadoresFecha(num) {
   return map[num] || null;
 }
 
+async function editarCanchaFecha(num) {
+  const f = fechas.find(x => x.num === num);
+  if(!f) return;
+  const nueva = prompt(`Cancha actual: ${f.cancha || '—'}\n\nIngresá la nueva cancha:`, f.cancha || '');
+  if(nueva == null || nueva.trim() === '' || nueva === f.cancha) return;
+  f.cancha = nueva.trim();
+  invalidateAccum();
+  // Sync a Supabase
+  const client = getSupabaseClient();
+  if(client) {
+    try {
+      const { error } = await client.from('fechas').update({ cancha: f.cancha, updated_at: new Date().toISOString() }).eq('num', num);
+      if(error) { console.warn('Error actualizando cancha en Supabase', error); alert('Cancha actualizada localmente, pero falló sync a Supabase: ' + error.message); }
+    } catch(e) { console.warn(e); }
+  }
+  persistfechas && persistfechas();
+  // Re-render dashboard
+  renderFechaDetail(num);
+}
+
 function renderFechaDetail(num) {
   const f = fechas.find(x=>x.num===num);
   if(!f||f.pendiente) return;
@@ -2325,19 +2345,20 @@ function renderFechaDetail(num) {
         <div style="margin-top:6px;font-size:0.85rem">
           ${(f.suplentes||[]).map(s=>{
             const info = SUPLENTES_CONOCIDOS.find(x=>x.id===s.id);
-            const nombre = info?.name || s.id;
+            const nombre = info?.name || s.name || s.id;
             const esEsp = info?.esOficialEspecial;
-            return `<span style="color:var(--gold)">${nombre}</span>
-              <span style="color:var(--muted-light);font-size:0.75rem"> → equipo ${s.equipo==='g'?'GRIS':'ROJO'}${s.reemplaza?' · reemplaza a '+s.reemplaza:''}${esEsp?' <span style="color:var(--gold);font-size:0.65rem">SUPLENTE OFICIAL</span>':''}</span>`;
+            const reemplazaName = s.reemplaza ? (PLAYERS.find(p=>p.id===s.reemplaza)?.name || s.reemplaza) : null;
+            return `<span style="color:var(--gold);font-weight:600">${nombre}</span>
+              <span style="color:var(--muted-light);font-size:0.75rem"> → equipo ${s.equipo==='g'?'GRIS':'ROJO'}${reemplazaName?' · reemplaza a '+reemplazaName:''}${esEsp?' <span style="color:var(--gold);font-size:0.65rem">SUPLENTE OFICIAL</span>':''}</span>`;
           }).join('<br>')}
         </div>
         ${(f.suplentes||[]).some(s=>!SUPLENTES_CONOCIDOS.find(x=>x.id===s.id)?.esOficialEspecial)
-          ? `<div style="margin-top:6px;font-size:0.7rem;color:var(--muted)">* Suplentes genéricos: sus puntos medal y match no se acumulan al torneo · Gatto acumula en su fila especial ★</div>` : ''}
+          ? `<div style="margin-top:6px;font-size:0.7rem;color:var(--muted)">* Suplentes externos: sus pts medal individuales no se acumulan al torneo. Los pts de match SÍ cuentan para el color que representan (regla 2026).</div>` : ''}
       </div>` : '';
 
   byId('fecha-detail').innerHTML = `
     <div class="g3" style="margin-bottom:16px">
-      <div class="card"><div class="kpi-label">Fecha</div><div style="font-size:1.1rem;font-weight:600;cursor:default;user-select:none" onclick="adminTripleClick()" title="">F${f.num} · ${f.fecha}</div><div style="font-size:0.78rem;color:var(--muted-light);margin-top:4px">${f.cancha||''}</div></div>
+      <div class="card"><div class="kpi-label">Fecha</div><div style="font-size:1.1rem;font-weight:600;cursor:default;user-select:none" onclick="adminTripleClick()" title="">F${f.num} · ${f.fecha}</div><div style="font-size:0.78rem;color:var(--muted-light);margin-top:4px;display:flex;align-items:center;gap:6px"><span>${f.cancha||'—'}</span><button onclick="editarCanchaFecha(${f.num})" title="Editar cancha" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:0.85rem;padding:0;line-height:1">✏️</button></div></div>
       <div class="card"><div class="kpi-label">Organizadores</div><div style="font-size:0.95rem;font-weight:500">${f.organizadores||getOrganizadoresFecha(f.num)||'—'}</div></div>
       <div class="card"><div class="kpi-label">Ausentes</div><div style="font-size:0.9rem">${(f.ausentes||[]).length===0?'<span style="color:var(--muted)">Todos presentes 💪</span>':f.ausentes.join(', ')}</div>
         ${supNotaFecha}
@@ -2372,6 +2393,19 @@ function renderFechaDetail(num) {
                 <td class="num" style="color:var(--gold)">${m.neto}</td>
                 <td class="num" style="color:var(--muted-light)">${m.gross}</td>
                 <td class="num">${ptsDisplay}</td>
+              </tr>`;
+            }).join('')}
+            ${(f.suplentes||[]).filter(s => !medalSorted.some(m => m.id === s.id)).map(s => {
+              const info = SUPLENTES_CONOCIDOS.find(x=>x.id===s.id);
+              const nombre = info?.name || s.name || s.id;
+              return `<tr style="opacity:0.55;border-top:1px dashed rgba(201,168,76,0.2)">
+                <td><span class="rank-num">—</span></td>
+                <td><span style="color:var(--gold)">${nombre}*</span> <span style="font-size:0.65rem;color:var(--muted)">sin tarjeta cargada</span></td>
+                <td><span style="color:var(--gold);font-size:0.7rem">${s.equipo==='g'?'GRIS*':'ROJO*'}</span></td>
+                <td class="num" style="color:var(--muted)">—</td>
+                <td class="num" style="color:var(--muted)">—</td>
+                <td class="num" style="color:var(--muted)">—</td>
+                <td class="num" style="color:var(--muted)">—</td>
               </tr>`;
             }).join('')}
           </tbody>
@@ -2526,29 +2560,29 @@ function getStatsFilters() {
   return { players, fechaNums };
 }
 
-function countShotTypes(scorecard, playersFilter, fechasFilter, par) {
-  // Returns per-player { id, name, eagles, birdies, pares, bogeys, dobles }
-  // and per-fecha { fnum, eagles, birdies, pares, bogeys, dobles }
+function countShotTypes(scorecard, playersFilter, fechasFilter) {
+  // Usa el par PROPIO de cada fecha (f.par) — soporta canchas distintas
+  // entre fechas. Si la fecha no tiene par definido, usa PAR global default.
   const byPlayer = {};
   const byFecha = {};
 
   fechasFilter.forEach(f => {
     const fkey = f.num;
+    const parF = (f.par && f.par.length === 18) ? f.par : PAR;
     if (!byFecha[fkey]) byFecha[fkey] = {eagles:0,birdies:0,pares:0,bogeys:0,dobles:0};
 
     (f.scorecard || []).forEach(sc => {
       if (!playersFilter.includes(sc.id)) return;
       if (!byPlayer[sc.id]) byPlayer[sc.id] = {eagles:0,birdies:0,pares:0,bogeys:0,dobles:0};
       (sc.holes || []).forEach((score, hi) => {
-        if (!score || score <= 0 || hi >= par.length) return;
-        const diff = score - par[hi];
+        if (!score || score <= 0 || hi >= parF.length) return;
+        const diff = score - parF[hi];
         const cat = diff <= -2 ? 'eagles' : diff === -1 ? 'birdies' : diff === 0 ? 'pares' : diff === 1 ? 'bogeys' : 'dobles';
         byPlayer[sc.id][cat]++;
         byFecha[fkey][cat]++;
       });
     });
 
-    // Fallback: use f.stats if no scorecard data available
     if ((!f.scorecard || f.scorecard.length === 0) && f.stats) {
       const s = f.stats;
       byFecha[fkey] = {eagles:s.eagles||0, birdies:s.birdies||0, pares:s.pares||0, bogeys:s.bogeys||0, dobles:s.dobles||0};
@@ -2560,9 +2594,8 @@ function countShotTypes(scorecard, playersFilter, fechasFilter, par) {
 
 function updateStatsCharts() {
   const { players, fechaNums } = getStatsFilters();
-  const par = PAR;
   const selectedFechas = fechas.filter(f => !f.pendiente && fechaNums.includes(f.num));
-  const { byPlayer, byFecha } = countShotTypes(selectedFechas, players, selectedFechas, par);
+  const { byPlayer, byFecha } = countShotTypes(selectedFechas, players, selectedFechas);
 
   const categories = ['Eagle-', 'Birdie', 'Par', 'Bogey', 'Doble+'];
   const catKeys = ['eagles', 'birdies', 'pares', 'bogeys', 'dobles'];
@@ -2606,9 +2639,15 @@ function updateStatsCharts() {
   }
 
   // ── 2. Average strokes per hole ──
+  // Par dinámico: si hay 1 fecha sola → par de esa fecha. Si hay varias → promedio
+  // del par por hoyo entre las canchas seleccionadas.
   const holeAvgs = Array(18).fill(0);
   const holeCounts = Array(18).fill(0);
+  const parSums = Array(18).fill(0);
+  const parCount = selectedFechas.length;
   selectedFechas.forEach(f => {
+    const parF = (f.par && f.par.length === 18) ? f.par : PAR;
+    parF.forEach((p, i) => { parSums[i] += p; });
     (f.scorecard || []).forEach(sc => {
       if (!players.includes(sc.id)) return;
       (sc.holes || []).forEach((score, hi) => {
@@ -2618,6 +2657,8 @@ function updateStatsCharts() {
   });
   const hasHoleData = holeCounts.some(c => c > 0);
   const avgPerHole = holeAvgs.map((sum, i) => holeCounts[i] > 0 ? +(sum / holeCounts[i]).toFixed(2) : null);
+  // par por hoyo: promedio si múltiples fechas, exacto si una sola
+  const par = parCount > 0 ? parSums.map(s => +(s / parCount).toFixed(1)) : PAR.slice();
 
   destroyChart('stats-holes');
   charts['stats-holes'] = new Chart(byId('chart-stats-holes'), {
