@@ -1329,14 +1329,20 @@ function buildAccum() {
     <div id="admin-tab-view" style="display:none">
       <div class="admin-notice">JSON completo de cualquier fecha ya cargada. Usalo como referencia o para copiar y corregir.</div>
       <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="admin-btn primary" onclick="descargarMasterExcel()" style="background:linear-gradient(135deg,#c9a84c,#f0d080);color:#080d18;font-weight:700">
-          📊 Descargar Excel Master
+        <a href="./MGT_2026_Master.xlsx" download="MGT_2026_Master.xlsx" class="admin-btn primary" style="background:linear-gradient(135deg,#c9a84c,#f0d080);color:#080d18;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+          📊 Descargar Master XLSX (curado)
+        </a>
+        <button class="admin-btn secondary" onclick="descargarMasterExcel()">
+          📊 Generar Master en vivo (JS)
         </button>
         <button class="admin-btn secondary" onclick="exportExcelBackup()">
           ⬇ Backup Excel simple
         </button>
         <button class="admin-btn secondary" onclick="exportConsolidadoPDF()">📄 PDF Estado Temporada</button>
         <span id="master-excel-status" style="font-size:0.78rem;align-self:center"></span>
+      </div>
+      <div style="font-size:0.7rem;color:var(--muted);margin-bottom:14px;padding:8px 10px;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);border-radius:4px;line-height:1.5">
+        <strong style="color:var(--gold)">Master XLSX (curado)</strong>: archivo auditado con fórmulas Excel reales, nombres completos, hcp del hoyo por cancha, dif normalizado. Se regenera off-line tras cada fecha nueva. &nbsp;·&nbsp; <strong>Master en vivo</strong>: lo genera el navegador con los datos actuales (útil si cargaste una fecha recién).
       </div>
       <div class="admin-field" style="margin-bottom:12px">
         <label>Ver JSON de una Fecha</label>
