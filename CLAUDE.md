@@ -40,7 +40,7 @@ Desplegado en GitHub Pages desde repo `DevelopFB/MiliciaGolfTour`.
 | `dipaola` | Dipaola, Martín | Dipa | Gris |
 | `gatto` | **Gatto, Mariano** | Gattait | Rojo |
 | `elizalde` | Elizalde, Juan Pedro | Juancho | Rojo |
-| `canonico` | Canónico, Agustín | Agus | Rojo |
+| `canonico` | Canónico, Agustín | Kno | Rojo |
 | `vogelius` | Vogelius, Nicolás | Nico | Rojo |
 | `mendez` | Méndez, Gastón | Pato | Rojo |
 | `molinario` | Molinario, Andrés | Andy | Rojo |

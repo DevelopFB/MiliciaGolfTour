@@ -54,7 +54,7 @@ OFICIALES (16) — nombre completo / sobrenombre / id / equipo:
  8. Dipaola, Martín        (Dipa)     — dipaola     — Gris
  9. Gatto, Mariano         (Gattait)  — gatto       — Rojo
 10. Elizalde, Juan Pedro   (Juancho)  — elizalde    — Rojo
-11. Canónico, Agustín      (Agus)     — canonico    — Rojo
+11. Canónico, Agustín      (Kno)      — canonico    — Rojo
 12. Vogelius, Nicolás      (Nico)     — vogelius    — Rojo
 13. Méndez, Gastón         (Pato)     — mendez      — Rojo
 14. Molinario, Andrés      (Andy)     — molinario   — Rojo
