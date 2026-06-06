@@ -37,15 +37,15 @@ Desplegado en GitHub Pages desde repo `DevelopFB/MiliciaGolfTour`.
 | `pannullo` | Pannullo, Martín | Tincho | Gris |
 | `benegas` | Benegas, Francisco | Pancho | Gris |
 | `guevara` | Guevara, Francisco | Franki | Gris |
-| `dipaola` | Dipaola, Martín | Martín | Gris |
-| `gatto` | **Gatto, Mariano** | Mariano | Rojo |
+| `dipaola` | Dipaola, Martín | Dipa | Gris |
+| `gatto` | **Gatto, Mariano** | Gattait | Rojo |
 | `elizalde` | Elizalde, Juan Pedro | Juancho | Rojo |
 | `canonico` | Canónico, Agustín | Agus | Rojo |
 | `vogelius` | Vogelius, Nicolás | Nico | Rojo |
 | `mendez` | Méndez, Gastón | Pato | Rojo |
 | `molinario` | Molinario, Andrés | Andy | Rojo |
 | `scapparone` | Scapparone, Nicolás | Nico | Rojo |
-| `fernandez` | Fernandez, Lucas | Lucas | Rojo |
+| `fernandez` | Fernandez, Lucas | Lule | Rojo |
 
 > **Nota Hdcp**: el hdcp de cada jugador es **dinámico** y cambia de fecha a fecha según evolución. Se lee de la tarjeta del día. Lo que figura en `PLAYERS[].hdc` del `index.html` son valores semilla (default) usados solo si no hay tarjeta cargada todavía; se sobrescriben al cargar cada fecha.
 

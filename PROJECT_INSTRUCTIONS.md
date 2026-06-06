@@ -51,15 +51,15 @@ OFICIALES (16) — nombre completo / sobrenombre / id / equipo:
  5. Pannullo, Martín       (Tincho)   — pannullo    — Gris
  6. Benegas, Francisco     (Pancho)   — benegas     — Gris
  7. Guevara, Francisco     (Franki)   — guevara     — Gris
- 8. Dipaola, Martín        (Martín)   — dipaola     — Gris
- 9. Gatto, Mariano         (Mariano)  — gatto       — Rojo
+ 8. Dipaola, Martín        (Dipa)     — dipaola     — Gris
+ 9. Gatto, Mariano         (Gattait)  — gatto       — Rojo
 10. Elizalde, Juan Pedro   (Juancho)  — elizalde    — Rojo
 11. Canónico, Agustín      (Agus)     — canonico    — Rojo
 12. Vogelius, Nicolás      (Nico)     — vogelius    — Rojo
 13. Méndez, Gastón         (Pato)     — mendez      — Rojo
 14. Molinario, Andrés      (Andy)     — molinario   — Rojo
 15. Scapparone, Nicolás    (Nico)     — scapparone  — Rojo
-16. Fernandez, Lucas       (Lucas)    — fernandez   — Rojo
+16. Fernandez, Lucas       (Lule)     — fernandez   — Rojo
 
 SUPLENTE OFICIAL ESPECIAL:
 17. Gatto, Alejandro       (Ale)      — gatto_ale   — sin equipo fijo, juega para el que reemplaza
