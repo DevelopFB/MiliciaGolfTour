@@ -4897,15 +4897,18 @@ function exportDashboardSummaryPDF() {
   // KPIs
   const leader = medalRank[0]; const lp = PLAYERS.find(p=>p.id===leader.id);
   const g=acc.teamMatch.g, r=acc.teamMatch.r;
-  const teamLead = g.pts>=r.pts?'GRIS':'ROJO';
-  const teamLeadColor = g.pts>=r.pts?C.gris:C.rojo;
-  const difLead = g.pts>=r.pts?g.dif:r.dif;
+  // Líder de equipo: 1) puntos; 2) desempate por diferencial de hoyos; 3) empate total
+  let teamLead, teamLeadColor, difLead;
+  if(g.pts>r.pts || (g.pts===r.pts && g.dif>r.dif)) { teamLead='GRIS'; teamLeadColor=C.gris; difLead=g.dif; }
+  else if(r.pts>g.pts || (r.pts===g.pts && r.dif>g.dif)) { teamLead='ROJO'; teamLeadColor=C.rojo; difLead=r.dif; }
+  else { teamLead='EMPATE'; teamLeadColor=C.muted; difLead=0; }
+  const ptsGap=Math.abs(g.pts-r.pts);
   const prox = fechas.find(f=>f.pendiente);
   const proxNum = fechas.findIndex(f=>f.pendiente)+1;
   const kpis=[
     {l:'Fechas jugadas', v:String(jugadas.length), s:'de 10 en el año', c:C.ink, sz:16},
     {l:'Líder Medal', v:(lp?lp.name:'—'), s:fmt2(leader.pts)+' pts · '+(lp&&lp.team==='g'?'GRIS':'ROJO'), c:C.ink, sz:9.5},
-    {l:'Equipo líder Match', v:teamLead, s:'+'+fmt2(Math.abs(g.pts-r.pts))+' pts · dif '+(difLead>=0?'+':'')+difLead+' H', c:teamLeadColor, sz:16},
+    {l:'Equipo líder Match', v:teamLead, s:(teamLead==='EMPATE'?'Igualdad total (pts y dif)':(ptsGap>0?'+'+fmt2(ptsGap)+' pts · dif '+(difLead>=0?'+':'')+difLead+' H':'Igualan en pts · dif '+(difLead>=0?'+':'')+difLead+' H')), c:teamLeadColor, sz:(teamLead==='EMPATE'?13:16)},
     {l:'Próxima fecha', v:(prox?prox.fecha:'—'), s:'F'+proxNum, c:C.ink, sz:12},
     {l:'Jugadores', v:'16', s:'8 Gris · 8 Rojo', c:C.ink, sz:16},
   ];
