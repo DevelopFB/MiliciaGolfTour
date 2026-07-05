@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
@@ -4779,240 +4780,122 @@ function exportConsolidadoPDF() {
 // ════════════════════════════════════════════════════════════
 // EXPORT: DASHBOARD SUMMARY PDF (Resumen Ejecutivo — 2 páginas)
 // ════════════════════════════════════════════════════════════
-function exportDashboardSummaryPDF() {
-  const { jsPDF } = window.jspdf;
+async function exportDashboardSummaryPDF() {
+  const { jsPDF } = window.jspdf || {};
   if(!jsPDF) { alert('jsPDF no disponible'); return; }
+  if(typeof html2canvas === 'undefined') { alert('html2canvas no disponible. Revisá la conexión e intentá de nuevo.'); return; }
 
-  const acc = getAccum();
   const jugadas = fechas.filter(f => !f.pendiente);
   if(jugadas.length === 0) { alert('No hay fechas jugadas aún.'); return; }
   const latest = jugadas[jugadas.length - 1];
-  const mpts = calcMedalPts(latest);
-  const medalSorted = [...mpts].sort((a,b) => a.pos - b.pos);
   const T = getThemeRGB();
 
-  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
-  const W = 210, H = 297, M = 14;
-  const cw = W - 2*M;
-  let y = 0;
+  // ── Secciones a incluir (orden = orden en el PDF) ──
+  const SECTIONS = [
+    { id:'overview', label:'Overview' },
+    { id:'medal',    label:'Ranking Medal' },
+    { id:'match',    label:'Ranking Match' },
+    { id:'fechas',   label:'Detalle Fechas' },
+    { id:'gross',    label:'Gross' },
+    { id:'fixture',  label:'Fixture' },
+  ];
 
-  // ── Helper: colored box ──
-  const box = (x,yy,w,h,rgb) => { doc.setFillColor(...rgb); doc.rect(x,yy,w,h,'F'); };
-  const txt = (text,x,yy,opts={}) => {
-    doc.setFontSize(opts.size||8);
-    doc.setTextColor(...(opts.color||T.white));
-    doc.setFont('helvetica', opts.style||'normal');
-    // align acepta string ('right') u objeto ({align:'right'}) — normalizar
-    const alignOpt = typeof opts.align === 'string' ? {align: opts.align} : opts.align;
-    doc.text(sanitizePdfText(String(text)), x, yy, alignOpt || undefined);
+  // ── Feedback visual en el botón ──
+  const btn = document.querySelector('button[onclick="exportDashboardSummaryPDF()"]');
+  const btnHtml = btn ? btn.innerHTML : null;
+  if(btn){ btn.disabled = true; btn.style.opacity = '0.6'; btn.innerHTML = '&#9203; Generando PDF...'; }
+
+  // ── Guardar estado para restaurar al final ──
+  const prevSec = document.querySelector('.sec.on')?.id?.replace('sec-','') || 'overview';
+  const prevBtn = document.querySelector('.tab.on');
+  const wrap = document.querySelector('.wrap');
+  const prevWrapStyle = wrap ? wrap.getAttribute('style') : null;
+  const prevAnim = (window.Chart && Chart.defaults) ? Chart.defaults.animation : undefined;
+  if(window.Chart && Chart.defaults) Chart.defaults.animation = false; // capturas sin animación
+
+  const doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+  const W = 297, H = 210, M = 10;
+
+  const footer = (pageLabel) => {
+    doc.setFillColor(...T.navyDeep); doc.rect(0, H-7, W, 7, 'F');
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5);
+    doc.setTextColor(...T.mutedLight);
+    doc.text(sanitizePdfText('Milicia Golf Tour 2026 - Temporada 2026'), M, H-2.5);
+    doc.setTextColor(...T.gold);
+    doc.text(sanitizePdfText(pageLabel), W/2, H-2.5, {align:'center'});
+    doc.setTextColor(...T.mutedLight);
+    doc.text(sanitizePdfText('Generado '+new Date().toLocaleDateString('es-AR')), W-M, H-2.5, {align:'right'});
   };
 
-  // ═══════════════════════════════════════
-  // PAGE 1: Resumen última fecha
-  // ═══════════════════════════════════════
+  try {
+    // ═══ PORTADA ═══
+    doc.setFillColor(...T.navyDeep); doc.rect(0,0,W,H,'F');
+    doc.setFillColor(...T.gold); doc.rect(0, 92, W, 1.4, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(40); doc.setTextColor(...T.gold);
+    doc.text('MILICIA GOLF TOUR', W/2, 78, {align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(15); doc.setTextColor(...T.onNavy);
+    doc.text('TEMPORADA 2026', W/2, 104, {align:'center'});
+    doc.setFontSize(11); doc.setTextColor(...T.mutedLight);
+    doc.text(sanitizePdfText('Resumen del torneo  -  Fecha '+latest.num+' ('+(latest.fecha||'')+')  -  '+jugadas.length+' de 10 fechas jugadas'), W/2, 118, {align:'center'});
+    doc.setFontSize(9); doc.setTextColor(...T.muted);
+    doc.text(sanitizePdfText('Generado el '+new Date().toLocaleDateString('es-AR')+'  -  developfb.github.io/MiliciaGolfTour'), W/2, 132, {align:'center'});
+    footer('Portada');
 
-  // Header bar
-  box(0, 0, W, 28, T.navyDeep);
-  txt('MILICIA GOLF TOUR 2026', M, 10, {size:16, color:T.gold, style:'bold'});
-  txt('RESUMEN EJECUTIVO', M, 16, {size:8, color:T.onNavy});
-  txt(`Fecha ${latest.num} — ${latest.fecha || ''}`, M, 22, {size:9, color:T.mutedLight});
-  txt(`${jugadas.length} de 10 fechas jugadas`, W-M, 22, {size:8, color:T.gold, align:{align:'right'}});
-  y = 32;
+    const raf = () => new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const sleep = ms => new Promise(r=>setTimeout(r,ms));
 
-  // Info row
-  box(M, y, cw, 10, T.navyMid);
-  txt(`Cancha: ${latest.cancha || 'CUBA Fátima'}`, M+3, y+6, {size:7, color:T.muted});
-  txt(`Organizadores: ${latest.organizadores || '—'}`, M+60, y+6, {size:7, color:T.muted});
-  const ausentes = latest.ausentes?.join(', ') || 'Ninguno';
-  txt(`Ausentes: ${ausentes}`, M+120, y+6, {size:7, color:T.muted});
-  y += 14;
+    // ── Capturar cada sección como "print" de la web ──
+    for(let i=0; i<SECTIONS.length; i++){
+      const S = SECTIONS[i];
+      document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+      const el = byId('sec-'+S.id);
+      if(!el) continue;
+      el.classList.add('on');                                // visible ANTES de renderizar (Chart.js necesita dimensiones)
+      if(wrap){ wrap.style.width='1340px'; wrap.style.maxWidth='1340px'; } // layout de escritorio
+      renderSection(S.id);                                   // asegura charts renderizados
+      await raf();
+      await sleep(450);                                      // reflow + charts
 
-  // Comentario
-  if(latest.comentario) {
-    box(M, y, cw, 12, [255,250,230]);
-    doc.setDrawColor(...T.gold); doc.setLineWidth(0.3);
-    doc.line(M, y, M+cw, y);
-    const lines = wrapTextHard(doc, latest.comentario, cw-8);
-    txt(lines[0].substring(0,120) + (lines[0].length>120?'...':''), M+3, y+7, {size:7, color:T.goldDark, style:'italic'});
-    y += 16;
+      let canvas;
+      try{
+        canvas = await html2canvas(el, {
+          scale: 2, backgroundColor:'#ffffff', useCORS:true, logging:false,
+          windowWidth: 1400, scrollX: 0, scrollY: -window.scrollY,
+        });
+      }catch(err){ console.error('html2canvas error en', S.id, err); continue; }
+
+      doc.addPage('a4','landscape');
+      // encabezado de sección
+      doc.setFillColor(...T.navyDeep); doc.rect(0,0,W,10,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...T.gold);
+      doc.text(sanitizePdfText(S.label.toUpperCase()), M, 6.8);
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...T.mutedLight);
+      doc.text(sanitizePdfText('Milicia Golf Tour 2026'), W-M, 6.8, {align:'right'});
+
+      // encajar la imagen entera en la hoja
+      const top=13, bottom=H-9;
+      const availW = W-2*M, availH = bottom-top;
+      const ratio = Math.min(availW/canvas.width, availH/canvas.height);
+      const drawW = canvas.width*ratio, drawH = canvas.height*ratio;
+      const dx = (W-drawW)/2, dy = top + (availH-drawH)/2;
+      doc.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', dx, dy, drawW, drawH);
+      footer(S.label+'  -  '+(i+1)+'/'+SECTIONS.length);
+    }
+  } catch(err){
+    console.error('Error generando PDF:', err);
+    alert('Hubo un error generando el PDF. Revisá la consola.');
+  } finally {
+    // ── Restaurar estado del dashboard ──
+    if(wrap){ if(prevWrapStyle===null) wrap.removeAttribute('style'); else wrap.setAttribute('style', prevWrapStyle); }
+    if(window.Chart && Chart.defaults) Chart.defaults.animation = prevAnim;
+    document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+    byId('sec-'+prevSec)?.classList.add('on');
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+    if(prevBtn) prevBtn.classList.add('on');
+    if(btn){ btn.disabled=false; btn.style.opacity=''; btn.innerHTML=btnHtml; }
   }
 
-  // ── Top 5 Medal ──
-  box(M, y, cw, 7, T.navyDeep);
-  txt(`MEDAL — F${latest.num}`, M+3, y+5, {size:8, color:T.gold, style:'bold'});
-  y += 8;
-
-  // Header
-  box(M, y, cw, 6, T.navyDeepMid);
-  txt('Pos', M+3, y+4.5, {size:6, color:T.onNavy, style:'bold'});
-  txt('Jugador', M+14, y+4.5, {size:6, color:T.onNavy, style:'bold'});
-  txt('Neto', M+75, y+4.5, {size:6, color:T.onNavy, style:'bold'});
-  txt('Gross', M+90, y+4.5, {size:6, color:T.onNavy, style:'bold'});
-  txt('HDC', M+105, y+4.5, {size:6, color:T.onNavy, style:'bold'});
-  txt('Puntos', M+120, y+4.5, {size:6, color:T.onNavy, style:'bold'});
-  y += 7;
-
-  medalSorted.slice(0,8).forEach((m, i) => {
-    const p = findPlayerOrSuplente(m.id);
-    const bg = i%2===0 ? [255,255,255] : T.navyMid;
-    box(M, y, cw, 5.5, bg);
-    txt(m.pos, M+5, y+4, {size:7, color: m.pos<=3?T.goldDark:T.white, style:m.pos<=3?'bold':'normal'});
-    txt(p?.name || m.id, M+14, y+4, {size:7});
-    txt(m.neto, M+77, y+4, {size:7, style:'bold'});
-    txt(m.gross, M+92, y+4, {size:7, color:T.muted});
-    txt(m.hdcp, M+107, y+4, {size:7, color:T.muted});
-    txt(m.pts?.toFixed(0) || '0', M+122, y+4, {size:7, color:T.gold, style:'bold'});
-    y += 6;
-  });
-  y += 4;
-
-  // ── Matchs ──
-  if(latest.matchs && latest.matchs.length > 0) {
-    box(M, y, cw, 7, T.navyDeep);
-    txt(`MATCHS — F${latest.num}`, M+3, y+5, {size:8, color:T.gold, style:'bold'});
-    y += 8;
-
-    latest.matchs.forEach(m => {
-      const tipo = m.tipo === 'fb' ? '2v2' : '1v1';
-      const gris = (m.gris||[]).map(id => { const p=findPlayerOrSuplente(id); return p?.name?.split(',')[0]||id; }).join(' + ');
-      const rojo = (m.rojo||[]).map(id => { const p=findPlayerOrSuplente(id); return p?.name?.split(',')[0]||id; }).join(' + ');
-      const ganador = m.ganador==='g'?'GRIS':m.ganador==='r'?'ROJO':'EMPATE';
-      const gColor = m.ganador==='g'?T.gris:m.ganador==='r'?T.rojo:T.muted;
-
-      box(M, y, cw, 6, [248,248,252]);
-      txt(`[${tipo}]`, M+3, y+4.5, {size:6, color:T.muted});
-      txt(gris, M+16, y+4.5, {size:6.5, color:T.gris});
-      txt('vs', M+68, y+4.5, {size:6, color:T.muted});
-      txt(rojo, M+75, y+4.5, {size:6.5, color:T.rojo});
-      txt(`${ganador} ${m.difHoyos?'('+m.difHoyos+'H)':''}`, M+130, y+4.5, {size:6.5, color:gColor, style:'bold'});
-      y += 7;
-    });
-    y += 2;
-  }
-
-  // ── Stats KPIs ──
-  const stats = latest.stats || (latest.scorecard ? calcStatsFromScorecard(latest) : null);
-  if(stats) {
-    box(M, y, cw, 7, T.navyDeep);
-    txt('ESTADÍSTICAS', M+3, y+5, {size:8, color:T.gold, style:'bold'});
-    y += 9;
-
-    const kpis = [
-      {label:'Avg Gross', val:stats.avgGross, color:T.goldDark},
-      {label:'Avg Neto', val:stats.avgNeto, color:[37,99,235]},
-      {label:'Eagles', val:stats.eagles||0, color:T.goldDark},
-      {label:'Birdies', val:stats.birdies, color:T.green},
-      {label:'Pares', val:stats.pares, color:T.muted},
-      {label:'Bogeys', val:stats.bogeys, color:[224,112,32]},
-      {label:'Dobles+', val:stats.dobles, color:T.rojo},
-    ];
-    const kpiW = cw / kpis.length;
-    kpis.forEach((k, i) => {
-      const kx = M + i * kpiW;
-      box(kx + 0.5, y, kpiW - 1, 14, [250,250,255]);
-      txt(k.val, kx + kpiW/2, y+7, {size:11, color:k.color, style:'bold', align:{align:'center'}});
-      txt(k.label, kx + kpiW/2, y+12, {size:5, color:T.muted, align:{align:'center'}});
-    });
-    y += 18;
-  }
-
-  // ── Team result ──
-  const g = acc.teamMatch.g, r = acc.teamMatch.r;
-  box(M, y, cw/2-1, 16, [245,246,250]);
-  box(M + cw/2 + 1, y, cw/2-1, 16, [255,245,245]);
-  txt('GRIS', M + cw/4, y+6, {size:10, color:T.gris, style:'bold', align:{align:'center'}});
-  txt(`${g.pts.toFixed(1)} pts | Dif: ${g.dif>0?'+':''}${g.dif}`, M + cw/4, y+12, {size:7, color:T.muted, align:{align:'center'}});
-  txt('ROJO', M + 3*cw/4, y+6, {size:10, color:T.rojo, style:'bold', align:{align:'center'}});
-  txt(`${r.pts.toFixed(1)} pts | Dif: ${r.dif>0?'+':''}${r.dif}`, M + 3*cw/4, y+12, {size:7, color:T.muted, align:{align:'center'}});
-  y += 20;
-
-  // ═══════════════════════════════════════
-  // PAGE 2: Rankings acumulados
-  // ═══════════════════════════════════════
-  doc.addPage();
-  y = 0;
-
-  // Header
-  box(0, 0, W, 18, T.navyDeep);
-  txt('RANKINGS ACUMULADOS', M, 8, {size:14, color:T.gold, style:'bold'});
-  txt(`Temporada 2026 — ${jugadas.length} fechas jugadas`, M, 14, {size:8, color:T.mutedLight});
-  y = 22;
-
-  // ── Medal Ranking ──
-  box(M, y, cw, 7, T.navyDeep);
-  txt('RANKING MEDAL — ACUMULADO', M+3, y+5, {size:8, color:T.gold, style:'bold'});
-  y += 8;
-
-  const medalRank = Object.entries(acc.medal).map(([id,v])=>({id,...v})).sort((a,b)=>b.pts-a.pts);
-  // Header
-  box(M, y, cw, 5, T.navyDeepMid);
-  txt('#', M+3, y+3.8, {size:5.5, color:T.onNavy, style:'bold'});
-  txt('Jugador', M+10, y+3.8, {size:5.5, color:T.onNavy, style:'bold'});
-  txt('Pts', M+65, y+3.8, {size:5.5, color:T.onNavy, style:'bold'});
-  txt('Fechas', M+82, y+3.8, {size:5.5, color:T.onNavy, style:'bold'});
-  y += 5.5;
-
-  medalRank.forEach((m, i) => {
-    const p = PLAYERS.find(x=>x.id===m.id);
-    if(!p) return;
-    const bg = i%2===0 ? [255,255,255] : T.navyMid;
-    box(M, y, cw/2-2, 5, bg);
-    txt(i+1, M+4, y+3.8, {size:6, color:i<3?T.goldDark:T.white, style:i<3?'bold':'normal'});
-    txt(p.name, M+10, y+3.8, {size:6});
-    const teamColor = p.team==='g'?T.gris:T.rojo;
-    doc.setFillColor(...teamColor); doc.circle(M+60, y+2.5, 1.2, 'F');
-    txt(m.pts.toFixed(0), M+65, y+3.8, {size:6, color:T.gold, style:'bold'});
-    txt(m.positions.length + ' fch', M+82, y+3.8, {size:5.5, color:T.muted});
-    y += 5.5;
-  });
-  y += 6;
-
-  // ── Match Ranking por equipo ──
-  box(M, y, cw, 7, T.navyDeep);
-  txt('RANKING MATCH — POR EQUIPO', M+3, y+5, {size:8, color:T.gold, style:'bold'});
-  y += 9;
-
-  const halfW = (cw - 4) / 2;
-  ['g','r'].forEach((team, ti) => {
-    const xOff = M + ti * (halfW + 4);
-    const color = team==='g'?T.gris:T.rojo;
-    const label = team==='g'?'GRIS':'ROJO';
-    box(xOff, y, halfW, 6, team==='g'?[240,242,248]:[252,240,240]);
-    txt(`${label}`, xOff+3, y+4.5, {size:7, color:color, style:'bold'});
-
-    let yy = y + 7;
-    const teamRank = Object.entries(acc.match)
-      .map(([id,v])=>({id,...v}))
-      .filter(m => PLAYERS.find(p=>p.id===m.id)?.team===team)
-      .sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
-
-    teamRank.forEach((m, i) => {
-      const p = PLAYERS.find(x=>x.id===m.id);
-      const bg = i%2===0?[255,255,255]:T.navyMid;
-      box(xOff, yy, halfW, 5, bg);
-      txt(i+1, xOff+3, yy+3.8, {size:5.5});
-      txt(p?.name||m.id, xOff+9, yy+3.8, {size:5.5});
-      txt(m.pts.toFixed(1), xOff+halfW-20, yy+3.8, {size:5.5, color:T.gold, style:'bold'});
-      txt(`${m.difHoyos>0?'+':''}${m.difHoyos}`, xOff+halfW-6, yy+3.8, {size:5, color:T.muted});
-      yy += 5.5;
-    });
-  });
-  y += 7 + 8 * 5.5 + 6;
-
-  // ── Progress bar ──
-  box(M, y, cw, 12, T.navyMid);
-  txt('PROGRESO TEMPORADA', M+3, y+5, {size:6, color:T.muted, style:'bold'});
-  const pct = jugadas.length / 10;
-  const barW = cw - 60;
-  box(M+55, y+2.5, barW, 6, [220,222,230]);
-  box(M+55, y+2.5, barW * pct, 6, T.gold);
-  txt(`${jugadas.length}/10`, M+55+barW+3, y+7, {size:7, color:T.goldDark, style:'bold'});
-  y += 16;
-
-  // Footer
-  txt(`Generado: ${new Date().toLocaleDateString('es-AR')} — Milicia Golf Tour 2026`, W/2, H-8, {size:6, color:T.muted, align:{align:'center'}});
-
-  doc.save(`MGT2026_Resumen_F${latest.num}_${new Date().toISOString().slice(0,10)}.pdf`);
+  doc.save('MGT2026_Resumen_F'+latest.num+'_'+new Date().toISOString().slice(0,10)+'.pdf');
 }
 
 async function descargarMasterExcel() {
