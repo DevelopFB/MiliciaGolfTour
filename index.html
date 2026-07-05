@@ -4291,13 +4291,33 @@ function exportFechaPDF() {
 <button class="print-btn no-print" onclick="window.print()">Imprimir / PDF</button>
 </body></html>`;
 
-  const w = window.open('', '_blank');
-  if(!w) { alert('Habilitá popups para descargar el PDF.'); return; }
-  w.document.write(html);
-  w.document.close();
-  w.document.title = `MGT_F${f.num}_${f.fecha.replace(/ /g,'_')}`;
-  // Auto-trigger print dialog después de que cargue
-  setTimeout(()=> { try { w.focus(); w.print(); } catch(e){} }, 800);
+  // Imprimir vía iframe oculto (sin popups — evita bloqueadores)
+  const prev = document.getElementById('fecha-pdf-iframe');
+  if(prev) prev.remove();
+  const iframe = document.createElement('iframe');
+  iframe.id = 'fecha-pdf-iframe';
+  iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+  document.body.appendChild(iframe);
+  const idoc = iframe.contentDocument || iframe.contentWindow.document;
+  idoc.open();
+  idoc.write(html);
+  idoc.close();
+  idoc.title = `MGT_F${f.num}_${f.fecha.replace(/ /g,'_')}`;
+  // Esperar fuentes/estilos y disparar el diálogo de impresión
+  const doPrint = () => {
+    try { iframe.contentWindow.focus(); iframe.contentWindow.print(); }
+    catch(e) {
+      // Fallback: descargar el HTML para abrirlo manualmente
+      const blob = new Blob([html], {type:'text/html'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `MGT_F${f.num}_Resumen.html`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+  };
+  if(iframe.contentDocument.readyState === 'complete') setTimeout(doPrint, 900);
+  else iframe.onload = () => setTimeout(doPrint, 900);
 }
 
 // ─── EXPORT PDF CONSOLIDADO ───
