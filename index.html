@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
@@ -4780,120 +4779,342 @@ function exportConsolidadoPDF() {
 // ════════════════════════════════════════════════════════════
 // EXPORT: DASHBOARD SUMMARY PDF (Resumen Ejecutivo — 2 páginas)
 // ════════════════════════════════════════════════════════════
-async function exportDashboardSummaryPDF() {
+function exportDashboardSummaryPDF() {
   const { jsPDF } = window.jspdf || {};
   if(!jsPDF) { alert('jsPDF no disponible'); return; }
-  if(typeof html2canvas === 'undefined') { alert('html2canvas no disponible. Revisá la conexión e intentá de nuevo.'); return; }
 
+  const acc = getAccum();
   const jugadas = fechas.filter(f => !f.pendiente);
   if(jugadas.length === 0) { alert('No hay fechas jugadas aún.'); return; }
   const latest = jugadas[jugadas.length - 1];
-  const T = getThemeRGB();
 
-  // ── Secciones a incluir (orden = orden en el PDF) ──
-  const SECTIONS = [
-    { id:'overview', label:'Overview' },
-    { id:'medal',    label:'Ranking Medal' },
-    { id:'match',    label:'Ranking Match' },
-    { id:'fechas',   label:'Detalle Fechas' },
-    { id:'gross',    label:'Gross' },
-    { id:'fixture',  label:'Fixture' },
-  ];
-
-  // ── Feedback visual en el botón ──
-  const btn = document.querySelector('button[onclick="exportDashboardSummaryPDF()"]');
-  const btnHtml = btn ? btn.innerHTML : null;
-  if(btn){ btn.disabled = true; btn.style.opacity = '0.6'; btn.innerHTML = '&#9203; Generando PDF...'; }
-
-  // ── Guardar estado para restaurar al final ──
-  const prevSec = document.querySelector('.sec.on')?.id?.replace('sec-','') || 'overview';
-  const prevBtn = document.querySelector('.tab.on');
-  const wrap = document.querySelector('.wrap');
-  const prevWrapStyle = wrap ? wrap.getAttribute('style') : null;
-  const prevAnim = (window.Chart && Chart.defaults) ? Chart.defaults.animation : undefined;
-  if(window.Chart && Chart.defaults) Chart.defaults.animation = false; // capturas sin animación
+  // ── Paleta optimizada para impresión (alto contraste) ──
+  const C = {
+    ink:[26,34,51], muted:[94,106,130], navy:[13,27,46], navyMid:[26,40,62],
+    gold:[168,132,52], goldOnNavy:[214,176,86], gris:[70,86,116], rojo:[178,50,40],
+    green:[22,140,86], zebra:[244,246,250], line:[212,219,229], white:[255,255,255],
+    grisBg:[236,239,245], rojoBg:[250,237,237], mutedNavy:[196,206,222]
+  };
+  const teamColor = t => t==='g' ? C.gris : C.rojo;
+  const S = s => sanitizePdfText(String(s==null?'':s));
+  const fmt2 = v => (typeof v==='number' ? v.toFixed(2).replace('.', ',') : String(v));
 
   const doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
-  const W = 297, H = 210, M = 10;
+  const W=297, H=210, M=12; let y=0;
 
-  const footer = (pageLabel) => {
-    doc.setFillColor(...T.navyDeep); doc.rect(0, H-7, W, 7, 'F');
-    doc.setFont('helvetica','normal'); doc.setFontSize(6.5);
-    doc.setTextColor(...T.mutedLight);
-    doc.text(sanitizePdfText('Milicia Golf Tour 2026 - Temporada 2026'), M, H-2.5);
-    doc.setTextColor(...T.gold);
-    doc.text(sanitizePdfText(pageLabel), W/2, H-2.5, {align:'center'});
-    doc.setTextColor(...T.mutedLight);
-    doc.text(sanitizePdfText('Generado '+new Date().toLocaleDateString('es-AR')), W-M, H-2.5, {align:'right'});
+  const setF=(sz,st)=>{ doc.setFont('helvetica', st||'normal'); doc.setFontSize(sz); };
+  const text=(t,x,yy,c,sz,st,align)=>{ setF(sz,st); doc.setTextColor(...(c||C.ink)); doc.text(S(t), x, yy, align?{align}:undefined); };
+  const rect=(x,yy,w,h,c)=>{ doc.setFillColor(...c); doc.rect(x,yy,w,h,'F'); };
+  const line=(x1,y1,x2,y2,c,lw)=>{ doc.setDrawColor(...(c||C.line)); doc.setLineWidth(lw||0.2); doc.line(x1,y1,x2,y2); };
+  const dot=(x,yy,r,c)=>{ doc.setFillColor(...c); doc.circle(x,yy,r,'F'); };
+
+  const footer=(label)=>{
+    rect(0,H-8,W,8,C.navy);
+    text('MILICIA GOLF TOUR 2026  -  Temporada 2026', M, H-3, C.goldOnNavy, 6.5, 'bold');
+    text(label||'', W/2, H-3, C.mutedNavy, 6.5, 'normal', 'center');
+    text('Generado '+new Date().toLocaleDateString('es-AR'), W-M, H-3, C.mutedNavy, 6.5, 'normal', 'right');
   };
+  const header=(title,sub)=>{
+    rect(0,0,W,15,C.navy);
+    rect(0,15,W,1.1,C.gold);
+    text(title, M, 10, C.goldOnNavy, 13, 'bold');
+    if(sub) text(sub, W-M, 10, C.mutedNavy, 8, 'normal', 'right');
+    y=22;
+  };
+  const page=(title,sub,label)=>{ doc.addPage('a4','landscape'); header(title,sub); footer(label); };
 
-  try {
-    // ═══ PORTADA ═══
-    doc.setFillColor(...T.navyDeep); doc.rect(0,0,W,H,'F');
-    doc.setFillColor(...T.gold); doc.rect(0, 92, W, 1.4, 'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(40); doc.setTextColor(...T.gold);
-    doc.text('MILICIA GOLF TOUR', W/2, 78, {align:'center'});
-    doc.setFont('helvetica','normal'); doc.setFontSize(15); doc.setTextColor(...T.onNavy);
-    doc.text('TEMPORADA 2026', W/2, 104, {align:'center'});
-    doc.setFontSize(11); doc.setTextColor(...T.mutedLight);
-    doc.text(sanitizePdfText('Resumen del torneo  -  Fecha '+latest.num+' ('+(latest.fecha||'')+')  -  '+jugadas.length+' de 10 fechas jugadas'), W/2, 118, {align:'center'});
-    doc.setFontSize(9); doc.setTextColor(...T.muted);
-    doc.text(sanitizePdfText('Generado el '+new Date().toLocaleDateString('es-AR')+'  -  developfb.github.io/MiliciaGolfTour'), W/2, 132, {align:'center'});
-    footer('Portada');
+  // Título de bloque dentro de una página
+  const blockTitle=(t)=>{ rect(M,y,W-2*M,7,C.navyMid); text(t, M+2.5, y+4.9, C.goldOnNavy, 8, 'bold'); y+=9; };
 
-    const raf = () => new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-    const sleep = ms => new Promise(r=>setTimeout(r,ms));
-
-    // ── Capturar cada sección como "print" de la web ──
-    for(let i=0; i<SECTIONS.length; i++){
-      const S = SECTIONS[i];
-      document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-      const el = byId('sec-'+S.id);
-      if(!el) continue;
-      el.classList.add('on');                                // visible ANTES de renderizar (Chart.js necesita dimensiones)
-      if(wrap){ wrap.style.width='1340px'; wrap.style.maxWidth='1340px'; } // layout de escritorio
-      renderSection(S.id);                                   // asegura charts renderizados
-      await raf();
-      await sleep(450);                                      // reflow + charts
-
-      let canvas;
-      try{
-        canvas = await html2canvas(el, {
-          scale: 2, backgroundColor:'#ffffff', useCORS:true, logging:false,
-          windowWidth: 1400, scrollX: 0, scrollY: -window.scrollY,
-        });
-      }catch(err){ console.error('html2canvas error en', S.id, err); continue; }
-
-      doc.addPage('a4','landscape');
-      // encabezado de sección
-      doc.setFillColor(...T.navyDeep); doc.rect(0,0,W,10,'F');
-      doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...T.gold);
-      doc.text(sanitizePdfText(S.label.toUpperCase()), M, 6.8);
-      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...T.mutedLight);
-      doc.text(sanitizePdfText('Milicia Golf Tour 2026'), W-M, 6.8, {align:'right'});
-
-      // encajar la imagen entera en la hoja
-      const top=13, bottom=H-9;
-      const availW = W-2*M, availH = bottom-top;
-      const ratio = Math.min(availW/canvas.width, availH/canvas.height);
-      const drawW = canvas.width*ratio, drawH = canvas.height*ratio;
-      const dx = (W-drawW)/2, dy = top + (availH-drawH)/2;
-      doc.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', dx, dy, drawW, drawH);
-      footer(S.label+'  -  '+(i+1)+'/'+SECTIONS.length);
-    }
-  } catch(err){
-    console.error('Error generando PDF:', err);
-    alert('Hubo un error generando el PDF. Revisá la consola.');
-  } finally {
-    // ── Restaurar estado del dashboard ──
-    if(wrap){ if(prevWrapStyle===null) wrap.removeAttribute('style'); else wrap.setAttribute('style', prevWrapStyle); }
-    if(window.Chart && Chart.defaults) Chart.defaults.animation = prevAnim;
-    document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-    byId('sec-'+prevSec)?.classList.add('on');
-    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-    if(prevBtn) prevBtn.classList.add('on');
-    if(btn){ btn.disabled=false; btn.style.opacity=''; btn.innerHTML=btnHtml; }
+  // Tabla genérica (sin auto-paginado; los datos caben en una hoja landscape).
+  // cols: [{label,w,align,get:(row,i)=>({text,color,style,size}) | string}]
+  function table(cols, rows, opt={}){
+    const x0 = opt.x!=null?opt.x:M;
+    const rowH = opt.rowH||6.4, headH=opt.headH||6.6;
+    const totalW = cols.reduce((a,c)=>a+c.w,0);
+    const drawHead=()=>{
+      rect(x0,y,totalW,headH,C.navyMid);
+      let x=x0;
+      cols.forEach(c=>{
+        const tx = c.align==='right'?x+c.w-2.5 : c.align==='center'?x+c.w/2 : x+(c.padL||2.8);
+        text(c.label, tx, y+headH-2, C.goldOnNavy, 6, 'bold', c.align);
+        x+=c.w;
+      });
+      y+=headH;
+    };
+    drawHead();
+    rows.forEach((row,i)=>{
+      if(i%2===1) rect(x0,y,totalW,rowH,C.zebra);
+      let x=x0;
+      cols.forEach(c=>{
+        let cell=c.get(row,i);
+        if(cell!=null){
+          const isObj = (typeof cell==='object');
+          const val = isObj?cell.text:cell;
+          const col = isObj&&cell.color?cell.color:C.ink;
+          const st  = isObj&&cell.style?cell.style:'normal';
+          const sz  = isObj&&cell.size?cell.size:7;
+          const tx = c.align==='right'?x+c.w-2.5 : c.align==='center'?x+c.w/2 : x+(c.padL||2.8);
+          text(val, tx, y+rowH-1.9, col, sz, st, c.align);
+        }
+        x+=c.w;
+      });
+      x=x0; cols.forEach(c=>{ if(c.dotTeam){ const t=c.dotTeam(row); if(t) dot(x+2.5, y+rowH/2-0.3, 1.15, teamColor(t)); } x+=c.w; });
+      y+=rowH;
+    });
+    line(x0,y,x0+totalW,y,C.line,0.25);
+    y+=1.5;
   }
+
+  const medalRank = Object.entries(acc.medal).map(([id,v])=>({id,...v})).sort((a,b)=>b.pts-a.pts);
+  const matchRankTeam = team => Object.entries(acc.match).map(([id,v])=>({id,...v}))
+      .filter(m=>PLAYERS.find(p=>p.id===m.id)?.team===team)
+      .sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
+
+  // ── Gross ranking (mejores 7) — misma lógica que la web ──
+  const BEST_N=7;
+  const grossMap={}; PLAYERS.forEach(p=>{grossMap[p.id]={scoresByF:{},scores:[]};});
+  jugadas.filter(f=>f.medal).forEach(f=>{ f.medal.forEach(m=>{ if(grossMap[m.id]&&m.gross){ grossMap[m.id].scoresByF[f.num]=m.gross; grossMap[m.id].scores.push(m.gross);} }); });
+  const grossRank = Object.entries(grossMap).map(([id,v])=>{
+    const sorted=[...v.scores].sort((a,b)=>a-b); const bestN=sorted.slice(0,BEST_N);
+    const avgBestN=bestN.length?+(bestN.reduce((a,b)=>a+b,0)/bestN.length).toFixed(1):null;
+    const avgAll=v.scores.length?+(v.scores.reduce((a,b)=>a+b,0)/v.scores.length).toFixed(1):null;
+    const best=v.scores.length?Math.min(...v.scores):null;
+    return {id, scoresByF:v.scoresByF, avgBestN, avgAll, best, tarjetas:v.scores.length};
+  }).filter(x=>x.avgAll!==null).sort((a,b)=>(a.avgBestN??a.avgAll)-(b.avgBestN??b.avgAll));
+
+  // ════════ PORTADA ════════
+  rect(0,0,W,H,C.navy);
+  rect(0,92,W,1.4,C.gold);
+  text('MILICIA GOLF TOUR', W/2, 78, C.goldOnNavy, 40, 'bold', 'center');
+  text('TEMPORADA 2026', W/2, 104, [222,230,242], 15, 'normal', 'center');
+  text('Resumen ejecutivo  -  Fecha '+latest.num+' ('+(latest.fecha||'')+')  -  '+jugadas.length+' de 10 fechas jugadas', W/2, 118, [150,164,190], 11, 'normal', 'center');
+  text('Generado el '+new Date().toLocaleDateString('es-AR')+'  -  developfb.github.io/MiliciaGolfTour', W/2, 131, [120,134,162], 9, 'normal', 'center');
+  footer('Portada');
+
+  // ════════ OVERVIEW ════════
+  page('OVERVIEW', 'Temporada 2026', 'Overview');
+  // KPIs
+  const leader = medalRank[0]; const lp = PLAYERS.find(p=>p.id===leader.id);
+  const g=acc.teamMatch.g, r=acc.teamMatch.r;
+  const teamLead = g.pts>=r.pts?'GRIS':'ROJO';
+  const teamLeadColor = g.pts>=r.pts?C.gris:C.rojo;
+  const difLead = g.pts>=r.pts?g.dif:r.dif;
+  const prox = fechas.find(f=>f.pendiente);
+  const proxNum = fechas.findIndex(f=>f.pendiente)+1;
+  const kpis=[
+    {l:'Fechas jugadas', v:String(jugadas.length), s:'de 10 en el año', c:C.ink, sz:16},
+    {l:'Líder Medal', v:(lp?lp.name:'—'), s:fmt2(leader.pts)+' pts · '+(lp&&lp.team==='g'?'GRIS':'ROJO'), c:C.ink, sz:9.5},
+    {l:'Equipo líder Match', v:teamLead, s:'+'+fmt2(Math.abs(g.pts-r.pts))+' pts · dif '+(difLead>=0?'+':'')+difLead+' H', c:teamLeadColor, sz:16},
+    {l:'Próxima fecha', v:(prox?prox.fecha:'—'), s:'F'+proxNum, c:C.ink, sz:12},
+    {l:'Jugadores', v:'16', s:'8 Gris · 8 Rojo', c:C.ink, sz:16},
+  ];
+  const kpiW=(W-2*M-4*3)/5;
+  kpis.forEach((k,i)=>{
+    const x=M+i*(kpiW+3);
+    rect(x,y,kpiW,22,C.zebra); rect(x,y,1.4,22,C.gold);
+    text(k.l.toUpperCase(), x+4, y+5.5, C.muted, 5.5, 'bold');
+    text(k.v, x+4, y+13.5, k.c, k.sz, 'bold');
+    text(k.s, x+4, y+19, C.muted, 5.5, 'normal');
+  });
+  y+=27;
+
+  const yTop=y;
+  // Columna izquierda: TOP MEDAL
+  const halfW=(W-2*M-8)/2;
+  blockTitle('TOP MEDAL — ACUMULADO');
+  table([
+    {label:'#', w:9, align:'center', get:(m,i)=>({text:String(i+1), color:i<3?C.gold:C.ink, style:i<3?'bold':'normal'})},
+    {label:'Jugador', w:halfW-9-26-24, align:'left', padL:7, dotTeam:m=>PLAYERS.find(p=>p.id===m.id)?.team, get:m=>({text:(PLAYERS.find(p=>p.id===m.id)?.name||m.id)})},
+    {label:'Puntos', w:26, align:'right', get:m=>({text:fmt2(m.pts), color:C.gold, style:'bold'})},
+    {label:'Fechas', w:24, align:'right', get:m=>({text:String(m.positions.length), color:C.muted})},
+  ], medalRank.slice(0,6), {x:M, rowH:6.2});
+  const yLeftEnd=y;
+
+  // Columna derecha: TOP GROSS
+  y=yTop; const xR=M+halfW+8;
+  const gTitleY=y; rect(xR,y,halfW,7,C.navyMid); text('TOP GROSS — MEJOR PROMEDIO', xR+2.5, y+4.9, C.goldOnNavy, 8, 'bold'); y+=9;
+  table([
+    {label:'#', w:9, align:'center', get:(m,i)=>({text:String(i+1), color:i<3?C.gold:C.ink, style:i<3?'bold':'normal'})},
+    {label:'Jugador', w:halfW-9-24-22, align:'left', padL:7, dotTeam:m=>PLAYERS.find(p=>p.id===m.id)?.team, get:m=>({text:(PLAYERS.find(p=>p.id===m.id)?.name||m.id)})},
+    {label:'Avg', w:24, align:'right', get:m=>({text:fmt2(m.avgAll), color:C.gold, style:'bold'})},
+    {label:'Tarj.', w:22, align:'right', get:m=>({text:String(m.tarjetas), color:C.muted})},
+  ], grossRank.slice(0,6), {x:xR, rowH:6.2});
+  y=Math.max(yLeftEnd, y)+3;
+
+  // Team GRIS vs ROJO
+  blockTitle('MATCH PLAY — EQUIPOS');
+  const boxW=(W-2*M-8)/2;
+  rect(M,y,boxW,20,C.grisBg); rect(M,y,2,20,C.gris);
+  text('GRIS', M+5, y+8, C.gris, 13, 'bold');
+  text(fmt2(g.pts)+' pts', M+boxW-5, y+8, C.ink, 12, 'bold', 'right');
+  text('Diferencial de hoyos: '+(g.dif>0?'+'+g.dif:String(g.dif)), M+5, y+15, C.muted, 7);
+  const xr2=M+boxW+8;
+  rect(xr2,y,boxW,20,C.rojoBg); rect(xr2,y,2,20,C.rojo);
+  text('ROJO', xr2+5, y+8, C.rojo, 13, 'bold');
+  text(fmt2(r.pts)+' pts', xr2+boxW-5, y+8, C.ink, 12, 'bold', 'right');
+  text('Diferencial de hoyos: '+(r.dif>0?'+'+r.dif:String(r.dif)), xr2+5, y+15, C.muted, 7);
+  y+=25;
+
+  // Último comentario
+  const lastC=[...jugadas].reverse().find(f=>f.comentario);
+  if(lastC){
+    blockTitle('ÚLTIMO COMENTARIO — F'+lastC.num);
+    setF(7.5,'italic'); doc.setTextColor(...C.ink);
+    const lines = (typeof wrapTextHard==='function'? wrapTextHard(doc, sanitizePdfText(lastC.comentario), W-2*M-8) : [sanitizePdfText(lastC.comentario)]);
+    lines.slice(0,4).forEach((ln,i)=>{ doc.text(S(ln), M+3, y+4+i*4.6); });
+  }
+
+  // ════════ RANKING MEDAL (por fecha + acumulado) ════════
+  page('RANKING MEDAL — POR FECHA Y ACUMULADO', jugadas.length+' fechas jugadas', 'Ranking Medal');
+  const medalByF={}; PLAYERS.forEach(p=>{ medalByF[p.id]={}; });
+  jugadas.forEach(f=>{ (calcMedalPts(f)||[]).forEach(m=>{ if(!m.esSuplente && medalByF[m.id]) medalByF[m.id][f.num]=m.pts; }); });
+  const medalBest={}; PLAYERS.forEach(p=>{ const vs=Object.values(medalByF[p.id]); medalBest[p.id]=vs.length?Math.max(...vs):null; });
+  const mfcols = jugadas.map(f=>f.num);
+  const mfColW = Math.min(18, 100/Math.max(mfcols.length,1));
+  const mcols=[
+    {label:'#', w:10, align:'center', get:(m,i)=>({text:String(i+1), color:i<3?C.gold:C.ink, style:i<3?'bold':'normal'})},
+    {label:'Jugador', w:62, align:'left', padL:7, dotTeam:m=>PLAYERS.find(p=>p.id===m.id)?.team, get:m=>({text:(PLAYERS.find(p=>p.id===m.id)?.name||m.id)})},
+  ];
+  mfcols.forEach(fn=> mcols.push({label:'F'+fn, w:mfColW, align:'right', get:m=>{ const v=medalByF[m.id][fn]; if(v==null) return {text:'—', color:C.muted}; const isBest=v===medalBest[m.id]&&v>0; return {text:String(v), color:isBest?C.gold:C.ink, style:isBest?'bold':'normal', size:6.9}; }}));
+  mcols.push({label:'Total', w:28, align:'right', get:m=>({text:fmt2(m.pts), color:C.gold, style:'bold', size:8})});
+  mcols.push({label:'Fechas', w:22, align:'right', get:m=>({text:String(m.positions.length), color:C.muted})});
+  const mTotalW=mcols.reduce((a,c)=>a+c.w,0); const mX=Math.max(M,(W-mTotalW)/2);
+  table(mcols, medalRank, {x:mX, rowH:7});
+  text('Puntos Medal por fecha. El dorado marca la mejor fecha de cada jugador. "Total" = acumulado del torneo.', mX, y+3, C.muted, 6, 'italic'); y+=4;
+
+  // ════════ RANKING MATCH ════════
+  page('RANKING MATCH — INDIVIDUAL POR EQUIPO', 'GRIS '+fmt2(g.pts)+' pts  ·  ROJO '+fmt2(r.pts)+' pts', 'Ranking Match');
+  const colW=[10,66,24,20]; const twM=colW.reduce((a,b)=>a+b,0);
+  const gapM=14; const x1=(W-(twM*2+gapM))/2; const x2=x1+twM+gapM;
+  [['g',x1,'⬜ GRIS',C.gris,C.grisBg],['r',x2,'ROJO',C.rojo,C.rojoBg]].forEach(([team,xx,lbl,col,bg])=>{
+    const yStart=y;
+    rect(xx,y,twM,7.5,bg); rect(xx,y,2,7.5,col);
+    text(lbl.replace('⬜ ',''), xx+5, y+5.3, col, 9, 'bold');
+    text('Total: '+fmt2(acc.teamMatch[team].pts)+' pts', xx+twM-3, y+5.3, C.ink, 7.5, 'bold', 'right');
+    y+=9.5;
+    table([
+      {label:'#', w:colW[0], align:'center', get:(m,i)=>({text:String(i+1), color:i<2?C.gold:C.ink, style:i<2?'bold':'normal'})},
+      {label:'Jugador', w:colW[1], align:'left', get:m=>({text:(PLAYERS.find(p=>p.id===m.id)?.name||m.id)})},
+      {label:'Pts', w:colW[2], align:'right', get:m=>({text:fmt2(m.pts), color:C.gold, style:'bold'})},
+      {label:'Dif H', w:colW[3], align:'right', get:m=>{const d=m.difHoyos; return {text:(d>0?'+':'')+d, color:d>0?C.green:d<0?C.rojo:C.muted};}},
+    ], matchRankTeam(team), {x:xx, rowH:6.6});
+    if(team==='g'){ y=yStart; }
+  });
+
+  // ════════ GROSS ════════
+  page('GROSS — RANKING DE PROMEDIO BRUTO', 'Premio a las mejores '+BEST_N+' tarjetas', 'Gross');
+  const fcols = jugadas.map(f=>f.num);
+  const fColW = Math.min(13, (110)/Math.max(fcols.length,1));
+  const gcols=[
+    {label:'#', w:10, align:'center', get:(m,i)=>({text:String(i+1), color:i<3?C.gold:C.ink, style:i<3?'bold':'normal'})},
+    {label:'Jugador', w:60, align:'left', padL:7, dotTeam:m=>PLAYERS.find(p=>p.id===m.id)?.team, get:m=>({text:(PLAYERS.find(p=>p.id===m.id)?.name||m.id)})},
+  ];
+  fcols.forEach(fn=> gcols.push({label:'F'+fn, w:fColW, align:'right', get:m=>{ const s=m.scoresByF[fn]; if(s==null) return {text:'—', color:C.muted}; const isBest=s===m.best; return {text:String(s)+(isBest?'*':''), color:isBest?C.gold:C.ink, style:isBest?'bold':'normal', size:6.8}; }}));
+  gcols.push({label:'Avg*', w:18, align:'right', get:m=>({text:m.avgBestN!=null?fmt2(m.avgBestN):'—', color:C.gold, style:'bold'})});
+  gcols.push({label:'Avg', w:16, align:'right', get:m=>({text:m.avgAll!=null?fmt2(m.avgAll):'—', color:C.muted})});
+  gcols.push({label:'Mejor', w:16, align:'right', get:m=>({text:String(m.best), color:C.green, style:'bold'})});
+  gcols.push({label:'Tarj.', w:13, align:'right', get:m=>({text:String(m.tarjetas), color:C.muted})});
+  gcols.push({label:'Premio', w:30, align:'left', get:m=> m.tarjetas>=BEST_N?{text:'  en carrera', color:C.green, size:6.3}:{text:'  falta '+(BEST_N-m.tarjetas)+' tarj.', color:C.muted, size:6.3}});
+  const gTotalW=gcols.reduce((a,c)=>a+c.w,0); const gX=Math.max(M,(W-gTotalW)/2);
+  table(gcols, grossRank, {x:gX, rowH:6.6});
+  text('* Avg* = promedio de las mejores '+BEST_N+' tarjetas. "Mejor" = mejor gross del año. El asterisco marca la mejor tarjeta.', gX, y+3, C.muted, 6, 'italic'); y+=4;
+
+  // ════════ DETALLE FECHAS (una fecha por página) ════════
+  [...jugadas].reverse().forEach((f, idx)=>{
+    page('DETALLE FECHAS', 'F'+f.num+' de '+jugadas.length+' fechas jugadas', 'Detalle Fechas');
+    const mp=(calcMedalPts(f)||[]).slice().sort((a,b)=>a.pos-b.pos);
+    // header de fecha
+    rect(M,y,W-2*M,7.5,C.navyMid);
+    text('F'+f.num+'   ·   '+(f.fecha||''), M+3, y+5.2, C.goldOnNavy, 8.5, 'bold');
+    text('Cancha: '+(f.cancha||'—')+'    Org: '+(f.organizadores||'—'), W-M-3, y+5.2, C.mutedNavy, 6.5, 'normal', 'right');
+    y+=10;
+    const colLW=150; const colRX=M+colLW+8; const colRW=W-2*M-colLW-8;
+    const medalTopY=y;
+    // ── Medal (columna izquierda) ──
+    rect(M,y,colLW,6,C.navyMid);
+    (function(){ const hs=[['Pos',10,'center'],['Jugador',78,'left'],['HDC',18,'right'],['Neto',20,'right'],['Gross',24,'right']];
+      let x=M; hs.forEach(([l,w,al])=>{ const tx=al==='right'?x+w-2.5:al==='center'?x+w/2:(l==='Jugador'?x+7:x+2.8); text(l,tx,y+4.2,C.goldOnNavy,5.8,'bold',al); x+=w; }); })();
+    y+=6;
+    const medalRowH = mp.length>17 ? 4.6 : 5.1;
+    mp.forEach((m,i)=>{
+      const p=findPlayerOrSuplente(m.id); const nm=(p&&p.name)?p.name:m.id;
+      if(i%2===1) rect(M,y,colLW,medalRowH,C.zebra);
+      const cols=[[String(m.pos),10,'center', m.pos<=3?C.gold:C.ink, m.pos<=3?'bold':'normal', null],
+                  [nm+(m.esSuplente?' *':''),78,'left', m.esSuplente?C.muted:C.ink,'normal', 7],
+                  [String(m.hdcp),18,'right',C.muted,'normal', null],
+                  [String(m.neto),20,'right',C.ink,'bold', null],
+                  [String(m.gross),24,'right',C.muted,'normal', null]];
+      let x=M; cols.forEach(([v,w,al,cc,st,pad])=>{ const tx=al==='right'?x+w-2.5:al==='center'?x+w/2:x+(pad||2.8); text(v,tx,y+medalRowH-1.6,cc,6.5,st,al); x+=w; });
+      const t=PLAYERS.find(pp=>pp.id===m.id)?.team; if(t) dot(M+12.5, y+medalRowH/2-0.2, 1, teamColor(t));
+      y+=medalRowH;
+    });
+    line(M,y,M+colLW,y,C.line,0.25);
+    const medalBottom=y;
+    // ── Matchs (columna derecha) ──
+    y=medalTopY;
+    rect(colRX,y,colRW,6,C.navyMid); text('MATCHS — F'+f.num, colRX+2.8, y+4.2, C.goldOnNavy,5.8,'bold'); y+=7;
+    (f.matchs||[]).forEach(mm=>{
+      const tipo = mm.tipo==='fb'?'2v2':'1v1';
+      const gris=(mm.gris||[]).map(id=>{const pp=findPlayerOrSuplente(id);return pp&&pp.name?pp.name.split(',')[0]:id;}).join(' + ');
+      const rojo=(mm.rojo||[]).map(id=>{const pp=findPlayerOrSuplente(id);return pp&&pp.name?pp.name.split(',')[0]:id;}).join(' + ');
+      const gan=mm.ganador==='g'?'GRIS':mm.ganador==='r'?'ROJO':'EMPATE';
+      const gc=mm.ganador==='g'?C.gris:mm.ganador==='r'?C.rojo:C.muted;
+      text('['+tipo+']', colRX+2, y+3.4, C.muted, 5.8);
+      text(gris+'  vs  '+rojo, colRX+13, y+3.4, C.ink, 6.5);
+      text(gan+(mm.difHoyos?' +'+Math.abs(mm.difHoyos)+'H':''), colRX+colRW-2.5, y+3.4, gc, 6.5, 'bold', 'right');
+      line(colRX,y+4.6,colRX+colRW,y+4.6,C.line,0.15);
+      y+=5.6;
+    });
+    // resultado de equipo de la fecha
+    let gg=0, rr=0; (f.matchs||[]).forEach(mm=>{ if(mm.ganador==='g')gg++; else if(mm.ganador==='r')rr++; else {gg+=0.5;rr+=0.5;} });
+    y+=1; rect(colRX,y,colRW,7,C.zebra);
+    text('Resultado fecha:', colRX+2.5, y+4.6, C.muted, 6.5, 'bold');
+    text('GRIS '+fmt2(gg)+'  -  '+fmt2(rr)+' ROJO', colRX+colRW-2.5, y+4.6, C.ink, 7, 'bold', 'right');
+    y=Math.max(medalBottom,y)+4;
+    // ── Cancha + crónica escrita de la fecha ──
+    if(f.comentario){
+      rect(M,y,W-2*M,6.5,C.navyMid);
+      text('CRÓNICA DE LA FECHA — F'+f.num+'   ·   Cancha: '+(f.cancha||'—'), M+2.5, y+4.5, C.goldOnNavy, 7, 'bold');
+      y+=9;
+      setF(8.5,'normal'); doc.setTextColor(...C.ink);
+      const cl=(typeof wrapTextHard==='function'?wrapTextHard(doc, sanitizePdfText(f.comentario), W-2*M-8):[sanitizePdfText(f.comentario)]);
+      cl.slice(0,16).forEach((ln,i)=>{ doc.text(S(ln), M+3, y+4+i*5); });
+      y+=Math.min(cl.length,16)*5+4;
+    }
+  });
+
+  // ════════ FIXTURE ════════
+  page('FIXTURE 2026', 'Calendario completo de la temporada', 'Fixture');
+  const fxInfo=[
+    [1,'Fourball 2v2','Por HDC (1y2)(3y4)(5y6)(7y8)','Gatto + Zunino'],
+    [2,'Fourball 2v2','100% aleatorio','Gonzalez + Tarasido'],
+    [3,'Individual 1v1','100% aleatorio','Molinario + Dipaola'],
+    [4,'Fourball 2v2','Por posición Medal','Pannullo + Basaldua'],
+    [5,'Fourball 2v2','100% aleatorio','Fernandez + Canónico'],
+    [6,'Individual 1v1','100% aleatorio','Guevara + Vogelius'],
+    [7,'Fourball 2v2','100% aleatorio','Scapparone + Benegas'],
+    [8,'Individual 1v1','Por posición Match','Elizalde + Mendez'],
+    [9,'Fourball 2v2','Match inverso (1v8)(2v7)...','— GIRA —'],
+    [10,'Individual 1v1 FINAL','#1 Gris vs #1 Rojo','— GIRA —'],
+  ];
+  const fxRows = fechas.map(f=>{
+    const info=fxInfo.find(x=>x[0]===f.num)||[];
+    const modalidad = f.pendiente?(info[1]||'—'):(f.matchs&&f.matchs.some(m=>m.tipo==='fb')?'Fourball 2v2':'Individual 1v1');
+    const criterio = info[2]||'—';
+    const org = f.pendiente?(info[3]||'—'):(f.organizadores||'—');
+    return {num:f.num, fecha:f.fecha, modalidad, criterio, org, jugada:!f.pendiente, gira:f.num>=9};
+  });
+  const fxCols=[
+    {label:'F', w:14, align:'center', get:r=>({text:'F'+r.num, color:C.gold, style:'bold'})},
+    {label:'Fecha', w:44, align:'left', get:r=>({text:r.fecha+(r.gira?'  (GIRA)':''), color:r.gira?C.gold:C.ink})},
+    {label:'Modalidad', w:50, align:'left', get:r=>({text:r.modalidad})},
+    {label:'Criterio', w:70, align:'left', get:r=>({text:r.criterio, color:C.muted, size:6.6})},
+    {label:'Organizadores', w:56, align:'left', get:r=>({text:r.org})},
+    {label:'Estado', w:24, align:'center', get:r=> r.jugada?{text:'Jugada', color:C.green, style:'bold', size:6.8}:{text:'Pendiente', color:C.muted, size:6.8}},
+  ];
+  const fxW=fxCols.reduce((a,c)=>a+c.w,0); const fxX=(W-fxW)/2;
+  table(fxCols, fxRows, {x:fxX, rowH:7.4});
 
   doc.save('MGT2026_Resumen_F'+latest.num+'_'+new Date().toISOString().slice(0,10)+'.pdf');
 }
