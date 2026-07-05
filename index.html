@@ -4480,8 +4480,8 @@ function exportConsolidadoPDF() {
     y += 10;
   }
 
-  y += 6;
-  y = checkY(y, 40);
+  // Gross siempre arranca en página nueva (evita que la tabla se corte a la mitad)
+  y = newPage();
   y = sectionHeader('RANKING GROSS — PROMEDIO MEJOR 7 TARJETAS', y);
   y = tableHead([
     ['#', M+3], ['JUGADOR', M+13], ['EQUIPO', M+92], ['TARJETAS', M+130, {align:'right'}], ['PROM.', W-M-2, {align:'right'}]
@@ -4511,16 +4511,18 @@ function exportConsolidadoPDF() {
   y = newPage();
   y = sectionHeader('RANKING MATCH PLAY — ACUMULADO', y);
 
+  // Sección match sobre fondo claro (texto oscuro, filas blancas/gris suave)
+  const ink = T.white; // color de texto principal del tema
   ['g','r'].forEach(team => {
     const teamName = team==='g' ? 'EQUIPO GRIS' : 'EQUIPO ROJO';
-    const tc = team==='g' ? grisC : redL;
+    const tc = team==='g' ? T.gris : red;
     const teamRank = Object.entries(acc.match)
       .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
       .filter(m=>m.p?.team===team)
       .sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
 
     y = checkY(y, 10);
-    fr(M, y, col, 7, team==='g'?[22,35,50]:[40,15,15]);
+    fr(M, y, col, 7, team==='g'?[238,241,246]:[250,238,238]);
     sf(7,'bold',tc); doc.text(teamName, M+4, y+5);
     const tPts = teamRank.reduce((s,m)=>s+m.pts,0);
     const tDif = teamRank.reduce((s,m)=>s+m.difHoyos,0);
@@ -4528,34 +4530,40 @@ function exportConsolidadoPDF() {
     doc.text(tPts + ' pts equipo · Dif: ' + (tDif>=0?'+':'')+tDif, W-M-2, y+5, {align:'right'});
     y += 7;
 
-    y = tableHead([
-      ['#', M+3], ['JUGADOR', M+13], ['PTS', M+100, {align:'right'}], ['DIF.H', M+122, {align:'right'}], ['fechas', W-M-2, {align:'right'}]
-    ], y);
+    // Header claro
+    fr(M, y, col, 7, [246,247,250]);
+    sf(5.5,'bold',muted);
+    doc.text('#', M+3, y+5);
+    doc.text('JUGADOR', M+13, y+5);
+    doc.text('PTS', M+100, y+5, {align:'right'});
+    doc.text('DIF.H', M+122, y+5, {align:'right'});
+    doc.text('fechas', W-M-2, y+5, {align:'right'});
+    y += 7;
 
     teamRank.forEach((m,i) => {
       y = checkY(y, 7);
-      fr(M, y, col, 7, i%2===0?navyM:navyL);
-      const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:mutedL;
-      sf(6,'bold',posC);      doc.text(String(i+1), M+3, y+5);
-      sf(6.5,'normal',white); doc.text(m.p?.name||m.id, M+13, y+5);
-      sf(6.5,'bold',gold);    doc.text(String(m.pts), M+100, y+5, {align:'right'});
-      const difC = m.difHoyos>0?green:m.difHoyos<0?redL:mutedL;
+      fr(M, y, col, 7, i%2===0?[255,255,255]:[244,246,250]);
+      const posC = i===0?goldD:i===1?[140,148,160]:i===2?[170,120,85]:muted;
+      sf(6,'bold',posC);    doc.text(String(i+1), M+3, y+5);
+      sf(6.5,'normal',ink); doc.text(m.p?.name||m.id, M+13, y+5);
+      sf(6.5,'bold',goldD); doc.text(String(m.pts), M+100, y+5, {align:'right'});
+      const difC = m.difHoyos>0?green:m.difHoyos<0?red:muted;
       sf(6,'bold',difC);
       doc.text((m.difHoyos>=0?'+':'')+m.difHoyos, M+122, y+5, {align:'right'});
-      sf(6,'normal',mutedL); doc.text(String(m.fechas||0), W-M-2, y+5, {align:'right'});
+      sf(6,'normal',muted); doc.text(String(m.fechas||0), W-M-2, y+5, {align:'right'});
       y += 7;
     });
 
     // Suplente especial en match
     if(acc.matchSupEspecial && acc.matchSupEspecial.pts > 0) {
       y = checkY(y, 8);
-      fr(M, y, col, 8, [20,17,5]);
+      fr(M, y, col, 8, [250,245,230]);
       doc.setDrawColor(...goldD); doc.setLineWidth(0.3); doc.rect(M,y,col,8,'S');
       sf(5.5,'bold',goldD);  doc.text('★ SUP', M+3, y+5.5);
-      sf(6.5,'normal',gold); doc.text(acc.matchSupEspecial.name, M+13, y+5.5);
-      sf(6.5,'bold',gold);   doc.text(String(acc.matchSupEspecial.pts), M+100, y+5.5, {align:'right'});
+      sf(6.5,'normal',goldD); doc.text(acc.matchSupEspecial.name, M+13, y+5.5);
+      sf(6.5,'bold',goldD);   doc.text(String(acc.matchSupEspecial.pts), M+100, y+5.5, {align:'right'});
       const sd = acc.matchSupEspecial.difHoyos;
-      sf(6,'bold',sd>0?green:sd<0?redL:mutedL);
+      sf(6,'bold',sd>0?green:sd<0?red:muted);
       doc.text((sd>=0?'+':'')+sd, M+122, y+5.5, {align:'right'});
       y += 10;
     }
