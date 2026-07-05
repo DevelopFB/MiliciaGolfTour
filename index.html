@@ -701,7 +701,7 @@ function calcStatsFromScorecard(fecha) {
     });
     if (playerGross > 0) {
       grossSum += playerGross;
-      netoSum += playerGross - (player.hdcp || 0);
+      netoSum += playerGross - Math.min(player.hdcp || 0, 26); // cap del tour
       count++;
     }
   });
@@ -3045,6 +3045,14 @@ function adminPastePreview() {
   // Preserve scorecard from pasted JSON (form can't hold hole-by-hole data)
   _pastedScorecard = (Array.isArray(obj.scorecard) && obj.scorecard.length > 0) ? obj.scorecard : null;
 
+  // Preserve metadata que el formulario no tiene campos para retener (par, cancha, etc.)
+  window._pastedMeta = {
+    par: (Array.isArray(obj.par) && obj.par.length === 18) ? obj.par : null,
+    cancha: obj.cancha || null,
+    organizadores: obj.organizadores || null,
+    fecha: obj.fecha || null
+  };
+
   // Populate the form tab with the JSON data
   // Switch to form tab
   const formBtn = document.getElementById('atab-form');
@@ -3828,14 +3836,20 @@ function adminGenerate() {
     nombre: s.nombre, acumulaPuntos: s.acumulaPuntos
   }));
 
+  // Metadata del JSON pegado (par/cancha/organizadores) tiene prioridad:
+  // el formulario no tiene campos para retenerla y sin `par` las stats caen al par de Fátima.
+  const pm = window._pastedMeta || {};
+  const parFecha = pm.par || ((Array.isArray(f.par) && f.par.length === 18) ? f.par : null);
   const newFecha = {
-    num, fecha:f.fecha, cancha:f.cancha||'CUBA Fátima',
-    organizadores:f.organizadores||'',
+    num, fecha: pm.fecha || f.fecha,
+    cancha: pm.cancha || f.cancha || 'CUBA Fátima',
+    organizadores: pm.organizadores || f.organizadores || '',
     pendiente: false,
     ausentes, suplentes,
     medal, stats, matchs,
     comentario: comentario||''
   };
+  if (parFecha) newFecha.par = parFecha;
   // Include scorecard: from pasted JSON > from existing fecha in memory > nothing
   const sc = _pastedScorecard || (f.scorecard && f.scorecard.length > 0 ? f.scorecard : null);
   if (sc) {
@@ -3845,6 +3859,7 @@ function adminGenerate() {
     if (autoStats) newFecha.stats = autoStats;
   }
   _pastedScorecard = null; // Clear after use
+  window._pastedMeta = null;
 
   window._lastAdminJson  = JSON.stringify(newFecha, null, 2);
   window._lastAdminFecha = newFecha;
