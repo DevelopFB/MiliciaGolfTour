@@ -1968,10 +1968,16 @@ function renderOverview(acc) {
   const totalMatchPts_r = acc.teamMatch.r.pts;
   const leader_medal = Object.entries(acc.medal).sort((a,b)=>b[1].pts-a[1].pts)[0];
   const lp = PLAYERS.find(p=>p.id===leader_medal[0]);
+  // Líder de Match: 1) puntos; 2) desempate por diferencial de hoyos; 3) empate total
+  const _gd = acc.teamMatch.g.dif, _rd = acc.teamMatch.r.dif;
+  let matchLead, matchLeadColor, matchLeadDif, matchLeadVs;
+  if(totalMatchPts_g>totalMatchPts_r || (totalMatchPts_g===totalMatchPts_r && _gd>_rd)) { matchLead='GRIS'; matchLeadColor='var(--gris-color)'; matchLeadDif=_gd; matchLeadVs='Rojo'; }
+  else if(totalMatchPts_r>totalMatchPts_g || (totalMatchPts_r===totalMatchPts_g && _rd>_gd)) { matchLead='ROJO'; matchLeadColor='var(--rojo-light)'; matchLeadDif=_rd; matchLeadVs='Gris'; }
+  else { matchLead='EMPATE'; matchLeadColor='var(--muted)'; matchLeadDif=0; matchLeadVs=''; }
   byId('kpi-row').innerHTML = `
     <div class="card"><div class="kpi-label">fechas Jugadas</div><div class="kpi-val">${played}</div><div class="kpi-sub">de 10 en el año</div></div>
     <div class="card"><div class="kpi-label">Líder Medal</div><div class="kpi-name">${lp?.name.split(',')[1]?.trim()||lp?.name}</div><div class="kpi-sub">${leader_medal[1].pts} pts · ${teamLabel(lp?.team||'g')}</div></div>
-    <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${totalMatchPts_g>=totalMatchPts_r?'var(--gris-color)':'var(--rojo-light)'}">${totalMatchPts_g>=totalMatchPts_r?'GRIS':'ROJO'}</div><div class="kpi-sub">+${fmtPts(Math.abs(totalMatchPts_g-totalMatchPts_r))} vs ${totalMatchPts_g>=totalMatchPts_r?'Rojo':'Gris'} | dif hoyos ${(totalMatchPts_g>=totalMatchPts_r?acc.teamMatch.g.dif:acc.teamMatch.r.dif)>=0?'+':''}${totalMatchPts_g>=totalMatchPts_r?acc.teamMatch.g.dif:acc.teamMatch.r.dif}</div></div>
+    <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${matchLeadColor}">${matchLead}</div><div class="kpi-sub">${matchLead==='EMPATE' ? 'Igualdad total (pts y dif)' : (totalMatchPts_g!==totalMatchPts_r ? ('+'+fmtPts(Math.abs(totalMatchPts_g-totalMatchPts_r))+' vs '+matchLeadVs+' | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif) : ('Igualan en pts | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif))}</div></div>
     <div class="card"><div class="kpi-label">Próxima Fecha</div><div class="kpi-val" style="font-size:1.6rem">${fechas.find(f=>f.pendiente)?.fecha||'—'}</div><div class="kpi-sub">F${fechas.findIndex(f=>f.pendiente)+1}</div></div>
     <div class="card"><div class="kpi-label">Jugadores</div><div class="kpi-val">16</div><div class="kpi-sub">8 Gris · 8 Rojo</div></div>
   `;
