@@ -4030,308 +4030,274 @@ function wrapTextHard(doc, text, maxWidth) {
 }
 
 function exportFechaPDF() {
-  const { jsPDF } = window.jspdf;
-  // Find current fecha
   const activeBtn = document.querySelector('.fnav-btn.on');
   if(!activeBtn) { alert('Seleccioná una fecha primero.'); return; }
   const num = parseInt(activeBtn.dataset.num);
   const f = fechas.find(x=>x.num===num);
   if(!f||f.pendiente) { alert('Esta fecha no tiene datos aún.'); return; }
 
-  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-  const W = 210, margin = 16;
-  let y = margin;
-  const col = W - margin*2;
-
-  // ── helpers ──
-  const T = getThemeRGB();
-  const navy   = T.navyDeep;
-  const gold   = T.gold;
-  const white  = T.onNavy; // text on navy blocks
-  const text   = T.white;
-  const muted  = T.muted;
-  const green  = T.green;
-  const red    = T.rojoLight;
-  const grisC  = T.gris;
-  const soft   = T.navyMid;
-  const soft2  = [238,240,245];
-
-  function setFont(size, style='normal', color=text) {
-    doc.setFontSize(size); doc.setFont('helvetica', style); doc.setTextColor(...color);
-  }
-  function line(color=muted, lw=0.3) {
-    doc.setDrawColor(...color); doc.setLineWidth(lw);
-    doc.line(margin, y, W-margin, y); y+=3;
-  }
-  function fillRect(x,ry,w,h,color) {
-    doc.setFillColor(...color); doc.rect(x,ry,w,h,'F');
-  }
-
-  // ── HEADER ──
-  fillRect(0, 0, W, 28, navy);
-  setFont(18,'bold', gold);
-  doc.text('MILICIA GOLF TOUR 2026', margin, 12);
-  setFont(9,'normal', muted);
-  doc.text(`F${f.num} · ${f.fecha} · ${f.cancha||'CUBA Fátima'}`, margin, 19);
-  setFont(8,'normal', muted);
-  doc.text(`Organizadores: ${f.organizadores||'—'}`, margin, 24);
-  y = 34;
-
-  // ── STATS FILA ──
-  if(f.stats) {
-    const s = f.stats;
-    const statCols = [
-      ['Avg Gross', s.avgGross],['Avg Neto', s.avgNeto],
-      ['Birdies', s.birdies],['Pares', s.pares],
-      ['Bogeys', s.bogeys],['Dobles+', s.dobles],
-    ];
-    const cw = col/statCols.length;
-    statCols.forEach((st,i)=>{
-      const x = margin + i*cw;
-      fillRect(x, y, cw-1, 14, soft);
-      setFont(6,'normal', muted); doc.text(st[0].toUpperCase(), x+cw/2, y+4, {align:'center'});
-      setFont(11,'bold', gold);   doc.text(String(st[1]), x+cw/2, y+11, {align:'center'});
-    });
-    y += 18;
-  }
-
-  // ── MEDAL TABLE ──
-  setFont(8,'bold', gold); doc.text('RESULTADO MEDAL', margin, y); y+=5;
-  line(gold, 0.4);
-
   const medalPts = calcMedalPts(f);
   const medalSorted = [...medalPts].sort((a,b)=>a.pos-b.pos||a.neto-b.neto);
+  const s = f.stats || {};
+  const total = (s.birdies||0)+(s.pares||0)+(s.bogeys||0)+(s.dobles||0)+(s.eagles||0);
 
-  // Header row — columnas: #(8) Jugador(72) Eq(16) HCP(12) Neto(14) Gross(16) Pts(rest)
-  const cEq=margin+80, cHcp=margin+104, cNeto=margin+118, cGross=margin+133, cPts=W-margin-2;
-  fillRect(margin, y, col, 7, soft2);
-  setFont(6,'bold', muted);
-  doc.text('#',      margin+3,  y+5);
-  doc.text('Jugador',margin+12, y+5);
-  doc.text('Eq',     cEq,       y+5);
-  doc.text('HCP',    cHcp,      y+5, {align:'right'});
-  doc.text('Neto',   cNeto,     y+5, {align:'right'});
-  doc.text('Gross',  cGross,    y+5, {align:'right'});
-  doc.text('Pts',    cPts,      y+5, {align:'right'});
-  y += 7;
+  // Podio: top 3 oficiales
+  const top3 = medalSorted.filter(m=>!m.esSuplente).slice(0,3);
+  while(top3.length<3) top3.push(null);
 
-  medalSorted.forEach((m,i)=>{
-    const p = PLAYERS.find(x=>x.id===m.id) || SUPLENTES_CONOCIDOS.find(x=>x.id===m.id);
-    const bg = i%2===0?[255,255,255]:soft;
-    fillRect(margin, y, col, 7, bg);
-    const posColor = m.pos===1?gold:m.pos===2?[176,184,196]:m.pos===3?[160,112,80]:muted;
-    setFont(6,'bold', posColor); doc.text(String(m.pos), margin+3, y+5);
-    // Truncate name to fit 68mm at font 7
-    const rawName = p?.name||m.id;
-    const isSup = m.esSuplente && !m.esOficialEspecial;
-    const displayName = isSup ? rawName + ' *' : rawName;
-    const nameStr = doc.splitTextToSize(displayName, 66)[0]; // max 1 line
-    setFont(7,'normal', m.esOficialEspecial?gold:isSup?[160,140,90]:text);
-    doc.text(nameStr, margin+12, y+5);
-    const teamColor = (p?.team||m.team)==='g'?grisC:red;
-    const teamLabel = (p?.team||m.team)==='g'?'GRIS':'ROJO';
-    setFont(6,'bold', teamColor); doc.text(teamLabel, cEq, y+5);
-    setFont(7,'normal', muted);   doc.text(m.hdcp!=null?String(m.hdcp):'—', cHcp, y+5, {align:'right'});
-    setFont(7,'normal', gold);    doc.text(String(m.neto), cNeto, y+5, {align:'right'});
-    setFont(7,'normal', muted);   doc.text(String(m.gross), cGross, y+5, {align:'right'});
-    const ptsStr = m.esSuplente && !m.esOficialEspecial ? '('+String(m.pts)+')' : String(m.pts);
-    setFont(7,'bold', m.esSuplente?muted:gold); doc.text(ptsStr, cPts, y+5, {align:'right'});
-    y += 7;
-    if(y > 240) { doc.addPage(); fillRect(0,0,W,10,navy); y=16; }
+  // Match summary
+  let gPts=0,rPts=0,gDif=0;
+  (f.matchs||[]).forEach(m=>{
+    const mag = Math.abs(m.difHoyos||0);
+    if(m.ganador==='g'){ gPts+=1; gDif+=mag; }
+    else if(m.ganador==='r'){ rPts+=1; gDif-=mag; }
+    else { gPts+=0.5; rPts+=0.5; }
   });
-  y += 6;
 
-  // ── MATCH TABLE ──
-  if(f.matchs && f.matchs.length) {
-    if(y > 220) { doc.addPage(); fillRect(0,0,W,10,navy); y=16; }
-    setFont(8,'bold', gold); doc.text('MATCHS', margin, y); y+=5;
-    line(gold, 0.4);
+  const nameOf = (id) => {
+    const p = PLAYERS.find(x=>x.id===id);
+    if(p) return p.name;
+    const sup = SUPLENTES_CONOCIDOS.find(x=>x.id===id);
+    if(sup) return sup.name;
+    const supF = (f.suplentes||[]).find(x=>x.id===id);
+    return supF?.name || id;
+  };
 
-    let gPts=0, rPts=0, gDif=0;
-    f.matchs.forEach((m,i)=>{
-      const gw=m.ganador==='g', rw=m.ganador==='r';
-      gPts += gw?1:m.ganador==='empate'?0.5:0;
-      rPts += rw?1:m.ganador==='empate'?0.5:0;
-      gDif += m.difHoyos||0;
-      const bg = i%2===0?[255,255,255]:soft;
-      fillRect(margin, y, col, 8, bg);
+  const podiumHtml = ['gold','silver','bronze'].map((cls, i)=>{
+    const m = top3[i];
+    if(!m) return `<div class="podium-card ${cls}"><div class="pc-pos">${i+1}°</div><div class="pc-name" style="opacity:.4">—</div></div>`;
+    const p = PLAYERS.find(x=>x.id===m.id);
+    return `<div class="podium-card ${cls}">
+      <div class="pc-pos">${i+1}°</div>
+      <div class="pc-name">${p?.name || nameOf(m.id)}</div>
+      <div class="pc-stats">
+        <div>Neto<span>${m.neto}</span></div>
+        <div>Gross<span>${m.gross}</span></div>
+        <div>Hcp<span>${m.hdcp ?? '—'}</span></div>
+      </div>
+    </div>`;
+  }).join('');
 
-      // Resolve names — include suplentes
-      const allKnown = [...PLAYERS, ...SUPLENTES_CONOCIDOS];
-      const getName = id => {
-        const p = allKnown.find(x=>x.id===id);
-        return p ? p.name.split(',')[0] : id;
-      };
-      const gNames = (m.gris||[]).map(getName).join(' + ');
-      const rNames = (m.rojo||[]).map(getName).join(' + ');
-      const tipo = m.tipo==='fb'?'2vs2':'1vs1';
-      const dif = m.difHoyos||0;
-      const difStr = dif>0?'+'+dif:String(dif);
+  const rankRowsHtml = medalSorted.map(m=>{
+    const p = PLAYERS.find(x=>x.id===m.id);
+    const isSup = m.esSuplente;
+    const dot = isSup ? 'sup' : (p?.team === 'g' ? 'g' : 'r');
+    const teamLabel = isSup ? 'SUP' : (p?.team==='g'?'GRIS':'ROJO');
+    const nameDisplay = p?.name || nameOf(m.id);
+    return `<tr class="${isSup?'sup':''}">
+      <td class="pos">${m.pos}°</td>
+      <td><span class="team-dot ${dot}"></span>${nameDisplay}${isSup?' <span class="tag">SUP</span>':''}</td>
+      <td class="r">${m.hdcp ?? '—'}</td>
+      <td class="r">${m.gross}</td>
+      <td class="r"><b>${m.neto}</b></td>
+      <td class="r">${isSup?'('+fmtPts(m.pts)+')':fmtPts(m.pts)}</td>
+    </tr>`;
+  }).join('');
 
-      // Layout: tipo(14) | gNames(54) | vs(8) | rNames(54) | winner(18) | dif(rest)
-      const xTipo=margin+3, xG=margin+18, xVs=margin+74, xR=margin+82, xWin=margin+138, xDif=W-margin-2;
-      setFont(6,'bold', muted);
-      doc.text(tipo, xTipo, y+5);
-      const gNamesT = doc.splitTextToSize(gNames, 54)[0];
-      setFont(6.5,'normal', grisC); doc.text(gNamesT, xG, y+5);
-      setFont(6,'normal', muted); doc.text('vs', xVs, y+5);
-      const rNamesT = doc.splitTextToSize(rNames, 54)[0];
-      setFont(6.5,'normal', red); doc.text(rNamesT, xR, y+5);
-      const winColor = gw?grisC:rw?red:gold;
-      const winText = gw?'GRIS':rw?'ROJO':'EMP';
-      setFont(7,'bold', winColor); doc.text(winText, xWin, y+5, {align:'right'});
-      setFont(7,'bold', dif>0?green:dif<0?red:muted);
-      doc.text(difStr+' H', xDif, y+5, {align:'right'});
-      y += 8;
-      if(y > 260) { doc.addPage(); fillRect(0,0,W,10,navy); y=16; }
-    });
+  const matchRowsHtml = (f.matchs||[]).map(m=>{
+    const gw=m.ganador==='g', rw=m.ganador==='r';
+    const mag = Math.abs(m.difHoyos||0);
+    const gris = (m.gris||[]).map(nameOf).map(n=>n.split(',')[0]).join(' + ');
+    const rojo = (m.rojo||[]).map(nameOf).map(n=>n.split(',')[0]).join(' + ');
+    const winLbl = gw?`G · ${mag}`:rw?`R · ${mag}`:`EMP`;
+    return `<li class="match-row">
+      <div class="mr-g ${gw?'win':rw?'lose':''}">${gris}</div>
+      <div class="mr-mid ${gw?'gris':rw?'rojo':''}">${winLbl}</div>
+      <div class="mr-r ${rw?'win':gw?'lose':''}">${rojo}</div>
+    </li>`;
+  }).join('');
 
-    // Resumen equipo
-    y+=2;
-    fillRect(margin, y, col, 10, soft2);
-    setFont(7,'bold', grisC); doc.text(`GRIS: ${gPts} pts`, margin+8, y+7);
-    setFont(7,'bold', red); doc.text(`ROJO: ${rPts} pts`, margin+60, y+7);
-    setFont(7,'normal', muted); doc.text(`Dif. Hoyos: ${gDif>0?'+':''}${gDif}`, margin+120, y+7);
-    y += 14;
-  }
+  // Stats grid — solo con lo que hay
+  const statBlocks = [
+    ['Avg Gross', s.avgGross ?? '—', false],
+    ['Avg Neto', s.avgNeto ?? '—', true],
+    ['Eagles', s.eagles ?? 0, false],
+    ['Birdies', s.birdies ?? 0, false],
+    ['Pares', s.pares ?? 0, false],
+    ['Bogeys', s.bogeys ?? 0, false],
+    ['Dobles+', s.dobles ?? 0, false],
+  ];
 
-  // ── COMENTARIO ──
-  if(f.comentario) {
-    const clean = sanitizePdfText(f.comentario);
-    setFont(7,'italic', muted);
-
-    const maxWidth = col - 12; // inner padding for safe margins
-    const cLines = wrapTextHard(doc, '•  ' + clean, maxWidth);
-    const cHeight = cLines.length * 5.5 + 10;
-
-    if(y + cHeight > 270) { doc.addPage(); fillRect(0,0,W,10,navy); y=16; }
-
-    // card
-    fillRect(margin, y, col, cHeight, [255,253,248]);
-    doc.setDrawColor(...gold); doc.setLineWidth(0.4);
-    doc.line(margin, y, margin, y + cHeight);
-
-    y += 6;
-    cLines.forEach(l => { doc.text(l, margin + 6, y, {maxWidth}); y += 5.5; });
-    y += 5;
-  }
-
-  // ── RANKINGS HASTA ESTA FECHA ──
-  const accF = buildAccum();
-
-  // helper local
-  function rankSection(title, yy) {
-    if(yy + 12 > 270) { doc.addPage(); fillRect(0,0,W,10,navy); yy=16; }
-    fillRect(margin, yy, col, 8, soft2);
-    setFont(7,'bold',gold); doc.text(title, margin+4, yy+5.5);
-    return yy + 10;
-  }
-  function rankRow(i, name, team, val1, val1Label, val2, val2Label, yy) {
-    if(yy + 7 > 278) { doc.addPage(); fillRect(0,0,W,10,navy); yy=16; }
-    fillRect(margin, yy, col, 7, i%2===0?[255,255,255]:soft);
-    const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:[90,106,125];
-    setFont(5.5,'bold',posC);
-    doc.text(String(i+1), margin+3, yy+5);
-    const nameT = doc.splitTextToSize(name||'', 70)[0];
-    setFont(6.5,'normal',text);
-    doc.text(nameT, margin+13, yy+5);
-    const tc = team==='g'?[180,185,195]:[224,48,48];
-    setFont(5.5,'bold',tc);
-    doc.text(team==='g'?'GRIS':'ROJO', margin+87, yy+5);
-    // val1Label left of val1, both in safe right zone
-    setFont(5.5,'normal',[90,106,125]);
-    doc.text(String(val1Label||''), W-margin-22, yy+5, {align:'right'});
-    setFont(6.5,'bold',gold);
-    doc.text(String(val1), W-margin-2, yy+5, {align:'right'});
-    return yy + 7;
-  }
-
-  // MEDAL ranking
-  y = rankSection('RANKING MEDAL — ACUMULADO AL F' + f.num, y);
-  const mRank = Object.entries(accF.medal)
-    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
-    .sort((a,b)=>b.pts-a.pts);
-  mRank.forEach((m,i) => {
-    y = rankRow(i, m.p?.name||m.id, m.p?.team, m.pts, 'pts', null, null, y);
+  // SVG mini-chart de distribución
+  const catData = [
+    ['Eagle', s.eagles||0, '#2BB673'],
+    ['Birdie', s.birdies||0, '#7FC8E8'],
+    ['Par', s.pares||0, '#8A8E96'],
+    ['Bogey', s.bogeys||0, '#FFC857'],
+    ['Doble+', s.dobles||0, '#E57373'],
+  ];
+  const catTotal = catData.reduce((a,[,v])=>a+v,0) || 1;
+  let chartSvg = '<svg viewBox="0 0 400 60" style="width:100%;height:60px">';
+  let xacc = 0;
+  catData.forEach(([lbl,v,col])=>{
+    const w = (v/catTotal)*400;
+    chartSvg += `<rect x="${xacc}" y="15" width="${w}" height="30" fill="${col}"/>`;
+    if(w>28) chartSvg += `<text x="${xacc+w/2}" y="35" fill="#fff" font-family="DM Sans" font-size="11" font-weight="700" text-anchor="middle">${v}</text>`;
+    xacc += w;
   });
-  if(accF.matchSupEspecial?.medalPts > 0) {
-    if(y+7>278){doc.addPage();fillRect(0,0,W,10,navy);y=16;}
-    fillRect(margin, y, col, 7, [20,17,5]);
-    setFont(5.5,'bold',gold); doc.text('★ SUP', margin+3, y+5);
-    setFont(6.5,'normal',gold); doc.text(accF.matchSupEspecial.name, margin+13, y+5);
-    setFont(6.5,'bold',gold); doc.text('('+accF.matchSupEspecial.medalPts+')', W-margin-2, y+5, {align:'right'});
-    y+=8;
+  chartSvg += '</svg>';
+
+  const html = `<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<title>MGT ${f.fecha} — Fecha ${f.num}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B1F3A;--navy-deep:#06152A;--navy-light:#15315A;
+    --gold:#C5A572;--gold-soft:#E4D4B0;--gold-deep:#9E8052;
+    --paper:#FAF7F1;--ink:#1B2333;--muted:#6B7585;
+    --gris:#5E6B7A;--rojo:#A33C3C;
+    --line:rgba(11,31,58,.10);
   }
-
-  y += 4;
-
-  // MATCH ranking (Gris | Rojo en columnas)
-  y = rankSection('RANKING MATCH — ACUMULADO AL F' + f.num, y);
-  const gMatch = Object.entries(accF.match)
-    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
-    .filter(m=>m.p?.team==='g').sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
-  const rMatch = Object.entries(accF.match)
-    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
-    .filter(m=>m.p?.team==='r').sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
-  const maxRows = Math.max(gMatch.length, rMatch.length);
-  const hw = (col-4)/2;
-  // team headers
-  if(y+7>270){doc.addPage();fillRect(0,0,W,10,navy);y=16;}
-  fillRect(margin, y, hw, 7, soft2);
-  fillRect(margin+hw+4, y, hw, 7, soft2);
-  setFont(6,'bold',[180,185,195]); doc.text('GRIS', margin+hw/2, y+5, {align:'center'});
-  setFont(6,'bold',[255,100,100]); doc.text('ROJO', margin+hw+4+hw/2, y+5, {align:'center'});
-  y += 7;
-  for(let i=0;i<maxRows;i++){
-    if(y+6>278){doc.addPage();fillRect(0,0,W,10,navy);y=16;}
-    const bg = i%2===0?[11,20,32]:[14,24,38];
-    fillRect(margin, y, hw, 6, bg);
-    fillRect(margin+hw+4, y, hw, 6, bg);
-    const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:[90,106,125];
-    if(gMatch[i]) {
-      setFont(5,'bold',posC); doc.text(String(i+1), margin+2, y+4.5);
-      setFont(6,'normal',white); doc.text(gMatch[i].p?.name?.split(',')[0]||'', margin+9, y+4.5);
-      const dg = gMatch[i].difHoyos;
-      setFont(6,'bold',gold); doc.text(fmtPts(gMatch[i].pts), margin+hw-16, y+4.5, {align:'right'});
-      setFont(5.5,'normal',dg>=0?[74,200,110]:[255,100,100]);
-      doc.text((dg>=0?'+':'')+dg, margin+hw-2, y+4.5, {align:'right'});
-    }
-    if(rMatch[i]) {
-      const xr = margin+hw+4;
-      setFont(5,'bold',posC); doc.text(String(i+1), xr+2, y+4.5);
-      setFont(6,'normal',white); doc.text(rMatch[i].p?.name?.split(',')[0]||'', xr+9, y+4.5);
-      const dr = rMatch[i].difHoyos;
-      setFont(6,'bold',gold); doc.text(fmtPts(rMatch[i].pts), xr+hw-16, y+4.5, {align:'right'});
-      setFont(5.5,'normal',dr>=0?[74,200,110]:[255,100,100]);
-      doc.text((dr>=0?'+':'')+dr, xr+hw-2, y+4.5, {align:'right'});
-    }
-    y += 6;
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.5}
+  .page{max-width:1100px;margin:0 auto;padding:36px 48px;background:var(--paper)}
+  .header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:20px;border-bottom:2px solid var(--gold);margin-bottom:28px}
+  .brand{font-family:'Playfair Display',serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:6px}
+  h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;color:var(--navy);line-height:1.05}
+  h1 span{color:var(--gold)}
+  .sub{font-size:13px;color:var(--muted);margin-top:4px;letter-spacing:.03em}
+  .h-right{text-align:right}
+  .h-right .lbl{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted)}
+  .h-right .val{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy);margin-top:2px}
+  .h-right .small{font-size:11px;color:var(--muted);margin-top:2px}
+  .section{margin-bottom:24px}
+  .section-title{font-family:'Playfair Display',serif;font-size:12px;text-transform:uppercase;letter-spacing:.3em;color:var(--gold-deep);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .podium{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px}
+  .podium-card{background:var(--navy);color:#fff;padding:18px 20px;border-radius:2px;position:relative}
+  .podium-card.gold{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-deep) 100%);border-left:4px solid var(--gold)}
+  .podium-card.silver{background:var(--navy-deep);border-left:4px solid #9CA3AF}
+  .podium-card.bronze{background:var(--navy-deep);border-left:4px solid #B87333}
+  .pc-pos{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;line-height:1;color:var(--gold);opacity:.85}
+  .pc-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-top:4px}
+  .pc-stats{display:flex;gap:16px;margin-top:12px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft)}
+  .pc-stats div span{display:block;font-family:'Playfair Display',serif;font-size:20px;color:#fff;font-weight:700;margin-top:1px}
+  .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:24px}
+  .ranking{width:100%;font-size:12px}
+  .ranking th{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;font-weight:500;border-bottom:1px solid var(--line)}
+  .ranking th.r{text-align:right}
+  .ranking td{padding:7px 8px;font-weight:500;border-bottom:1px solid var(--line)}
+  .ranking td.r{text-align:right;font-variant-numeric:tabular-nums}
+  .ranking tr:nth-child(even) td{background:rgba(11,31,58,.02)}
+  .ranking tr.sup td{background:rgba(197,165,114,.10);color:var(--gold-deep);font-style:italic}
+  .ranking .pos{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold-deep);width:34px}
+  .team-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .team-dot.g{background:var(--gris)}
+  .team-dot.r{background:var(--rojo)}
+  .team-dot.sup{background:var(--gold)}
+  .tag{display:inline-block;font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:1px 5px;background:var(--gold-soft);color:var(--gold-deep);border-radius:2px;margin-left:5px;font-weight:600}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+  .stat{background:#fff;border:1px solid var(--line);padding:10px 10px;border-radius:2px}
+  .stat .lbl{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .stat .v{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy);margin-top:4px}
+  .stat.gold{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .stat.gold .lbl{color:var(--gold-soft)}
+  .stat.gold .v{color:var(--gold)}
+  .chart-box{background:#fff;border:1px solid var(--line);padding:12px;border-radius:2px}
+  .chart-legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;font-size:10px;color:var(--muted)}
+  .chart-legend .dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+  .match-summary{background:var(--navy);color:#fff;padding:16px;border-radius:2px}
+  .ms-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+  .ms-row:last-child{border:none}
+  .ms-row .label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-soft)}
+  .ms-row .val{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold)}
+  .match-list{list-style:none;margin-top:8px}
+  .match-row{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;padding:7px 6px;border-bottom:1px solid var(--line);font-size:12px}
+  .mr-g{text-align:right}
+  .mr-g.win,.mr-r.win{font-weight:700;color:var(--navy)}
+  .mr-g.lose,.mr-r.lose{color:var(--muted)}
+  .mr-mid{text-align:center;font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:var(--gold-deep);letter-spacing:.1em}
+  .mr-mid.gris{color:var(--gris)} .mr-mid.rojo{color:var(--rojo)}
+  .narrative{background:#fff;border-left:3px solid var(--gold);padding:14px 18px;font-size:12px;line-height:1.65;color:var(--ink)}
+  .narrative p+p{margin-top:8px}
+  .footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .print-btn{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;border:none;padding:12px 22px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:11px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:100}
+  .print-btn:hover{background:var(--gold-deep)}
+  @media print{
+    body{background:#fff}
+    .page{padding:18px 26px;max-width:none}
+    .no-print{display:none}
+    @page{size:A4;margin:12mm}
   }
+</style></head><body>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="brand">Milicia Golf Tour · 2026</div>
+      <h1>Fecha <span>${String(f.num).padStart(2,'0')}</span></h1>
+      <div class="sub">${f.cancha||'CUBA Fátima'} · Par ${(f.par||PAR).reduce((a,b)=>a+b,0)} · ${(f.matchs||[]).some(m=>m.tipo==='fb')?'Fourball 2v2':'Individual 1v1'}</div>
+    </div>
+    <div class="h-right">
+      <div class="lbl">Fecha</div>
+      <div class="val">${f.fecha}</div>
+      <div class="small">Organizan: ${f.organizadores||'—'}</div>
+    </div>
+  </div>
 
-  y += 4;
+  <div class="section">
+    <div class="section-title">Podio · Medal Play</div>
+    <div class="podium">${podiumHtml}</div>
+  </div>
 
-  // GROSS ranking
-  const grossEntries = Object.entries(accF.gross||{})
-    .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
-    .filter(x=>x.count>=1).sort((a,b)=>a.avg-b.avg);
-  if(grossEntries.length) {
-    y = rankSection('RANKING GROSS — PROMEDIO AL F' + f.num, y);
-    grossEntries.forEach((m,i) => {
-      y = rankRow(i, m.p?.name||m.id, m.p?.team, m.avg, m.count+' tar.', null, null, y);
-    });
-  }
+  <div class="grid-2">
+    <div class="section">
+      <div class="section-title">Ranking del día</div>
+      <table class="ranking">
+        <thead><tr><th>Pos</th><th>Jugador</th><th class="r">Hcp</th><th class="r">Gross</th><th class="r">Neto</th><th class="r">Pts</th></tr></thead>
+        <tbody>${rankRowsHtml}</tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="section-title">Estadísticas del grupo</div>
+      <div class="stats-grid">
+        ${statBlocks.map(([l,v,g])=>`<div class="stat${g?' gold':''}"><div class="lbl">${l}</div><div class="v">${v}</div></div>`).join('')}
+      </div>
+      <div class="chart-box">
+        <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Distribución de scores</div>
+        ${chartSvg}
+        <div class="chart-legend">
+          ${catData.map(([l,,c])=>`<span><span class="dot" style="background:${c}"></span>${l}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
 
-  // ── FOOTER (todas las páginas) ──
-  const totalPages = doc.getNumberOfPages();
-  for(let pg=1; pg<=totalPages; pg++) {
-    doc.setPage(pg);
-    fillRect(0, 291, W, 6, navy);
-    setFont(6,'normal',[40,60,80]);
-    doc.text('Milicia Golf Tour 2026 · F'+f.num+' · '+f.fecha, margin, 295);
-    doc.text('Pág. '+pg+' / '+totalPages, W-margin, 295, {align:'right'});
-  }
+  ${(f.matchs && f.matchs.length) ? `
+  <div class="section">
+    <div class="section-title">Match Play · Gris vs Rojo</div>
+    <div class="grid-2">
+      <div>
+        <ul class="match-list">${matchRowsHtml}</ul>
+      </div>
+      <div class="match-summary">
+        <div class="ms-row"><div class="label">Puntos GRIS</div><div class="val" style="color:#fff">${fmtPts(gPts)}</div></div>
+        <div class="ms-row"><div class="label">Puntos ROJO</div><div class="val" style="color:#fff">${fmtPts(rPts)}</div></div>
+        <div class="ms-row"><div class="label">Dif Hoyos</div><div class="val">${gDif>0?'GRIS +'+gDif:gDif<0?'ROJO +'+Math.abs(gDif):'EMP'}</div></div>
+      </div>
+    </div>
+  </div>` : ''}
 
-  doc.save(`MGT2026_F${f.num}_${f.fecha.replace(/ /g,'_')}.pdf`);
+  ${f.comentario ? `
+  <div class="section">
+    <div class="section-title">Crónica del día</div>
+    <div class="narrative"><p>${f.comentario.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')}</p></div>
+  </div>` : ''}
+
+  <div class="footer">
+    <div>Milicia Golf Tour · 2026 · Fecha ${String(f.num).padStart(2,'0')}</div>
+    <div>${f.cancha||'CUBA Fátima'}</div>
+  </div>
+</div>
+<button class="print-btn no-print" onclick="window.print()">Imprimir / PDF</button>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  if(!w) { alert('Habilitá popups para descargar el PDF.'); return; }
+  w.document.write(html);
+  w.document.close();
+  w.document.title = `MGT_F${f.num}_${f.fecha.replace(/ /g,'_')}`;
+  // Auto-trigger print dialog después de que cargue
+  setTimeout(()=> { try { w.focus(); w.print(); } catch(e){} }, 800);
 }
 
 // ─── EXPORT PDF CONSOLIDADO ───
