@@ -685,8 +685,11 @@ function calcStatsFromScorecard(fecha) {
   fecha.scorecard.forEach(sc => {
     const player = fecha.medal?.find(m => m.id === sc.id);
     if (!player) return;
+    // Acepta tanto `holes` (formato interno) como `hoyos` (JSON del chat); null = sin tarjeta
+    const holes = Array.isArray(sc.holes) ? sc.holes : (Array.isArray(sc.hoyos) ? sc.hoyos : null);
+    if (!holes) return;
     let playerGross = 0;
-    sc.holes.forEach((score, i) => {
+    holes.forEach((score, i) => {
       if (score <= 0) return; // skip invalid
       playerGross += score;
       const diff = score - par[i];
@@ -2724,7 +2727,7 @@ function countShotTypes(scorecard, playersFilter, fechasFilter) {
     (f.scorecard || []).forEach(sc => {
       if (!playersFilter.includes(sc.id)) return;
       if (!byPlayer[sc.id]) byPlayer[sc.id] = {eagles:0,birdies:0,pares:0,bogeys:0,dobles:0};
-      (sc.holes || []).forEach((score, hi) => {
+      (sc.holes || sc.hoyos || []).forEach((score, hi) => {
         if (!score || score <= 0 || hi >= parF.length) return;
         const diff = score - parF[hi];
         const cat = diff <= -2 ? 'eagles' : diff === -1 ? 'birdies' : diff === 0 ? 'pares' : diff === 1 ? 'bogeys' : 'dobles';
@@ -2800,7 +2803,7 @@ function updateStatsCharts() {
     parF.forEach((p, i) => { parSums[i] += p; });
     (f.scorecard || []).forEach(sc => {
       if (!players.includes(sc.id)) return;
-      (sc.holes || []).forEach((score, hi) => {
+      (sc.holes || sc.hoyos || []).forEach((score, hi) => {
         if (score > 0 && hi < 18) { holeAvgs[hi] += score; holeCounts[hi]++; }
       });
     });
@@ -3018,6 +3021,13 @@ function adminPasteValidate() {
     if(!obj.num || !obj.medal || !obj.matchs) {
       status.textContent='⚠ JSON incompleto — falta num, medal o matchs.';
       status.style.color='var(--rojo-light)'; return null;
+    }
+    // Normalizar scorecard: el JSON del chat usa `hoyos`, el formato interno usa `holes`
+    if(Array.isArray(obj.scorecard)) {
+      obj.scorecard = obj.scorecard.map(sc => ({
+        ...sc,
+        holes: Array.isArray(sc.holes) ? sc.holes : (Array.isArray(sc.hoyos) ? sc.hoyos : null)
+      }));
     }
     status.textContent=`✓ JSON válido — F${obj.num} · ${obj.medal.length} jugadores · ${obj.matchs.length} matchs`;
     status.style.color='var(--green)';
