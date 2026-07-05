@@ -4787,7 +4787,9 @@ function exportDashboardSummaryPDF() {
     doc.setFontSize(opts.size||8);
     doc.setTextColor(...(opts.color||T.white));
     doc.setFont('helvetica', opts.style||'normal');
-    doc.text(sanitizePdfText(String(text)), x, yy, opts.align ? {align:opts.align} : undefined);
+    // align acepta string ('right') u objeto ({align:'right'}) — normalizar
+    const alignOpt = typeof opts.align === 'string' ? {align: opts.align} : opts.align;
+    doc.text(sanitizePdfText(String(text)), x, yy, alignOpt || undefined);
   };
 
   // ═══════════════════════════════════════
