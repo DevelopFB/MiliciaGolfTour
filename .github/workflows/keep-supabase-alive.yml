@@ -1,29 +1,14 @@
 name: Keep Supabase Alive
 
+# Milicia Golf Tour ya NO usa Supabase (migrado a JSON del repo, jul-2026).
+# Este workflow solo mantiene despierto el proyecto Portfolio Analyst.
+
 on:
   schedule:
-    - cron: "0 12 * * 3"
+    - cron: "0 12 * * 1,4"
   workflow_dispatch:
 
 jobs:
-
-  ping-milicia:
-    name: Ping — Milicia Golf Tour
-    runs-on: ubuntu-latest
-    steps:
-      - name: Query tabla fechas (Milicia)
-        run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "apikey: ${{ secrets.SUPABASE_KEY_MILICIA }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY_MILICIA }}" \
-            "${{ secrets.SUPABASE_URL_MILICIA }}/rest/v1/fechas?select=num&limit=1")
-          echo "HTTP status: $STATUS"
-          if [ "$STATUS" = "200" ] || [ "$STATUS" = "404" ]; then
-            echo "✅ Milicia Golf Tour — Supabase activo"
-          else
-            echo "⚠️  Respuesta inesperada: $STATUS"
-            exit 1
-          fi
 
   ping-portfolio:
     name: Ping — Portfolio Analyst
@@ -32,9 +17,10 @@ jobs:
       - name: Query tabla properties (Portfolio)
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --retry 4 --retry-delay 20 --retry-all-errors --max-time 30 \
             -H "apikey: ${{ secrets.SUPABASE_KEY_PORTFOLIO }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY_PORTFOLIO }}" \
-            "${{ secrets.SUPABASE_URL_PORTFOLIO }}/rest/v1/properties?select=id&limit=1")
+            "${{ secrets.SUPABASE_URL_PORTFOLIO }}/rest/v1/properties?select=id&limit=1") || STATUS="curl-exit-$?"
           echo "HTTP status: $STATUS"
           if [ "$STATUS" = "200" ] || [ "$STATUS" = "404" ]; then
             echo "✅ Portfolio Analyst — Supabase activo"

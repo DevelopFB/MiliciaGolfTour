@@ -6,7 +6,7 @@
 
 ## 1. QUÉ ES EL PROYECTO
 
-Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (Gris vs Rojo). Datos viven en Supabase + localStorage; archivos Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original para 2016-2025.
+Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (Gris vs Rojo). Los datos viven en **archivos JSON del propio repo** (`data/fechas.json`, `data/fixture.json`, `data/recaudacion.json`, `jugadores_historico.json`) + localStorage como cache; archivos Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original para 2016-2025. **Supabase fue eliminado (jul-2026)** — backup completo en `data/backup-supabase/`.
 
 ### ⚠️ Dos competencias separadas — NO mezclar
 
@@ -242,14 +242,17 @@ Multiplicador F9 = ×1.5, F10 = ×2 (sobre los puntos base).
 
 Cambiar `_version` cada vez que se actualiza para forzar re-sync en clientes.
 
-### Tablas Supabase
+### Archivos de datos del repo (fuente de verdad)
 
-| Tabla | Uso |
+| Archivo | Uso |
 |---|---|
-| `fechas` | scorecard + matchs + medal + recaudación de cada fecha (clave `num`) |
-| `jugadores_historico` | foto + años por jugador (clave `id`) |
-| `fixture` | fecha/modalidad/criterio/organizadores editables (clave `num`) |
-| `recaudacion` | aportes pendientes (legacy, puede integrarse en `fechas`) |
+| `data/fechas.json` | array de fechas jugadas: scorecard + matchs + medal + comentario (clave `num`) |
+| `data/fixture.json` | fecha/modalidad/criterio/organizadores editables (clave `num`) |
+| `data/recaudacion.json` | inscripción + multas por fecha por jugador (clave `id`) |
+| `jugadores_historico.json` | foto + años por jugador, con `_version` |
+| `data/backup-supabase/` | snapshot de las tablas Supabase al momento de la migración (solo histórico) |
+
+**Escritura desde el backoffice**: GitHub Contents API con token fine-grained (solo repo MiliciaGolfTour, permiso Contents RW) guardado en localStorage del navegador del admin (tab Admin → 🔑 Publicación). El guardado es read-modify-write (lee sha + contenido fresco, mergea, publica) y GitHub Pages republica en ~1 min. Sin token, los cambios quedan solo en localStorage.
 
 ---
 
@@ -267,9 +270,14 @@ Cambiar `_version` cada vez que se actualiza para forzar re-sync en clientes.
 - Mapeo de nombres → ID: por apellido + primer nombre. Aliases manuales necesarios para `Julian → miceli`, `Juani Alonso → alfonso`, `Tomi Vigil → vigil`, etc.
 
 ### Web — flujo de datos
-1. Al cargar: fetch `./jugadores_historico.json` del repo → fuente de verdad.
-2. Si `_version` cambió: pisa localStorage + sincroniza a Supabase.
+1. Al cargar: localStorage primero (render rápido), después fetch de `data/*.json` + `jugadores_historico.json` del repo → fuente de verdad, re-render.
+2. Guardar desde backoffice = commit al repo vía GitHub API (requiere token en ese navegador) → Pages republica en ~1 min.
 3. Filtrado en UI: sólo se muestran los 16 oficiales + `gatto_ale`. Históricos no aparecen.
+
+### Multas por ausencia
+- **USD 12 por fecha no jugada**, sin importar el motivo (haya mandado suplente o no). Constante `MULTA_AUSENCIA_USD` en `index.html`.
+- Al aplicar una fecha desde el backoffice, `sugerirMultasFecha()` detecta los oficiales ausentes (sin scorecard/medal ni match) y ofrece cargar la multa en `data/recaudacion.json` con un click. No pisa montos ya cargados.
+- `gatto_ale` no entra en la detección automática (multas manuales si corresponde).
 
 ### Fórmula de pos en Medal (calcMedalPts)
 1. Filtrar suplentes y no-oficiales.
@@ -313,6 +321,7 @@ La idea: cargar fecha = sólo llenar scores por hoyo. Todo lo demás se calcula 
 
 ## 9. HISTORIAL DE DECISIONES IMPORTANTES
 
+- **2026-07-30**: Migración completa de Supabase a JSON del repo (data/fechas.json, data/fixture.json, data/recaudacion.json). Escritura vía GitHub Contents API con token fine-grained en localStorage del admin. Motivo: free tier de Supabase pausaba el proyecto por inactividad; el repo versiona la historia gratis. Backup de las 4 tablas en data/backup-supabase/. Multas por ausencia automatizadas al cargar fecha.
 - **2026-04-14**: Rebuild completo del JSON histórico desde hojas Fecha de cada Excel (2017-2025). 2016 procesado aparte por formato distinto.
 - **2026-04-14**: Confirmado que `(*)` = La Comisión, no invitado. Aliases nuevos: Julian→Miceli, Juani Alonso→Alfonso. Altas: Basaldua Javi, Tomas Vigil.
 - **2026-04-14**: Fixture sincronizado via tabla Supabase `fixture`.

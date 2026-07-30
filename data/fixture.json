@@ -1,0 +1,72 @@
+[
+  {
+    "num": 1,
+    "fecha": "14 Mar 2026",
+    "modalidad": "Fourball 2v2",
+    "criterio": "Por HDC (1y2)(3y4)(5y6)(7y8)",
+    "organizadores": "Gatto + Zunino"
+  },
+  {
+    "num": 2,
+    "fecha": "11 Abr 2026",
+    "modalidad": "Fourball 2v2",
+    "criterio": "100% aleatorio",
+    "organizadores": "Molinario + Dipaola"
+  },
+  {
+    "num": 3,
+    "fecha": "09 May 2026",
+    "modalidad": "Individual 1v1",
+    "criterio": "100% aleatorio",
+    "organizadores": "Gonzalez + Tarasido"
+  },
+  {
+    "num": 4,
+    "fecha": "06 Jun 2026",
+    "modalidad": "Fourball 2v2",
+    "criterio": "Por posición Medal",
+    "organizadores": "Pannullo + Fernandez"
+  },
+  {
+    "num": 5,
+    "fecha": "04 Jul 2026",
+    "modalidad": "Fourball 2v2",
+    "criterio": "100% aleatorio",
+    "organizadores": "Basaldua + Canónico"
+  },
+  {
+    "num": 6,
+    "fecha": "08 Ago 2026",
+    "modalidad": "Individual 1v1",
+    "criterio": "100% aleatorio",
+    "organizadores": "Guevara + Vogelius"
+  },
+  {
+    "num": 7,
+    "fecha": "12 Sep 2026",
+    "modalidad": "Fourball 2v2",
+    "criterio": "100% aleatorio",
+    "organizadores": "Scapparone + Benegas"
+  },
+  {
+    "num": 8,
+    "fecha": "03 Oct 2026",
+    "modalidad": "Individual 1v1",
+    "criterio": "Por posición Match",
+    "organizadores": "Elizalde + Mendez"
+  },
+  {
+    "num": 9,
+    "fecha": "Entre 04 Nov 2026",
+    "modalidad": "Fourball 2v2",
+    "criterio": "Match inverso (1v8)(2v7)...",
+    "organizadores": "GIRA"
+  },
+  {
+    "num": 10,
+    "fecha": "Y 9 Nov 2026",
+    "modalidad": "Individual 1v1 FINAL",
+    "criterio": "#1 Gris vs #1 Rojo",
+    "organizadores": "GIRA"
+  }
+]
