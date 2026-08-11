@@ -3923,6 +3923,7 @@ async function adminResetFechaPending() {
   let remoteOk = true;
   if(idx>=0){
     fechas[idx] = { num: f.num, fecha: f.fecha, pendiente: true };
+    invalidateAccum(); // FIX 2026-08-11: idem adminApply
     persistfechas();
     remoteOk = await deleteFechaRemote(num);
   }
@@ -3958,6 +3959,7 @@ async function adminApply() {
   const idx = fechas.findIndex(x=>x.num===newFecha.num);
   if(idx<0) return;
   fechas[idx] = newFecha;
+  invalidateAccum(); // FIX 2026-08-11: sin esto las cards (getAccum) quedan con el acumulado viejo hasta recargar
   persistfechas();
   const remoteOk = await saveFechaRemote(newFecha);
   rendered = {};
