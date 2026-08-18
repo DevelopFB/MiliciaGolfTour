@@ -1,105 +1,131 @@
-# Prompt — Extracción de Tarjetas (Carga de Fecha)
+# PROMPT_CARGA_FECHA — Procesamiento de una fecha del MGT (v3 — Jul 2026)
 
-**Cómo usarlo**: copiá este prompt completo en un nuevo chat del proyecto "La Milicia", pegá las N tarjetas (screenshots o fotos) en el mismo mensaje, y Claude devolverá los 3 outputs listos para usar.
-
----
-
-## 📋 PROMPT (copiar desde acá ↓)
-
-Antes de responder, leé el archivo `CLAUDE.md` del proyecto para contexto completo (jugadores canónicos, reglas, formato).
-
-Te paso las tarjetas (screenshots / fotos) de **Fecha [N]** del Milicia Golf Tour, jugada el **[DD/MM/AAAA]**. Cancha: **[NOMBRE CANCHA]** (par a confirmar viendo las tarjetas).
-
-Hay [N] jugadores oficiales + [N] suplentes (si aplica).
-
-Extraé de cada tarjeta:
-- Nombre del jugador → mapear al ID canónico de `CLAUDE.md` (formato `"Apellido, Nombre"`).
-- Hdcp del día (el que figura en la tarjeta — antes del cap del tour).
-- Gross total (suma de los 18 hoyos).
-- Neto total.
-- Score por hoyo (18 valores).
-- Par por hoyo (18 valores) — sale de la tarjeta también. Tiene que ser el mismo para todas las tarjetas de esa fecha.
-
-**Reglas obligatorias**:
-- Si ves "Gatto" sin primer nombre, pediime aclaración. Hay 3 Gatto distintos (Mariano = `gatto`, Alejandro = `gatto_ale`, Hector = `hector_gatto`).
-- El gross debe coincidir con la suma de los 18 hoyos. Si no coincide, marcá ⚠️ y mostrá ambos valores.
-- Neto = Gross − Hdcp del día (sin cap todavía). Si tampoco coincide, marcá ⚠️.
-- Hdcp aplicado al tour = `min(hdcp_día, 26)` — esto lo calcula el backoffice, no lo apliques vos.
-- Si un jugador no figura en la lista canónica de `CLAUDE.md`, marcalo como `"_unknown"` y avisame en el resumen.
+**Cómo se usa**: en un chat nuevo del proyecto, pegar el mini-prompt de abajo con los datos de la fecha + las screenshots de las tarjetas (shagolf.com.ar o golf.cuba.org.ar). Claude devuelve los 4 outputs. Diseñado para funcionar desde el teléfono (solo chat, sin Cowork).
 
 ---
 
-## 📤 OUTPUTS — devolveme estos 3 bloques exactos, en este orden
+## 📱 MINI-PROMPT (copiar, completar y pegar con las tarjetas)
 
-### 1. RESUMEN EJECUTIVO
-
-Texto plano corto:
 ```
-Fecha [N] — [DD/MM/AAAA] — [Cancha]
-Par total: [N]
-Jugadores: [N] oficiales [+ N suplentes]
+Fecha [N] MGT — [DD/MM/AAAA] — [Cancha] — [Individual 1v1 / Fourball 2v2]
+Organizadores: [Apellido + Apellido]
+Ausentes: [lista o "ninguno"]
+Suplentes: [Nombre completo, equipo, a quién reemplaza — o "ninguno"]
+Matchs y resultados: [los paso acá o al final]
 
-Top 5 Neto:
-1° [Apellido, Nombre] — Neto [N] (Gross [N] / Hcp [N])
-2° ...
-
-Ganador de fecha: [Apellido, Nombre]   ó   VACANTE (si ganó suplente/no-oficial)
-
-Mejor Gross: [Apellido, Nombre] — [N]
-Eagles: [N]   Birdies: [N]
-Discrepancias: [lista si hubo, sino "ninguna"]
-Tarjetas no reconocidas: [lista si hubo]
+Te adjunto las tarjetas. Seguí PROMPT_CARGA_FECHA.md y devolveme los 4 outputs.
 ```
 
-### 2. JSON PARA BACKOFFICE
+---
 
-Bloque JSON listo para pegar en el campo de admin de la web. Estructura exacta:
+## EXTRACCIÓN (reglas para Claude)
+
+De cada tarjeta:
+
+- Nombre → mapear al ID canónico de `CLAUDE.md`. Display siempre `"Apellido, Nombre"` completo.
+- Hdcp del día (campo HCP de la tarjeta, sin cap ni redondeo).
+- Score por hoyo (18 valores) + par por hoyo (18 valores, igual en todas las tarjetas de la fecha).
+- Gross = suma de los 18 hoyos. Si no coincide con el total impreso → ⚠️ mostrar ambos.
+- Neto = Gross − min(hdcp_día, 26).
+
+Obligatorio:
+
+- "Gatto" sin primer nombre → preguntar (Mariano `gatto` / Alejandro `gatto_ale` / Hector `hector_gatto`).
+- Cancha ≠ CUBA Fátima → leer el par de la tarjeta, NO asumir.
+- Hoyo ilegible → `null` + avisar en discrepancias. No inventar.
+- Jugador que jugó match pero sin tarjeta → incluir en scorecard con `hdcp/hoyos/gross/neto: null`.
+- Jugador ausente → NO incluir en scorecard.
+- Nombre no reconocido → `"_unknown"` + avisar.
+- NO calcular pts medal ni vacante (lo hace el backoffice). NO inventar matchs (los pasa el usuario).
+
+---
+
+## 📤 LOS 4 OUTPUTS (en este orden, siempre)
+
+### 1️⃣ RESUMEN EJECUTIVO (texto plano)
+
+```
+FECHA N — DD-MM-AAAA — CANCHA
+Modalidad · Organizadores · Par total
+Jugadores: N oficiales + N suplentes
+
+🏆 PODIO MEDAL (por neto, con empates)
+🎯 Ganador de fecha: [nombre] ó VACANTE
+🏌️ Mejor Gross / 📈 Peor Gross
+🦅 Stats: eagles, birdies, pares, bogeys, dobles+ · avg gross · avg neto
+⚔️ MATCH PLAY: resultado por match + total Gris vs Rojo + dif hoyos
+📝 Narrativa 3-5 oraciones (rioplatense, nombres completos)
+⚠️ Discrepancias: [lista o "ninguna"]
+```
+
+### 2️⃣ JSON PARA BACKOFFICE
+
+Un solo bloque ```json``` listo para pegar en "📋 Pegar JSON" del backoffice:
 
 ```json
 {
-  "num": 0,
-  "fecha": "DD MMM AAAA",
-  "cancha": "...",
-  "par": [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0],
-  "par_total": 0,
+  "num": 5,
+  "fecha": "04 Jul 2026",
+  "cancha": "CUBA Fátima",
+  "par": [5,3,4,5,4,4,3,4,4, 4,5,4,4,3,4,4,3,5],
+  "organizadores": "Benegas + Guevara",
+  "comentario": "Misma narrativa del resumen.",
+  "medal": [],
   "scorecard": [
-    {
-      "id": "...",
-      "name": "Apellido, Nombre",
-      "hdcp": 0,
-      "hoyos": [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0],
-      "gross": 0,
-      "neto": 0
-    }
+    {"id": "benegas", "hdcp": 21, "hoyos": [6,4,4,6,5,5,3,5,5, 4,6,5,5,4,5,5,4,6], "gross": 91, "neto": 70},
+    {"id": "gonzalez", "hdcp": null, "hoyos": null, "gross": null, "neto": null}
+  ],
+  "suplentes": [
+    {"id": "gatto_ale", "name": "Gatto, Alejandro", "equipo": "g", "reemplaza": "zunino"},
+    {"id": "sup_alfonso", "name": "Alfonso, Juan Ignacio", "equipo": "r", "reemplaza": "scapparone"}
+  ],
+  "matchs": [
+    {"tipo": "ind", "gris": ["benegas"], "rojo": ["elizalde"], "ganador": "r", "difHoyos": 2},
+    {"tipo": "fb", "gris": ["pannullo","benegas"], "rojo": ["molinario","mendez"], "ganador": "g", "difHoyos": 3}
   ]
 }
 ```
 
-- `fecha`: formato `"DD MMM AAAA"` en español ("10 May 2026").
-- `par`: 18 enteros.
-- `hoyos`: 18 enteros por jugador.
-- `hdcp`: el del día, sin redondear ni capear.
-- No incluyas `medal`, `matchs`, `suplentes` ni `comentario` — esos los carga el usuario manualmente en el backoffice.
+Reglas del JSON:
 
-### 3. FILAS PARA EXCEL MASTER
+- `fecha`: `"DD MMM AAAA"` en español. `organizadores`: string `"Apellido + Apellido"`.
+- `medal`: **incluir siempre**, vacío `[]` (el backoffice lo calcula; el validador lo exige presente).
+- `hdcp`: el del día, sin cap. `neto` sí va con cap aplicado (gross − min(hdcp,26)).
+- `suplentes[].id`: `gatto_ale` para el oficial; externos `sup_apellido` (minúsculas, sin acentos). `equipo`/`ganador`: `"g"` / `"r"` (o `"empate"` en ganador).
+- `difHoyos`: entero **positivo** — el campo `ganador` define el signo.
+- Match 2v1 por ausencia → completar la dupla con `"sin_suplente"`.
+- NO incluir `pts_g`, `pts_r`, `stats`, `medal_pos`.
 
-Bloque tabular pegable en la hoja `F[N]` del Excel maestro. 2 filas por jugador (score + diff vs par) más el header. Formato TSV (tab-separated) para pegar directo en Excel:
+### 3️⃣ TSV PARA EXCEL MASTER (excel-first)
 
+Bloque tabular para la hoja `F[N]` del `MGT_2026_Master.xlsx`. **Dos sub-bloques** (para no pisar las columnas de fórmulas U/W/X):
+
+**Bloque A — pegar en `A8` (Jugador → H18, columnas A:T):**
 ```
-Jugador	Hcp	H1	H2	H3	H4	H5	H6	H7	H8	H9	OUT	H10	H11	H12	H13	H14	H15	H16	H17	H18	IN	Gross	Neto
-Par		[par H1]	[par H2]	...			...		[par_out]	...			...		[par_in]	[par_total]
-Apellido, Nombre	[hcp]	[score1]	...		[out]		...		[in]	[gross]	[neto]
-(repetir por jugador)
+Jugador	Equipo	H1	H2	…	H18
+Gatto, Mariano	ROJO	4	3	…	5
+```
+- Orden: los 8 Gris primero, después los 8 Rojo, suplentes al final (mismo orden que hojas F1–F3).
+- Jugador sin tarjeta: fila con nombre y equipo, hoyos vacíos.
+
+**Bloque B — pegar en `V8` (hdcp del día, columna V, mismo orden de filas):**
+```
+21
+11
+…
 ```
 
-(En el Excel master las fórmulas calculan diff vs par automáticamente; el TSV solo necesita scores.)
+- Gross (U), Hdcp aplic (W) y Neto (X) son fórmulas de la hoja: no incluirlos.
+- Si la cancha no es Fátima: agregar una línea aparte con el par por hoyo para pegar en `C6:T6` y el stroke index en `C5:T5`.
+
+### 4️⃣ HTML DEL PDF
+
+`F[N]_PDF_REPORT.html` standalone (styles inline, Playfair Display + DM Sans, paleta navy + dorado): podio, ranking de la fecha, stats, match play, narrativa. 1-2 páginas A4 → abrir en navegador y Cmd/Ctrl+P → PDF.
 
 ---
 
 ## ⚠️ IMPORTANTE
 
-- **No inventes datos.** Si una tarjeta es borrosa o falta un hoyo, marcalo con `null` y avisá en el resumen.
-- **No apliques reglas de tour** (pts medal, vacante, etc.). Eso lo hace el backoffice. Tu único trabajo acá es extraer datos crudos correctamente.
-- **No proceses los matchs.** Los carga el usuario aparte (sabe quién jugó con quién).
-
-(fin del prompt ↑)
+- No inventar datos. Dudas → preguntar antes de generar los outputs.
+- El JSON del output 2 es la **fuente única** para el update del Master el lunes (Cowork lee este JSON y reconstruye la hoja F[N] con fórmulas). Guardarlo.
+- No mezclar Medal (individual) con Match Play (equipos) en el resumen.

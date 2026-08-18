@@ -17,7 +17,7 @@
   },
   {
     "id": "benegas",
-    "nombre": "Benegas, Pancho",
+    "nombre": "Benegas, Francisco",
     "equipo": "g",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -33,7 +33,7 @@
   },
   {
     "id": "canonico",
-    "nombre": "Canonico, Agus",
+    "nombre": "Canónico, Agustín",
     "equipo": "r",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -49,7 +49,7 @@
   },
   {
     "id": "dipaola",
-    "nombre": "Dipaola, Martin",
+    "nombre": "Dipaola, Martín",
     "equipo": "g",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -65,7 +65,7 @@
   },
   {
     "id": "elizalde",
-    "nombre": "Elizalde, Juancho",
+    "nombre": "Elizalde, Juan Pedro",
     "equipo": "r",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -113,7 +113,7 @@
   },
   {
     "id": "gatto_ale",
-    "nombre": "Gatto, Ale",
+    "nombre": "Gatto, Alejandro",
     "equipo": "r",
     "inscripcion": 0.0,
     "f1": 0.0,
@@ -129,7 +129,7 @@
   },
   {
     "id": "gonzalez",
-    "nombre": "Gonzalez, Agus",
+    "nombre": "Gonzalez, Agustín",
     "equipo": "g",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -145,7 +145,7 @@
   },
   {
     "id": "guevara",
-    "nombre": "Guevara, Franki",
+    "nombre": "Guevara, Francisco",
     "equipo": "g",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -161,7 +161,7 @@
   },
   {
     "id": "mendez",
-    "nombre": "Mendez, Pato",
+    "nombre": "Méndez, Gastón",
     "equipo": "r",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -177,7 +177,7 @@
   },
   {
     "id": "molinario",
-    "nombre": "Molinario, Andy",
+    "nombre": "Molinario, Andrés",
     "equipo": "r",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -193,7 +193,7 @@
   },
   {
     "id": "pannullo",
-    "nombre": "Pannullo, Tincho",
+    "nombre": "Pannullo, Martín",
     "equipo": "g",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -209,7 +209,7 @@
   },
   {
     "id": "scapparone",
-    "nombre": "Scapparone, Nico",
+    "nombre": "Scapparone, Nicolás",
     "equipo": "r",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -241,7 +241,7 @@
   },
   {
     "id": "vogelius",
-    "nombre": "Vogelius, Nico",
+    "nombre": "Vogelius, Nicolás",
     "equipo": "r",
     "inscripcion": 40.0,
     "f1": 0.0,
@@ -257,7 +257,7 @@
   },
   {
     "id": "zunino",
-    "nombre": "Zunino, Javi",
+    "nombre": "Zunino, Javier",
     "equipo": "g",
     "inscripcion": 40.0,
     "f1": 0.0,

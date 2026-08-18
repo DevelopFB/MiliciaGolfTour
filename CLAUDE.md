@@ -189,7 +189,7 @@ Multiplicador F9 = ×1.5, F10 = ×2 (sobre los puntos base).
 
 ## 5. ESTRUCTURA DE DATOS
 
-### `fechas[]` (array en index.html, sincronizado con Supabase tabla `fechas`)
+### `fechas[]` (array en index.html, persistido en `data/fechas.json` del repo)
 
 ```js
 {
@@ -261,7 +261,7 @@ Cambiar `_version` cada vez que se actualiza para forzar re-sync en clientes.
 ### IDs internos
 - Minúsculas, sin acentos, sin espacios, formato `apellido` o `apellido_primernombre` si hay ambigüedad.
 - Los 3 Gatto: `gatto` (Mariano), `gatto_ale` (Alejandro), `hector_gatto` (Hector).
-- **Recomendación futura**: migrar a `gatto_mariano` / `gatto_alejandro` / `gatto_hector` para máxima claridad (requiere migración de datos en Supabase y archivos).
+- **Recomendación futura**: migrar a `gatto_mariano` / `gatto_alejandro` / `gatto_hector` para máxima claridad (requiere migración de `data/fechas.json`, `data/recaudacion.json` y `jugadores_historico.json`).
 
 ### Parsing de Excels históricos
 - Las hojas `FechaN` (2017-2025) tienen columnas: `Posición | Nombre | GROSS | HDC | NETO | PUNTOS`.

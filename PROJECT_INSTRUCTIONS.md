@@ -161,8 +161,12 @@ TUS TAREAS PRINCIPALES
    Años: 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025 (no hay 2020).
 
 3) **MEJORAS A LA WEBAPP**.
-   El proyecto es un single-file `index.html` desplegado en GitHub Pages. Datos en Supabase + localStorage.
-   Tablas Supabase relevantes: fechas, jugadores_historico, fixture, recaudacion.
+   El proyecto es un single-file `index.html` desplegado en GitHub Pages.
+   Datos: archivos JSON del propio repo (`data/fechas.json`, `data/fixture.json`,
+   `data/recaudacion.json`, `jugadores_historico.json`) + localStorage como cache de render.
+   Escritura: el backoffice comitea vía GitHub Contents API (token fine-grained, Contents RW,
+   guardado en el localStorage del navegador del admin). Pages republica en ~1 min.
+   Supabase fue eliminado en jul-2026 (backup en `data/backup-supabase/`).
 
 ------------------------------------------------------
 REGLAS DE COMUNICACIÓN
@@ -209,4 +213,4 @@ Cowork usa el mismo set de instrucciones. Mismos pasos. Asegurate que tenga acce
 7. Claude devuelve resumen + JSON + PDF
 8. Volvé al backoffice → click **📥 Pegar JSON de Claude** → pegá el JSON
 9. Revisá el grid, cargá manualmente los matchs y comentario
-10. **Guardar en Dashboard** → sincroniza Supabase
+10. **Guardar en Dashboard** → comitea `data/fechas.json` al repo (Pages republica en ~1 min)

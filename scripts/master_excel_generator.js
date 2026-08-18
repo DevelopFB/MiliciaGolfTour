@@ -376,7 +376,7 @@
     const footRow = 24;
     ws.mergeCells(footRow, 1, footRow, 12);
     const f = ws.getCell(footRow, 1);
-    f.value = 'Generado por MGT Master Excel Generator — datos fuente: index.html / Supabase';
+    f.value = 'Generado por MGT Master Excel Generator — datos fuente: data/*.json del repo MiliciaGolfTour';
     f.font = { italic: true, size: 8, color: { argb: COLOR.grayMid } };
     f.alignment = { horizontal: 'center' };
 

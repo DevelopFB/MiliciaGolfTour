@@ -1667,6 +1667,20 @@ const GH_TOKEN_KEY = 'mgt2026_gh_token';
 const DATA_FECHAS_PATH = 'data/fechas.json';
 const DATA_FIXTURE_PATH = 'data/fixture.json';
 const DATA_REC_PATH = 'data/recaudacion.json';
+
+// ── Control de publicación ──────────────────────────────────────────
+// Registra qué fechas vinieron REALMENTE del repo. Sin esto, una fecha
+// guardada sin token queda solo en localStorage y se ve igual que una
+// publicada (el merge agrega y pisa, pero nunca borra).
+const REPO_FECHA_NUMS = new Set();
+let repoFechasLoadOk = false;
+function fechaSinPublicar(num) {
+  return repoFechasLoadOk && !REPO_FECHA_NUMS.has(num);
+}
+function fechasSinPublicar() {
+  if (!repoFechasLoadOk) return [];
+  return fechas.filter(f => !f.pendiente && !REPO_FECHA_NUMS.has(f.num));
+}
 const DATA_HIST_PATH = 'jugadores_historico.json';
 const ADMIN_PASSWORD = 'lacomision';
 const STORAGE_KEY = 'mgt2026_fechas_v2';
@@ -1829,19 +1843,68 @@ async function loadfechasRemote() {
   sbStatus('loading', 'Cargando datos del torneo...');
   const data = await repoFetchJson(DATA_FECHAS_PATH);
   if (!Array.isArray(data)) {
+    repoFechasLoadOk = false;
     sbStatus('warn', 'No se pudo leer ' + DATA_FECHAS_PATH + ' — mostrando datos locales');
     return false;
   }
   let merged = 0;
+  REPO_FECHA_NUMS.clear();
   data.forEach(payload => {
     if (payload && typeof payload === 'object' && typeof payload.num === 'number') {
       mergeFechaIntoMemory(payload);
+      REPO_FECHA_NUMS.add(payload.num);
       merged++;
     }
   });
+  repoFechasLoadOk = true;
   persistfechas();
   sbStatus('ok', `Datos actualizados — ${merged} fecha(s) cargada(s)`);
+  renderAvisoSinPublicar();
+  try { renderfechasNav(); } catch (e) {}
   return true;
+}
+
+// Banner persistente: hay fechas que existen SOLO en este navegador.
+function renderAvisoSinPublicar() {
+  const faltan = fechasSinPublicar();
+  let el = document.getElementById('aviso-sin-publicar');
+  if (!faltan.length) { if (el) el.remove(); return; }
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'aviso-sin-publicar';
+    el.style.cssText = 'position:sticky;top:0;z-index:9998;background:#3a2c00;border-bottom:2px solid #c9a84c;' +
+      'color:#f0d080;font-family:\'DM Sans\',sans-serif;font-size:0.8rem;padding:10px 16px;' +
+      'display:flex;align-items:center;gap:12px;flex-wrap:wrap;line-height:1.4';
+    document.body.insertBefore(el, document.body.firstChild);
+  }
+  const lista = faltan.map(f => 'F' + f.num).join(', ');
+  el.innerHTML = '<strong>&#9888; Sin publicar:</strong> ' +
+    '<span>' + lista + ' ' + (faltan.length === 1 ? 'existe' : 'existen') +
+    ' solo en este navegador. Si borr&aacute;s los datos del sitio, se ' +
+    (faltan.length === 1 ? 'pierde' : 'pierden') + '.</span>' +
+    '<button id="btn-publicar-pendientes" style="background:#c9a84c;color:#080d18;border:none;' +
+    'border-radius:6px;padding:6px 14px;font-weight:700;cursor:pointer;font-size:0.75rem">Publicar ahora</button>' +
+    '<span id="aviso-sp-status" style="font-family:\'DM Mono\',monospace;font-size:0.72rem"></span>';
+  const btn = document.getElementById('btn-publicar-pendientes');
+  if (btn) btn.onclick = publicarPendientes;
+}
+
+async function publicarPendientes() {
+  const st = document.getElementById('aviso-sp-status');
+  if (typeof ghConfigured === 'function' && !ghConfigured()) {
+    if (st) { st.textContent = 'Falta el token: Admin \u2192 \uD83D\uDD11 Publicaci\u00F3n'; st.style.color = '#e05050'; }
+    return;
+  }
+  if (st) { st.textContent = 'Publicando...'; st.style.color = '#f0d080'; }
+  const ok = await saveAllFechasRemote('data: publicar fechas pendientes desde el aviso');
+  if (ok) {
+    fechasSinPublicar().forEach(f => REPO_FECHA_NUMS.add(f.num));
+    renderAvisoSinPublicar();
+    try { renderfechasNav(); } catch (e) {}
+    if (st) { st.textContent = '\u2713 Publicado'; st.style.color = '#4caf50'; }
+  } else if (st) {
+    st.textContent = '\u26A0 No se pudo publicar'; st.style.color = '#e05050';
+  }
 }
 
 function sbStatus(type, msg) {
@@ -1873,7 +1936,11 @@ async function saveFechaRemote(fechaObj) {
     arr.sort((a, b) => a.num - b.num);
     return arr;
   });
-  if (ok) sbStatus('ok', 'Fecha ' + payload.num + ' publicada — visible para todos en ~1 min');
+  if (ok) {
+    REPO_FECHA_NUMS.add(payload.num);
+    sbStatus('ok', 'Fecha ' + payload.num + ' publicada — visible para todos en ~1 min');
+  }
+  renderAvisoSinPublicar();
   return ok;
 }
 
@@ -2300,7 +2367,8 @@ function renderfechasNav() {
       ${f.pendiente?`onclick="adminTripleClick()" title="Triple-click para cargar datos"`:''}
       ${f.pendiente?'':''}
       data-num="${f.num}"
-    >F${f.num} ${f.pendiente?'·':''}</button>
+      ${(!f.pendiente && fechaSinPublicar(f.num))?'title="Esta fecha existe solo en este navegador — todavía no está publicada" style="border-color:#c9a84c"':''}
+    >F${f.num} ${f.pendiente?'·':''}${(!f.pendiente && fechaSinPublicar(f.num))?' ⚠':''}</button>
   `).join('');
   nav.querySelectorAll('.fnav-btn:not(.pending)').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -6573,7 +6641,7 @@ const _origOpenAdmin = typeof openAdmin === 'function' ? openAdmin : null;
 // ════════════════════════════════════════════════════════════
 const REC_PLAYERS = [
   ...PLAYERS,
-  {id:'gatto_ale',name:'Gatto, Ale',team:'r',hdc:20}
+  {id:'gatto_ale',name:'Gatto, Alejandro',team:'r',hdc:20}
 ];
 let recData = {};
 
