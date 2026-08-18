@@ -1,0 +1,16 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# LibreOffice / Excel
+.~lock.*#
+~$*
+
+# Python
+__pycache__/
+*.pyc
+
+# Nada de credenciales, nunca
+.env
+*.token
+token*.txt

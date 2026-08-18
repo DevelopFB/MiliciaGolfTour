@@ -34,6 +34,9 @@ Sin token, los cambios quedan sólo en el navegador.
   Fuente de verdad de las reglas: leer siempre antes de tocar datos.
 - `PROMPT_CARGA_FECHA.md` — procedimiento de extracción de tarjetas y outputs esperados.
 - `PROJECT_INSTRUCTIONS.md` — instrucciones del agente del torneo.
+- `ESTADO_2026.md` — snapshot acumulado del torneo (medal, match, gross, fixture, hdcp).
+  Se regenera después de CADA fecha y se sube al Project Knowledge.
+- `PROYECTO_CHAT_SETUP.md` — el workflow completo: qué se hace desde el teléfono y qué desde Cowork.
 - `scripts/master_excel_generator.js` — genera el Master XLSX "en vivo" desde el navegador
   (ExcelJS). Complementa a `MGT_2026_Master.xlsx`, el Master curado que se regenera
   off-line después de cada fecha.
