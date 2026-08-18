@@ -1643,6 +1643,10 @@ const esc = s => String(s).replace(/</g,'&lt;');
 const teamLabel = t => t==='g'?'<span class="badge gris">GRIS</span>':'<span class="badge rojo">ROJO</span>';
 const fmtDif = d => d>0?`<span class="diff-pos">+${d}</span>`:d<0?`<span class="diff-neg">${d}</span>`:`<span class="diff-zero">0</span>`;
 const fmtPts = v => typeof v==='number' ? v.toFixed(2).replace('.', ',') : String(v);
+// Puntos de match compactos: decimales solo cuando aportan (3 · 17,5 · 0,25).
+const fmtPtsC = v => typeof v==='number'
+  ? (Number.isInteger(v) ? String(v) : String(parseFloat(v.toFixed(2))).replace('.', ','))
+  : String(v);
 const CHART_BASE = {
   color:'rgba(26,34,51,0.8)',
   plugins:{legend:{labels:{color:'rgba(26,34,51,0.7)',font:{family:'DM Sans',size:11}}}},
@@ -2006,14 +2010,14 @@ function renderMatchTeamSummary(acc) {
     <div class="team-vs">
       <div class="team-box gris">
         <div class="tlabel">⬜ GRIS</div>
-        <div class="tpts">${fmtPts(g.pts)}</div>
+        <div class="tpts">${fmtPtsC(g.pts)}</div>
         <div class="tsub">puntos acumulados de equipo</div>
         <div class="tdif">Dif. Hoyos: ${gDifTxt}</div>
       </div>
       <div class="vs-mid">VS</div>
       <div class="team-box rojo">
         <div class="tlabel">🟥 ROJO</div>
-        <div class="tpts">${fmtPts(r.pts)}</div>
+        <div class="tpts">${fmtPtsC(r.pts)}</div>
         <div class="tsub">puntos acumulados de equipo</div>
         <div class="tdif">Dif. Hoyos: ${rDifTxt}</div>
       </div>
@@ -2068,7 +2072,7 @@ function renderOverview(acc) {
   byId('kpi-row').innerHTML = `
     <div class="card"><div class="kpi-label">fechas Jugadas</div><div class="kpi-val">${played}</div><div class="kpi-sub">de 10 en el año</div></div>
     <div class="card"><div class="kpi-label">Líder Medal</div><div class="kpi-name">${lp?.name.split(',')[1]?.trim()||lp?.name}</div><div class="kpi-sub">${leader_medal[1].pts} pts · ${teamLabel(lp?.team||'g')}</div></div>
-    <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${matchLeadColor}">${matchLead}</div><div class="kpi-sub">${matchLead==='EMPATE' ? 'Igualdad total (pts y dif)' : (totalMatchPts_g!==totalMatchPts_r ? ('+'+fmtPts(Math.abs(totalMatchPts_g-totalMatchPts_r))+' vs '+matchLeadVs+' | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif) : ('Igualan en pts | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif))}</div></div>
+    <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${matchLeadColor}">${matchLead}</div><div class="kpi-sub">${matchLead==='EMPATE' ? 'Igualdad total (pts y dif)' : (totalMatchPts_g!==totalMatchPts_r ? ('+'+fmtPtsC(Math.abs(totalMatchPts_g-totalMatchPts_r))+' pts vs '+matchLeadVs+' | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif) : ('Igualan en pts | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif))}</div></div>
     <div class="card"><div class="kpi-label">Próxima Fecha</div><div class="kpi-val" style="font-size:1.6rem">${fechas.find(f=>f.pendiente)?.fecha||'—'}</div><div class="kpi-sub">F${fechas.findIndex(f=>f.pendiente)+1}</div></div>
     <div class="card"><div class="kpi-label">Jugadores</div><div class="kpi-val">16</div><div class="kpi-sub">8 Gris · 8 Rojo</div></div>
   `;

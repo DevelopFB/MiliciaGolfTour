@@ -4,6 +4,24 @@
 
 ---
 
+## ▶️ PRÓXIMA FECHA — F7 (listo para copiar)
+
+```
+Fecha 7 MGT — 12/09/2026 — CUBA Fátima — Fourball 2v2
+Organizadores: Scapparone + Benegas
+Ausentes: [lista o "ninguno"]
+Suplentes: [Nombre completo, equipo, a quién reemplaza — o "ninguno"]
+Matchs y resultados: [los paso acá o al final]
+
+Te adjunto las tarjetas. Seguí PROMPT_CARGA_FECHA.md y devolveme los 4 outputs.
+```
+
+Contexto que trae la F7: Medal líder Elizalde 1220 · Copa Match Play **Gris 17.5 – Rojo 14.5**
+(tablero: Gris +3 pts, dif hoyos +3) · Fourball 2v2 aleatorio → 4 matchs.
+Par CUBA Fátima `[5,3,4,5,4,4,3,4,4, 4,5,4,4,3,4,4,3,5]` = 72.
+
+---
+
 ## 📱 MINI-PROMPT (copiar, completar y pegar con las tarjetas)
 
 ```
@@ -129,3 +147,28 @@ Gatto, Mariano	ROJO	4	3	…	5
 - No inventar datos. Dudas → preguntar antes de generar los outputs.
 - El JSON del output 2 es la **fuente única** para el update del Master el lunes (Cowork lee este JSON y reconstruye la hoja F[N] con fórmulas). Guardarlo.
 - No mezclar Medal (individual) con Match Play (equipos) en el resumen.
+
+---
+
+## ✅ DESPUÉS DE PEGAR EL JSON — verificar que se publicó
+
+Este paso no es opcional: en la F6 la fecha estuvo 10 días cargada pero sin publicar.
+
+1. Backoffice → **📋 Pegar JSON** → revisar el grid → **Guardar**.
+2. **Refrescar la página.**
+   - Sin banner amarillo → ✅ publicado.
+   - Banner **"⚠ Sin publicar"** → quedó solo en ese navegador. Tocar **"Publicar ahora"**;
+     si pide el token, cargarlo en **Admin → 🔑 Publicación** y repetir.
+3. Si querés estar seguro: abrir la web en **incógnito**. Lo que se ve ahí es lo que está publicado.
+
+> Por qué pasa: sin token, `repoSaveJson` falla y el cambio queda en localStorage. La web mergea
+> lo del repo con lo local y **nunca borra**, así que se ve idéntica a una fecha publicada.
+
+## 📋 Cierre de la fecha
+
+- **Multas**: USD 12 por oficial ausente, con o sin suplente. El que jugó el match pero no entregó
+  tarjeta NO es ausente. Se guardan en `data/recaudacion.json`. La fecha no está cerrada sin esto.
+- **Lunes en Cowork**: *"Actualizá el Master con la FN, el JSON está en el chat de la fecha"* →
+  hoja FN, columnas en Match / Gross_Historial / Medal_Fechas / Medal_Consolidado, Fixture,
+  `ESTADO_2026.md` regenerado y `git push`. Procedimiento completo en
+  `COCKPITS/MGT/core/runbook-fecha.md`.
