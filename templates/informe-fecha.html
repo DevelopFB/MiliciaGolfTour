@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MGT 2026 — Informe de Fecha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MILICIA GOLF TOUR — INFORME DE FECHA
+   Identidad visual congelada. Para cambiar de fecha, reemplazar
+   únicamente el objeto DATA del <script> al final del archivo.
+   ============================================================ */
+
+:root{
+  --navy:#0d1b2e;
+  --navy-soft:#1b2a4a;
+  --gold:#c9a84c;
+  --gold-soft:#f0d080;
+  --gold-bg:#fbf6e8;
+  --paper:#ffffff;
+  --row-alt:#f5f6f8;
+  --ink:#101010;
+  --muted:#6a6e78;
+  --gris-team:#3a4356;
+  --rojo-team:#b33a3a;
+  --rule:#d8dce3;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html{background:#e9ebef}
+
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-weight:300;
+  color:var(--ink);
+  font-size:9.5px;
+  line-height:1.4;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{
+  width:210mm;
+  min-height:297mm;
+  margin:12mm auto;
+  background:var(--paper);
+  box-shadow:0 2px 18px rgba(13,27,46,.18);
+  padding:0 0 3mm 0;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+}
+
+.pad{padding:0 14mm}
+
+/* ---------- HEADER ---------- */
+.header{
+  background:var(--navy);
+  color:#fff;
+  padding:5.5mm 14mm 4mm;
+  margin-bottom:2.6mm;
+}
+.kicker{
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  color:var(--gold);
+  margin-bottom:3px;
+}
+.header h1{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;
+  font-size:20px;
+  line-height:1.1;
+  color:#fff;
+  letter-spacing:.2px;
+}
+.header .meta{
+  margin-top:5px;
+  font-size:8.8px;
+  font-weight:300;
+  color:#c3cad6;
+  letter-spacing:.3px;
+}
+.header .meta span{white-space:nowrap}
+.header .meta .sep{color:var(--gold);padding:0 6px;opacity:.75}
+
+/* ---------- SECCIONES ---------- */
+.section{margin-bottom:1.5mm}
+.section-title{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;
+  font-size:12px;
+  color:var(--navy);
+  padding-bottom:2px;
+  border-bottom:2px solid var(--gold);
+  margin-bottom:1.4mm;
+  letter-spacing:.2px;
+}
+
+/* ---------- PODIO ---------- */
+.podio{display:flex;gap:3mm}
+.podio-card{
+  flex:1;
+  border:1px solid var(--rule);
+  border-top:3px solid var(--navy-soft);
+  padding:2mm 2.8mm 1.8mm;
+  background:var(--paper);
+  min-width:0;
+}
+.podio-card.first{
+  border-top-color:var(--gold);
+  background:var(--gold-bg);
+}
+.podio-pos{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:2px;
+}
+.podio-card.first .podio-pos{color:#9a7f2c}
+.podio-name{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;
+  font-size:11.5px;
+  color:var(--navy);
+  line-height:1.18;
+  margin-bottom:2px;
+  overflow-wrap:break-word;
+}
+.podio-neto{
+  font-family:'DM Mono',monospace;
+  font-size:18px;
+  font-weight:500;
+  line-height:1;
+  color:var(--navy);
+  letter-spacing:-1px;
+}
+.podio-card.first .podio-neto{color:#8a6f22}
+.podio-neto small{
+  font-family:'DM Sans',sans-serif;
+  font-size:8px;
+  font-weight:400;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-left:4px;
+  vertical-align:super;
+}
+.podio-sub{
+  margin-top:2px;
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  color:var(--muted);
+  letter-spacing:.2px;
+}
+
+/* ---------- TABLAS ---------- */
+table{width:100%;border-collapse:collapse;font-size:8.4px;line-height:1.14}
+thead th{
+  background:var(--navy);
+  color:#fff;
+  font-weight:500;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  padding:3px 5px;
+  text-align:left;
+  white-space:nowrap;
+}
+tbody td{
+  padding:1px 5px;
+  border-bottom:1px solid var(--rule);
+  vertical-align:middle;
+}
+tbody tr:nth-child(even){background:var(--row-alt)}
+tbody tr.winner{background:var(--gold-bg);font-weight:600}
+tbody tr.winner td{border-bottom-color:#e3d5a8}
+tbody tr.nocard td{color:var(--muted);font-style:italic}
+.num{
+  font-family:'DM Mono',monospace;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.pos{
+  font-family:'DM Mono',monospace;
+  width:9mm;
+  color:var(--muted);
+  font-weight:500;
+}
+tr.winner .pos{color:#8a6f22}
+.name{font-weight:400}
+tr.winner .name{font-weight:600}
+
+/* ---------- BADGES ---------- */
+.badge{
+  display:inline-block;
+  font-size:7px;
+  font-weight:500;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:0.5px 5.5px;
+  border-radius:9px;
+  color:#fff;
+  white-space:nowrap;
+}
+.badge.g{background:var(--gris-team)}
+.badge.r{background:var(--rojo-team)}
+.badge.e{background:var(--muted)}
+
+/* ---------- KPI BAND ---------- */
+.kpis{display:flex;background:var(--navy);color:#fff}
+.kpi{
+  flex:1;
+  padding:1.45mm 2mm;
+  text-align:center;
+  border-right:1px solid rgba(255,255,255,.11);
+}
+.kpi:last-child{border-right:none}
+.kpi-label{
+  font-size:7.5px;
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:1.4px;
+  color:var(--gold);
+  margin-bottom:3px;
+}
+.kpi-val{
+  font-family:'DM Mono',monospace;
+  font-size:15px;
+  font-weight:500;
+  line-height:1;
+  color:#fff;
+}
+
+/* ---------- EXTREMOS GROSS ---------- */
+.extremos{display:flex;gap:3mm;margin-top:2mm}
+.extremo{
+  flex:1;
+  border:1px solid var(--rule);
+  padding:1.3mm 3mm;
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:4mm;
+}
+.extremo .lbl{
+  font-size:7.5px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--muted);
+  font-weight:500;
+}
+.extremo .who{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;
+  font-size:11px;
+  color:var(--navy);
+  flex:1;
+  margin-left:4mm;
+}
+.extremo .val{
+  font-family:'DM Mono',monospace;
+  font-size:13px;
+  font-weight:500;
+  color:var(--navy);
+}
+
+.detalle{
+  margin-top:1.4mm;
+  font-size:8px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.detalle b{color:var(--navy);font-weight:500}
+.detalle .lbl{
+  display:block;
+  font-size:7.5px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--navy);
+  font-weight:500;
+  margin-bottom:1mm;
+}
+
+/* ---------- MARCADOR MATCH ---------- */
+.marcador{
+  display:flex;
+  background:var(--navy);
+  color:#fff;
+  margin-top:2mm;
+  align-items:stretch;
+}
+.marcador > div{
+  flex:1;
+  padding:1.5mm 3mm;
+  text-align:center;
+}
+.marcador .mid{
+  flex:1.15;
+  background:var(--navy-soft);
+  border-left:1px solid rgba(255,255,255,.12);
+  border-right:1px solid rgba(255,255,255,.12);
+}
+.marcador .m-lbl{
+  font-size:7.5px;
+  text-transform:uppercase;
+  letter-spacing:1.6px;
+  margin-bottom:4px;
+  font-weight:500;
+  color:#b9c2d0;
+}
+.marcador .mid .m-lbl{color:var(--gold)}
+.marcador .m-val{
+  font-family:'DM Mono',monospace;
+  font-size:18px;
+  font-weight:500;
+  line-height:1;
+}
+.marcador .mid .m-val{color:var(--gold-soft)}
+.marcador .m-sub{
+  font-size:7.5px;
+  color:#98a3b4;
+  margin-top:2px;
+  letter-spacing:.6px;
+}
+
+/* ---------- CRÓNICA ---------- */
+.cronica{
+  border-left:3px solid var(--gold);
+  background:var(--row-alt);
+  padding:1.7mm 3mm;
+  text-align:justify;
+  font-size:8.2px;
+  line-height:1.45;
+  color:#23262e;
+  hyphens:auto;
+}
+
+/* ---------- NOTAS ---------- */
+.notas{list-style:none;font-size:8px;color:var(--muted);line-height:1.4}
+.notas li{padding-left:3.6mm;position:relative;margin-bottom:0.6mm}
+.notas li:before{
+  content:"";
+  position:absolute;
+  left:0;top:5px;
+  width:4px;height:4px;
+  background:var(--gold);
+  border-radius:50%;
+}
+.notas b{color:var(--navy);font-weight:500}
+
+/* ---------- FOOTER ---------- */
+.footer{
+  margin-top:auto;
+  padding:2.6mm 14mm 0;
+  text-align:center;
+  font-size:7px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--muted);
+  border-top:1px solid var(--rule);
+  padding-top:1.7mm;
+}
+.footer .next{color:var(--navy);font-weight:500}
+
+/* ---------- PRINT ---------- */
+@page{size:A4 portrait;margin:0}
+@media print{
+  html{background:#fff}
+  .page{
+    width:210mm;min-height:296mm;margin:0;box-shadow:none;
+    page-break-after:always;
+  }
+  .page:last-child{page-break-after:auto}
+  .section,.podio,.marcador,table{page-break-inside:avoid}
+  thead{display:table-header-group}
+  tbody tr.winner,.kpis,.marcador,.header{
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+/* ================================================================
+   DATA — ÚNICO BLOQUE A REEMPLAZAR CADA FECHA
+   ================================================================ */
+const DATA = {
+  meta: {
+    kicker: "Milicia Golf Tour · Temporada 2026",
+    num: 6,
+    titulo: "Fecha 6 — 8 de agosto de 2026",
+    cancha: "CUBA Fátima",
+    parTotal: 72,
+    modalidad: "Individual 1v1",
+    organizadores: "Guevara, Francisco + Vogelius, Nicolás",
+    jugadores: 16,
+    tarjetas: 13
+  },
+
+  // Ranking de la fecha. pos ya calculada (empates comparten pos).
+  // gross/hcp/neto en null => jugó el match pero no entregó tarjeta.
+  ranking: [
+    { pos: 1,  id:"benegas",    name:"Benegas, Francisco",   team:"g", gross:92,  hcp:23, neto:69 },
+    { pos: 2,  id:"elizalde",   name:"Elizalde, Juan Pedro", team:"r", gross:89,  hcp:14, neto:75 },
+    { pos: 3,  id:"gonzalez",   name:"Gonzalez, Agustín",    team:"g", gross:83,  hcp:7,  neto:76 },
+    { pos: 3,  id:"guevara",    name:"Guevara, Francisco",   team:"g", gross:96,  hcp:20, neto:76 },
+    { pos: 3,  id:"mendez",     name:"Méndez, Gastón",       team:"r", gross:92,  hcp:16, neto:76 },
+    { pos: 6,  id:"tarasido",   name:"Tarasido, Gonzalo",    team:"g", gross:89,  hcp:12, neto:77 },
+    { pos: 7,  id:"vogelius",   name:"Vogelius, Nicolás",    team:"r", gross:93,  hcp:15, neto:78 },
+    { pos: 8,  id:"pannullo",   name:"Pannullo, Martín",     team:"g", gross:96,  hcp:17, neto:79 },
+    { pos: 8,  id:"canonico",   name:"Canónico, Agustín",    team:"r", gross:95,  hcp:16, neto:79 },
+    { pos:10,  id:"molinario",  name:"Molinario, Andrés",    team:"r", gross:97,  hcp:17, neto:80 },
+    { pos:10,  id:"fernandez",  name:"Fernandez, Lucas",     team:"r", gross:99,  hcp:19, neto:80 },
+    { pos:12,  id:"basaldua",   name:"Basaldua, Ignacio",    team:"g", gross:99,  hcp:17, neto:82 },
+    { pos:13,  id:"dipaola",    name:"Dipaola, Martín",      team:"g", gross:109, hcp:26, neto:83 },
+    { pos:null,id:"zunino",     name:"Zunino, Javier",       team:"g", gross:null,hcp:null,neto:null },
+    { pos:null,id:"gatto",      name:"Gatto, Mariano",       team:"r", gross:null,hcp:null,neto:null },
+    { pos:null,id:"scapparone", name:"Scapparone, Nicolás",  team:"r", gross:null,hcp:null,neto:null }
+  ],
+
+  stats: {
+    eagles:0, birdies:3, pares:57, bogeys:99, dobles:75,
+    avgGross:94.5, avgNeto:77.7,
+    mejorGross:{ name:"Gonzalez, Agustín", val:83 },
+    peorGross: { name:"Dipaola, Martín",   val:109 },
+    // Detalle de birdies: hoyo, par del hoyo, golpes.
+    birdiesDetalle: [
+      { name:"Benegas, Francisco",  hoyo:7,  par:3, golpes:2 },
+      { name:"Tarasido, Gonzalo",   hoyo:6,  par:4, golpes:3 },
+      { name:"Vogelius, Nicolás",   hoyo:13, par:4, golpes:3 }
+    ]
+  },
+
+  // Cruces del match play. difHoyos siempre POSITIVO; `ganador` define el lado.
+  // TODO: completar por fecha — los horarios de salida no vienen en el JSON del backoffice.
+  matchs: [
+    { hora:"09:00", tipo:"ind", gris:["Gonzalez, Agustín"],  rojo:["Fernandez, Lucas"],     ganador:"g",      difHoyos:5 },
+    { hora:"09:00", tipo:"ind", gris:["Benegas, Francisco"], rojo:["Vogelius, Nicolás"],    ganador:"g",      difHoyos:7 },
+    { hora:"09:10", tipo:"ind", gris:["Tarasido, Gonzalo"],  rojo:["Molinario, Andrés"],    ganador:"r",      difHoyos:3 },
+    { hora:"09:10", tipo:"ind", gris:["Basaldua, Ignacio"],  rojo:["Méndez, Gastón"],       ganador:"r",      difHoyos:3 },
+    { hora:"09:20", tipo:"ind", gris:["Dipaola, Martín"],    rojo:["Elizalde, Juan Pedro"], ganador:"empate", difHoyos:0 },
+    { hora:"09:20", tipo:"ind", gris:["Guevara, Francisco"], rojo:["Scapparone, Nicolás"],  ganador:"g",      difHoyos:3 },
+    { hora:"09:30", tipo:"ind", gris:["Zunino, Javier"],     rojo:["Gatto, Mariano"],       ganador:"g",      difHoyos:2 },
+    { hora:"09:30", tipo:"ind", gris:["Pannullo, Martín"],   rojo:["Canónico, Agustín"],    ganador:"g",      difHoyos:4 }
+  ],
+
+  // Marcador de la fecha. difHoyos con signo: + = a favor del Gris.
+  marcador: { ptsG:5.5, ptsR:2.5, difHoyos:15 },
+
+  cronica: "Fecha 6 en Fátima con día de scoring alto: promedio gross de 94,5 y apenas tres birdies en trece tarjetas. Benegas, Francisco firmó 92 gross para un neto de 69 y se quedó con la fecha por seis golpes de diferencia sobre Elizalde, Juan Pedro. Gonzalez, Agustín fue el mejor gross con 83 y comparte el tercer escalón del neto con Guevara, Francisco y Méndez, Gastón, los tres en 76. En el match play el Gris hizo la fecha redonda: se llevó cinco de los ocho cruces, empató el de Dipaola, Martín con Elizalde, Juan Pedro y cerró 5,5 a 2,5 con quince hoyos de ventaja neta. Zunino, Javier, Gatto, Mariano y Scapparone, Nicolás jugaron sus matchs pero no presentaron tarjeta, así que no suman en el medal.",
+
+  notas: [
+    "Los <b>16 oficiales</b> estuvieron presentes: no hubo suplentes ni multas por ausencia en esta fecha.",
+    "<b>Zunino, Javier</b>, <b>Gatto, Mariano</b> y <b>Scapparone, Nicolás</b> jugaron su match pero no entregaron tarjeta. No suman en el medal y <b>no son ausentes</b>: no pagan multa.",
+    "Con esta fecha el <b>Gris pasa al frente por primera vez en el año</b> en la Copa Match Play: 17,5 a 14,5.",
+    "Día duro de scoring: 3 birdies y ningún eagle en 234 hoyos jugados; los dobles o peor fueron el 32% de las cifras."
+  ],
+
+  // Aviso de control: se muestra sólo si la lista tiene elementos.
+  discrepancias: [
+    "La crónica original decía «catorce hoyos de ventaja»; el cómputo de los ocho cruces da <b>+15</b>. Se corrigió el texto."
+  ],
+
+  proxima: "Próxima fecha — F7 · 12 de septiembre de 2026 · CUBA Fátima · Fourball 2v2 · Organizan Scapparone, Nicolás + Benegas, Francisco"
+};
+
+/* ================================================================
+   RENDER — no debería hacer falta tocar nada de acá para abajo
+   ================================================================ */
+const TEAM_LABEL = { g:"Gris", r:"Rojo", empate:"Empate" };
+
+// Formato es-AR: miles con punto, decimales con coma.
+// Decimales sólo cuando aportan (500 -> "500"; 5.5 -> "5,5"; 156.67 -> "156,67").
+function nf(n, max = 2, min = 0){
+  if (n === null || n === undefined || Number.isNaN(n)) return "—";
+  return Number(n).toLocaleString("es-AR", {
+    minimumFractionDigits: min,
+    maximumFractionDigits: max
+  });
+}
+function signed(n, max = 2){
+  if (n === null || n === undefined) return "—";
+  const s = n > 0 ? "+" : (n < 0 ? "−" : "");
+  return s + nf(Math.abs(n), max);
+}
+function badge(team){
+  return `<span class="badge ${team}">${TEAM_LABEL[team] || team}</span>`;
+}
+const el = (html) => html;
+
+function renderHeader(m){
+  return `
+  <div class="header">
+    <div class="kicker">${m.kicker}</div>
+    <h1>${m.titulo}</h1>
+    <div class="meta">
+      <span>${m.cancha} · Par ${nf(m.parTotal)}</span><span class="sep">|</span>
+      <span>${m.modalidad}</span><span class="sep">|</span>
+      <span>Organizan ${m.organizadores}</span><span class="sep">|</span>
+      <span>${nf(m.jugadores)} jugadores · ${nf(m.tarjetas)} tarjetas</span>
+    </div>
+  </div>`;
+}
+
+function renderPodio(ranking){
+  // Podio = posiciones 1, 2 y 3. Si el 3° está empatado, se muestran todos.
+  const podio = ranking.filter(r => r.pos !== null && r.pos <= 3);
+  const cards = podio.map(r => `
+    <div class="podio-card${r.pos === 1 ? " first" : ""}">
+      <div class="podio-pos">${r.pos}° puesto</div>
+      <div class="podio-name">${r.name}</div>
+      <div class="podio-neto">${nf(r.neto)}<small>neto</small></div>
+      <div class="podio-sub">Gross ${nf(r.gross)} · Hcp ${nf(r.hcp)}</div>
+    </div>`).join("");
+  return `
+  <div class="section pad">
+    <div class="section-title">Podio Medal</div>
+    <div class="podio">${cards}</div>
+  </div>`;
+}
+
+function renderRanking(ranking){
+  const conTarjeta = ranking.filter(r => r.neto !== null);
+  const sinTarjeta = ranking.filter(r => r.neto === null);
+  const filas = conTarjeta.map(r => `
+    <tr class="${r.pos === 1 ? "winner" : ""}">
+      <td class="pos">${r.pos}°</td>
+      <td class="name">${r.name}</td>
+      <td>${badge(r.team)}</td>
+      <td class="num">${nf(r.gross)}</td>
+      <td class="num">${nf(r.hcp)}</td>
+      <td class="num">${nf(r.neto)}</td>
+    </tr>`).join("");
+  const filasSin = sinTarjeta.map(r => `
+    <tr class="nocard">
+      <td class="pos">—</td>
+      <td class="name">${r.name}</td>
+      <td>${badge(r.team)}</td>
+      <td colspan="3" style="color:var(--muted)">Sin tarjeta · jugó match</td>
+    </tr>`).join("");
+  return `
+  <div class="section pad">
+    <div class="section-title">Ranking de la fecha</div>
+    <table>
+      <thead><tr>
+        <th>Pos</th><th>Jugador</th><th>Equipo</th>
+        <th style="text-align:right">Gross</th>
+        <th style="text-align:right">Hcp</th>
+        <th style="text-align:right">Neto</th>
+      </tr></thead>
+      <tbody>${filas}${filasSin}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderStats(s){
+  const kpis = [
+    ["Birdies",  nf(s.birdies)],
+    ["Pares",    nf(s.pares)],
+    ["Bogeys",   nf(s.bogeys)],
+    ["Dobles +", nf(s.dobles)],
+    ["Avg Gross",nf(s.avgGross, 1, 1)],
+    ["Avg Neto", nf(s.avgNeto, 1, 1)]
+  ].map(([l, v]) => `<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-val">${v}</div></div>`).join("");
+
+  const birdies = s.birdiesDetalle.length
+    ? s.birdiesDetalle.map(b => `<b>${b.name}</b> — hoyo ${nf(b.hoyo)} (par ${nf(b.par)}, ${nf(b.golpes)} golpes)`).join(" · ")
+    : "Sin birdies en la fecha.";
+
+  return `
+  <div class="section pad">
+    <div class="section-title">Estadísticas del día</div>
+    <div class="kpis">${kpis}</div>
+    <div class="extremos">
+      <div class="extremo">
+        <span class="lbl">Mejor gross</span>
+        <span class="who">${s.mejorGross.name}</span>
+        <span class="val">${nf(s.mejorGross.val)}</span>
+      </div>
+      <div class="extremo">
+        <span class="lbl">Peor gross</span>
+        <span class="who">${s.peorGross.name}</span>
+        <span class="val">${nf(s.peorGross.val)}</span>
+      </div>
+    </div>
+    <div class="detalle">
+      <span class="lbl">Detalle de birdies</span>
+      ${birdies}
+    </div>
+  </div>`;
+}
+
+function renderMatch(matchs, marc){
+  const filas = matchs.map((m, i) => {
+    const gan = m.ganador === "empate" ? "Empate" : TEAM_LABEL[m.ganador];
+    return `
+    <tr>
+      <td class="pos">${i + 1}</td>
+      <td class="num" style="text-align:left">${m.hora}</td>
+      <td class="name">${m.gris.join(" + ")}</td>
+      <td style="text-align:center;color:var(--muted);font-size:8px;letter-spacing:1px">VS</td>
+      <td class="name">${m.rojo.join(" + ")}</td>
+      <td>${m.ganador === "empate" ? `<span class="badge e">Empate</span>` : badge(m.ganador)}</td>
+      <td class="num">${m.difHoyos === 0 ? "—" : nf(m.difHoyos)}</td>
+    </tr>`;
+  }).join("");
+
+  const favor = marc.difHoyos > 0 ? "Gris" : (marc.difHoyos < 0 ? "Rojo" : "Igualados");
+  return `
+  <div class="section pad">
+    <div class="section-title">Copa Match Play</div>
+    <table>
+      <thead><tr>
+        <th>#</th><th>Hora</th><th>Gris</th><th></th><th>Rojo</th><th>Ganador</th>
+        <th style="text-align:right">Dif. hoyos</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    <div class="marcador">
+      <div>
+        <div class="m-lbl">Gris</div>
+        <div class="m-val">${nf(marc.ptsG)}</div>
+        <div class="m-sub">puntos de la fecha</div>
+      </div>
+      <div class="mid">
+        <div class="m-lbl">Hoyos a favor</div>
+        <div class="m-val">${signed(marc.difHoyos, 0)}</div>
+        <div class="m-sub">${favor === "Igualados" ? "sin ventaja" : "ventaja del " + favor}</div>
+      </div>
+      <div>
+        <div class="m-lbl">Rojo</div>
+        <div class="m-val">${nf(marc.ptsR)}</div>
+        <div class="m-sub">puntos de la fecha</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCronica(texto){
+  return `
+  <div class="section pad">
+    <div class="section-title">La crónica</div>
+    <div class="cronica">${texto}</div>
+  </div>`;
+}
+
+function renderNotas(notas, discrepancias){
+  const items = notas.map(n => `<li>${n}</li>`).join("");
+  const disc = (discrepancias && discrepancias.length)
+    ? `<li><b>Discrepancia detectada.</b> ${discrepancias.join(" ")}</li>`
+    : "";
+  return `
+  <div class="section pad">
+    <div class="section-title">Notas y observaciones</div>
+    <ul class="notas">${items}${disc}</ul>
+  </div>`;
+}
+
+function renderFooter(m, proxima){
+  return `
+  <div class="footer">
+    <div class="next">${proxima}</div>
+    <div style="margin-top:1.2mm">Milicia Golf Tour · Temporada 2026 · Informe de la Fecha ${nf(m.num)}</div>
+  </div>`;
+}
+
+function render(D){
+  document.getElementById("root").innerHTML = `
+  <div class="page">
+    ${renderHeader(D.meta)}
+    ${renderPodio(D.ranking)}
+    ${renderRanking(D.ranking)}
+    ${renderStats(D.stats)}
+    ${renderMatch(D.matchs, D.marcador)}
+    ${renderCronica(D.cronica)}
+    ${renderNotas(D.notas, D.discrepancias)}
+    ${renderFooter(D.meta, D.proxima)}
+  </div>`;
+  document.title = `MGT 2026 — ${D.meta.titulo}`;
+}
+
+render(DATA);
+</script>
+</body>
+</html>

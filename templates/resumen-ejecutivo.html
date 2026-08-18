@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MGT 2026 — Resumen Ejecutivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MILICIA GOLF TOUR — RESUMEN EJECUTIVO (3 páginas A4)
+   Identidad visual congelada. Para actualizar, reemplazar
+   únicamente el objeto DATA del <script> al final del archivo.
+   ============================================================ */
+
+:root{
+  --navy:#0d1b2e;
+  --navy-soft:#1b2a4a;
+  --gold:#c9a84c;
+  --gold-soft:#f0d080;
+  --gold-bg:#fbf6e8;
+  --paper:#ffffff;
+  --row-alt:#f5f6f8;
+  --ink:#101010;
+  --muted:#6a6e78;
+  --gris-team:#3a4356;
+  --rojo-team:#b33a3a;
+  --rule:#d8dce3;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#e9ebef}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-weight:300;
+  color:var(--ink);
+  font-size:9.5px;
+  line-height:1.35;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{
+  width:210mm;
+  min-height:297mm;
+  margin:12mm auto;
+  background:var(--paper);
+  box-shadow:0 2px 18px rgba(13,27,46,.18);
+  padding-bottom:5mm;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.pad{padding:0 13mm}
+
+/* ---------- HEADER ---------- */
+.header{
+  background:var(--navy);
+  color:#fff;
+  padding:7.5mm 13mm 5.5mm;
+  margin-bottom:4.2mm;
+}
+.kicker{
+  font-size:9px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  color:var(--gold);
+  margin-bottom:3px;
+}
+.header h1{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;
+  font-size:21px;
+  line-height:1.1;
+  color:#fff;
+}
+.header .meta{
+  margin-top:4px;
+  font-size:8.6px;
+  color:#c3cad6;
+  letter-spacing:.3px;
+}
+.header .meta .sep{color:var(--gold);padding:0 6px;opacity:.75}
+
+/* Header reducido para páginas 2 y 3 */
+.header.cont{padding:5.5mm 13mm 4.2mm;margin-bottom:3.6mm}
+.header.cont h1{font-size:17px}
+
+/* ---------- SECCIONES ---------- */
+.section{margin-bottom:3.4mm}
+.section-title{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;
+  font-size:13.5px;
+  color:var(--navy);
+  padding-bottom:2.5px;
+  border-bottom:2px solid var(--gold);
+  margin-bottom:2.3mm;
+}
+.section-title small{
+  font-family:'DM Sans',sans-serif;
+  font-size:8px;
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--muted);
+  margin-left:8px;
+}
+
+/* ---------- KPI BAND ---------- */
+.kpis{display:flex;background:var(--navy);color:#fff}
+.kpi{
+  flex:1;
+  padding:3.2mm 2.5mm;
+  text-align:center;
+  border-right:1px solid rgba(255,255,255,.11);
+  min-width:0;
+}
+.kpi:last-child{border-right:none}
+.kpi-label{
+  font-size:7.5px;
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:1.4px;
+  color:var(--gold);
+  margin-bottom:4px;
+}
+.kpi-val{
+  font-family:'DM Mono',monospace;
+  font-size:19px;
+  font-weight:500;
+  line-height:1.05;
+  color:#fff;
+}
+.kpi-val.text{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:11.5px;
+  line-height:1.2;
+}
+.kpi-sub{
+  font-size:7.5px;
+  color:#98a3b4;
+  margin-top:3px;
+  letter-spacing:.5px;
+}
+
+/* ---------- TABLAS ---------- */
+table{width:100%;border-collapse:collapse;font-size:8.8px;line-height:1.3}
+thead th{
+  background:var(--navy);
+  color:#fff;
+  font-weight:500;
+  font-size:7.5px;
+  text-transform:uppercase;
+  letter-spacing:1.1px;
+  padding:3.6px 5px;
+  text-align:left;
+  white-space:nowrap;
+}
+tbody td{
+  padding:1.9px 5px;
+  border-bottom:1px solid var(--rule);
+  vertical-align:middle;
+}
+tbody tr:nth-child(even){background:var(--row-alt)}
+tbody tr.winner{background:var(--gold-bg);font-weight:600}
+tbody tr.winner td{border-bottom-color:#e3d5a8}
+.num{
+  font-family:'DM Mono',monospace;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.pos{
+  font-family:'DM Mono',monospace;
+  width:8mm;
+  color:var(--muted);
+  font-weight:500;
+}
+tr.winner .pos{color:#8a6f22}
+.name{font-weight:400}
+tr.winner .name{font-weight:600}
+.gold{color:#8a6f22;font-weight:600}
+.dim{color:var(--muted)}
+
+/* Matriz compacta F1..F10 */
+table.matriz{font-size:7.6px}
+table.matriz thead th{font-size:7px;padding:3.2px 3px;text-align:right}
+table.matriz thead th:nth-child(-n+3){text-align:left}
+table.matriz tbody td{padding:2.3px 3px}
+table.matriz td.num{font-size:7.6px}
+table.matriz .tot{background:rgba(201,168,76,.13);font-weight:600;color:var(--navy)}
+
+/* Dos columnas lado a lado */
+.cols{display:flex;gap:4.5mm}
+.cols > div{flex:1;min-width:0}
+.col-title{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;
+  font-size:11.5px;
+  color:var(--navy);
+  margin-bottom:2mm;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+/* ---------- BADGES ---------- */
+.badge{
+  display:inline-block;
+  font-size:7px;
+  font-weight:500;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:1.2px 5.5px;
+  border-radius:9px;
+  color:#fff;
+  white-space:nowrap;
+}
+.badge.g{background:var(--gris-team)}
+.badge.r{background:var(--rojo-team)}
+.badge.e{background:var(--muted)}
+
+/* ---------- MARCADOR COPA ---------- */
+.marcador{display:flex;background:var(--navy);color:#fff;align-items:stretch}
+.marcador > div{flex:1;padding:3.6mm 3mm;text-align:center}
+.marcador .mid{
+  flex:1.2;
+  background:var(--navy-soft);
+  border-left:1px solid rgba(255,255,255,.12);
+  border-right:1px solid rgba(255,255,255,.12);
+}
+.marcador .m-lbl{
+  font-size:7.5px;
+  text-transform:uppercase;
+  letter-spacing:1.6px;
+  margin-bottom:4px;
+  font-weight:500;
+  color:#b9c2d0;
+}
+.marcador .mid .m-lbl{color:var(--gold)}
+.marcador .m-val{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;line-height:1}
+.marcador .mid .m-val{color:var(--gold-soft)}
+.marcador .m-sub{font-size:7.5px;color:#98a3b4;margin-top:2.5px;letter-spacing:.8px}
+.marcador .mid .m-sub{
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:1.4px;
+  font-weight:500;
+}
+
+/* ---------- CRÓNICA ---------- */
+.cronica{
+  border-left:3px solid var(--gold);
+  background:var(--row-alt);
+  padding:2.8mm 3.6mm;
+  text-align:justify;
+  font-size:8.8px;
+  line-height:1.6;
+  color:#23262e;
+  hyphens:auto;
+}
+
+/* ---------- NOTAS / BULLETS ---------- */
+.notas{list-style:none;font-size:8.3px;color:var(--muted);line-height:1.45}
+.notas li{padding-left:4mm;position:relative;margin-bottom:0.9mm}
+.notas li:before{
+  content:"";position:absolute;left:0;top:5px;
+  width:4px;height:4px;background:var(--gold);border-radius:50%;
+}
+.notas b{color:var(--navy);font-weight:500}
+.notas .up{color:#2f7d4f;font-weight:600}
+.notas .down{color:var(--rojo-team);font-weight:600}
+
+/* ---------- FIXTURE ---------- */
+.estado{
+  font-size:7px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  font-weight:500;
+  padding:1.2px 6px;
+  border-radius:9px;
+  white-space:nowrap;
+}
+.estado.jugada{background:#e6ece7;color:#2f7d4f}
+.estado.proxima{background:var(--gold-bg);color:#8a6f22;border:1px solid #e3d5a8}
+.estado.pendiente{background:var(--row-alt);color:var(--muted)}
+tr.is-next{background:var(--gold-bg) !important}
+
+/* ---------- FOOTER ---------- */
+.footer{
+  margin-top:auto;
+  padding:1.8mm 13mm 0;
+  text-align:center;
+  font-size:7px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--muted);
+  border-top:1px solid var(--rule);
+}
+.footer .next{color:var(--navy);font-weight:500}
+
+/* ---------- PRINT ---------- */
+@page{size:A4 portrait;margin:0}
+@media print{
+  html{background:#fff}
+  .page{
+    width:210mm;min-height:296mm;margin:0;box-shadow:none;
+    page-break-after:always;
+  }
+  .page:last-child{page-break-after:auto}
+  .section,.marcador,.kpis,.cronica{page-break-inside:avoid}
+  table{page-break-inside:avoid}
+  thead{display:table-header-group}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+/* ================================================================
+   DATA — ÚNICO BLOQUE A REEMPLAZAR CADA ACTUALIZACIÓN
+   ================================================================ */
+const DATA = {
+  meta: {
+    kicker: "Milicia Golf Tour · Temporada 2026",
+    titulo: "Resumen Ejecutivo — después de la Fecha 6",
+    subtitulo: "8 de agosto de 2026 · CUBA Fátima · Individual 1v1",
+    generado: "18 de agosto de 2026"
+  },
+
+  kpis: [
+    { label:"Fechas jugadas",     val:"6",                    sub:"de 10 del calendario" },
+    { label:"Líder Medal",        val:"Elizalde, Juan Pedro", sub:"1.220 pts",              text:true },
+    { label:"Equipo líder Match", val:"Gris",                 sub:"17,5 — 14,5",            text:true },
+    { label:"Próxima fecha",      val:"F7",                   sub:"12 Sep · Fourball 2v2" },
+    { label:"Jugadores",          val:"16",                   sub:"oficiales del tour" }
+  ],
+
+  // Copa Match Play acumulada. dif = ptsG - ptsR (+ = ventaja del Gris).
+  copa: { ptsG:17.5, ptsR:14.5, dif:3, difHoyos:3 },
+
+  cronica: "La Fecha 6 dio vuelta el año en la Copa Match Play. El Gris se llevó cinco de los ocho cruces individuales, empató el de Dipaola, Martín con Elizalde, Juan Pedro y cerró 5,5 a 2,5 con quince hoyos de ventaja neta: es la primera vez en la temporada que pasa al frente, ahora 17,5 a 14,5. En el Medal la jornada fue de Benegas, Francisco, que firmó 92 gross para un neto de 69 y se quedó con la fecha por seis golpes sobre Elizalde, Juan Pedro; con los 500 puntos saltó del séptimo al cuarto lugar del acumulado. Elizalde, Juan Pedro sigue liderando cómodo con 1.220 puntos y una ventaja de casi 287 sobre Vogelius, Nicolás. El día fue duro para el scoring —promedio gross de 94,5 y apenas tres birdies en trece tarjetas— y dejó a Gatto, Mariano, Zunino, Javier y Scapparone, Nicolás sin sumar en el Medal por no presentar tarjeta.",
+
+  // ---- Detalle Medal de la fecha (F6) ----
+  medalFecha: [
+    { pos:1,  name:"Benegas, Francisco",   team:"g", gross:92,  hcp:23, neto:69, pts:500 },
+    { pos:2,  name:"Elizalde, Juan Pedro", team:"r", gross:89,  hcp:14, neto:75, pts:300 },
+    { pos:3,  name:"Gonzalez, Agustín",    team:"g", gross:83,  hcp:7,  neto:76, pts:156.67 },
+    { pos:3,  name:"Guevara, Francisco",   team:"g", gross:96,  hcp:20, neto:76, pts:156.67 },
+    { pos:3,  name:"Méndez, Gastón",       team:"r", gross:92,  hcp:16, neto:76, pts:156.67 },
+    { pos:6,  name:"Tarasido, Gonzalo",    team:"g", gross:89,  hcp:12, neto:77, pts:100 },
+    { pos:7,  name:"Vogelius, Nicolás",    team:"r", gross:93,  hcp:15, neto:78, pts:90 },
+    { pos:8,  name:"Pannullo, Martín",     team:"g", gross:96,  hcp:17, neto:79, pts:77.5 },
+    { pos:8,  name:"Canónico, Agustín",    team:"r", gross:95,  hcp:16, neto:79, pts:77.5 },
+    { pos:10, name:"Molinario, Andrés",    team:"r", gross:97,  hcp:17, neto:80, pts:45 },
+    { pos:10, name:"Fernandez, Lucas",     team:"r", gross:99,  hcp:19, neto:80, pts:45 },
+    { pos:12, name:"Basaldua, Ignacio",    team:"g", gross:99,  hcp:17, neto:82, pts:20 },
+    { pos:13, name:"Dipaola, Martín",      team:"g", gross:109, hcp:26, neto:83, pts:20 }
+  ],
+  sinTarjeta: ["Zunino, Javier", "Gatto, Mariano", "Scapparone, Nicolás"],
+
+  // ---- Matriz Medal por fecha (F1..F10). null = no jugó / fecha no disputada ----
+  // F4 quedó suspendida por niebla: sólo valió Match Play, no repartió puntos Medal.
+  medalMatriz: [
+    { name:"Elizalde, Juan Pedro", team:"r", f:[80, 250, 90, null, 500, 300, null,null,null,null], total:1220,   fechas:5 },
+    { name:"Vogelius, Nicolás",    team:"r", f:[400, 20, 123.33, null, 300, 90, null,null,null,null], total:933.33, fechas:5 },
+    { name:"Guevara, Francisco",   team:"g", f:[400, 80, 80, null, 156.67, 156.67, null,null,null,null], total:873.34, fechas:5 },
+    { name:"Benegas, Francisco",   team:"g", f:[0, 123.33, 123.33, null, 100, 500, null,null,null,null], total:846.66, fechas:5 },
+    { name:"Fernandez, Lucas",     team:"r", f:[null, 250, 500, null, null, 45, null,null,null,null], total:795,    fechas:3 },
+    { name:"Gatto, Mariano",       team:"r", f:[95, 500, 20, null, 156.67, null, null,null,null,null], total:771.67, fechas:4 },
+    { name:"Tarasido, Gonzalo",    team:"g", f:[72.5, 20, 300, null, 85, 100, null,null,null,null], total:577.5,  fechas:5 },
+    { name:"Méndez, Gastón",       team:"r", f:[175, 90, 20, null, null, 156.67, null,null,null,null], total:441.67, fechas:4 },
+    { name:"Pannullo, Martín",     team:"g", f:[20, 70, 200, null, null, 77.5, null,null,null,null], total:367.5,  fechas:4 },
+    { name:"Canónico, Agustín",    team:"r", f:[20, 123.33, 75, null, 45, 77.5, null,null,null,null], total:340.83, fechas:5 },
+    { name:"Molinario, Andrés",    team:"r", f:[175, 75, 36.67, null, null, 45, null,null,null,null], total:331.67, fechas:4 },
+    { name:"Basaldua, Ignacio",    team:"g", f:[20, null, 123.33, null, 156.67, 20, null,null,null,null], total:320, fechas:4 },
+    { name:"Dipaola, Martín",      team:"g", f:[120, 123.33, 36.67, null, 20, 20, null,null,null,null], total:320,  fechas:5 },
+    { name:"Gonzalez, Agustín",    team:"g", f:[20, null, null, null, 45, 156.67, null,null,null,null], total:221.67, fechas:3 },
+    { name:"Zunino, Javier",       team:"g", f:[95, null, null, null, null, null, null,null,null,null], total:95,   fechas:1 },
+    { name:"Scapparone, Nicolás",  team:"r", f:[72.5, null, null, null, null, null, null,null,null,null], total:72.5, fechas:1 }
+  ],
+  fechasJugadas: 6,
+
+  movimientos: [
+    "<b>Benegas, Francisco</b> ganó la fecha y con 500 puntos saltó del <span class='down'>7°</span> al <span class='up'>4°</span> puesto del Medal acumulado.",
+    "<b>Méndez, Gastón</b> fue el que más escaló: del <span class='down'>12°</span> al <span class='up'>8°</span>, tras compartir el tercer escalón de la fecha.",
+    "<b>Guevara, Francisco</b> subió al <span class='up'>3°</span> puesto y <b>Canónico, Agustín</b> entró al top 10 (del 13° al 10°).",
+    "<b>Gatto, Mariano</b> no presentó tarjeta y cayó del <span class='down'>3°</span> al <span class='down'>6°</span> lugar: es el único del top 6 que ya se perdió dos fechas del Medal.",
+    "<b>Elizalde, Juan Pedro</b> sigue líder con 1.220 puntos y estiró a 286,67 la ventaja sobre <b>Vogelius, Nicolás</b>.",
+    "En el Match individual, <b>Molinario, Andrés</b> trepó al <span class='up'>2°</span> puesto general y <b>Guevara, Francisco</b> se mantiene 1° con 3,5 puntos."
+  ],
+
+  // ---- Match individual acumulado, por equipo ----
+  matchGris: [
+    { name:"Guevara, Francisco", pts:3.5,  jugados:6 },
+    { name:"Pannullo, Martín",   pts:2.5,  jugados:5 },
+    { name:"Dipaola, Martín",    pts:2.25, jugados:6 },
+    { name:"Benegas, Francisco", pts:1.5,  jugados:6 },
+    { name:"Gonzalez, Agustín",  pts:1.5,  jugados:4 },
+    { name:"Tarasido, Gonzalo",  pts:1.5,  jugados:6 },
+    { name:"Basaldua, Ignacio",  pts:1.25, jugados:4 },
+    { name:"Zunino, Javier",     pts:1.25, jugados:3 }
+  ],
+  matchRojo: [
+    { name:"Elizalde, Juan Pedro", pts:3,    jugados:6 },
+    { name:"Molinario, Andrés",    pts:3,    jugados:5 },
+    { name:"Méndez, Gastón",       pts:2.75, jugados:6 },
+    { name:"Gatto, Mariano",       pts:2.25, jugados:6 },
+    { name:"Canónico, Agustín",    pts:1.25, jugados:6 },
+    { name:"Fernandez, Lucas",     pts:1,    jugados:5 },
+    { name:"Vogelius, Nicolás",    pts:0.75, jugados:5 },
+    { name:"Scapparone, Nicolás",  pts:0,    jugados:2 }
+  ],
+
+  // ---- Gross: promedio de todas las tarjetas. Premio = mejores 7 (mínimo 7 tarjetas). ----
+  gross: [
+    { name:"Gatto, Mariano",       team:"r", tarjetas:4, avg:83.2,  mejor:75, falta:3 },
+    { name:"Gonzalez, Agustín",    team:"g", tarjetas:3, avg:85.7,  mejor:83, falta:4 },
+    { name:"Elizalde, Juan Pedro", team:"r", tarjetas:5, avg:86.8,  mejor:83, falta:2 },
+    { name:"Zunino, Javier",       team:"g", tarjetas:1, avg:87.0,  mejor:87, falta:6 },
+    { name:"Tarasido, Gonzalo",    team:"g", tarjetas:5, avg:90.0,  mejor:86, falta:2 },
+    { name:"Vogelius, Nicolás",    team:"r", tarjetas:5, avg:91.4,  mejor:84, falta:2 },
+    { name:"Méndez, Gastón",       team:"r", tarjetas:4, avg:92.5,  mejor:86, falta:3 },
+    { name:"Fernandez, Lucas",     team:"r", tarjetas:3, avg:93.3,  mejor:90, falta:4 },
+    { name:"Molinario, Andrés",    team:"r", tarjetas:4, avg:94.5,  mejor:86, falta:3 },
+    { name:"Basaldua, Ignacio",    team:"g", tarjetas:4, avg:94.8,  mejor:91, falta:3 },
+    { name:"Pannullo, Martín",     team:"g", tarjetas:4, avg:94.8,  mejor:92, falta:3 },
+    { name:"Scapparone, Nicolás",  team:"r", tarjetas:1, avg:95.0,  mejor:95, falta:6 },
+    { name:"Guevara, Francisco",   team:"g", tarjetas:5, avg:96.0,  mejor:87, falta:2 },
+    { name:"Canónico, Agustín",    team:"r", tarjetas:5, avg:96.2,  mejor:91, falta:2 },
+    { name:"Benegas, Francisco",   team:"g", tarjetas:5, avg:99.6,  mejor:92, falta:2 },
+    { name:"Dipaola, Martín",      team:"g", tarjetas:5, avg:104.2, mejor:93, falta:2 }
+  ],
+  grossNota: "Quedan 4 fechas (F7–F10). Sólo llegan al mínimo de 7 tarjetas quienes hoy tengan 3 o más y jueguen todas las restantes.",
+
+  // ---- Match Play de la fecha, en detalle ----
+  matchsFecha: [
+    { hora:"09:00", gris:["Gonzalez, Agustín"],  rojo:["Fernandez, Lucas"],     ganador:"g",      difHoyos:5 },
+    { hora:"09:00", gris:["Benegas, Francisco"], rojo:["Vogelius, Nicolás"],    ganador:"g",      difHoyos:7 },
+    { hora:"09:10", gris:["Tarasido, Gonzalo"],  rojo:["Molinario, Andrés"],    ganador:"r",      difHoyos:3 },
+    { hora:"09:10", gris:["Basaldua, Ignacio"],  rojo:["Méndez, Gastón"],       ganador:"r",      difHoyos:3 },
+    { hora:"09:20", gris:["Dipaola, Martín"],    rojo:["Elizalde, Juan Pedro"], ganador:"empate", difHoyos:0 },
+    { hora:"09:20", gris:["Guevara, Francisco"], rojo:["Scapparone, Nicolás"],  ganador:"g",      difHoyos:3 },
+    { hora:"09:30", gris:["Zunino, Javier"],     rojo:["Gatto, Mariano"],       ganador:"g",      difHoyos:2 },
+    { hora:"09:30", gris:["Pannullo, Martín"],   rojo:["Canónico, Agustín"],    ganador:"g",      difHoyos:4 }
+  ],
+  marcadorFecha: { ptsG:5.5, ptsR:2.5, difHoyos:15 },
+
+  // ---- Copa Match Play por fecha ----
+  copaPorFecha: [
+    { f:"F1", g:1,   r:3,   dif:-2 },
+    { f:"F2", g:2,   r:2,   dif:-2 },
+    { f:"F3", g:4,   r:4,   dif:-7 },
+    { f:"F4", g:3,   r:1,   dif:0  },
+    { f:"F5", g:2,   r:2,   dif:-1 },
+    { f:"F6", g:5.5, r:2.5, dif:15 }
+  ],
+
+  fixture: [
+    { f:"F1",  fecha:"14 Mar 2026", cancha:"CUBA Fátima",  modalidad:"Fourball 2v2",        org:"Gatto, Mariano + Zunino, Javier",             estado:"jugada",    nota:"" },
+    { f:"F2",  fecha:"11 Abr 2026", cancha:"CUBA Fátima",  modalidad:"Fourball 2v2",        org:"Gonzalez, Agustín + Tarasido, Gonzalo",       estado:"jugada",    nota:"" },
+    { f:"F3",  fecha:"09 May 2026", cancha:"SHA Hebraica", modalidad:"Individual 1v1",      org:"Molinario, Andrés + Dipaola, Martín",         estado:"jugada",    nota:"Par 69" },
+    { f:"F4",  fecha:"06 Jun 2026", cancha:"CUBA Fátima",  modalidad:"Fourball 2v2",        org:"Pannullo, Martín + Basaldua, Ignacio",        estado:"jugada",    nota:"Suspendida por niebla: sólo valió Match Play" },
+    { f:"F5",  fecha:"04 Jul 2026", cancha:"La Orquídea",  modalidad:"Fourball 2v2",        org:"Basaldua, Ignacio + Canónico, Agustín",       estado:"jugada",    nota:"Salida demorada 1 h por helada" },
+    { f:"F6",  fecha:"08 Ago 2026", cancha:"CUBA Fátima",  modalidad:"Individual 1v1",      org:"Guevara, Francisco + Vogelius, Nicolás",      estado:"jugada",    nota:"Los 16 oficiales presentes" },
+    { f:"F7",  fecha:"12 Sep 2026", cancha:"CUBA Fátima",  modalidad:"Fourball 2v2",        org:"Scapparone, Nicolás + Benegas, Francisco",    estado:"proxima",   nota:"Armado 100% aleatorio" },
+    { f:"F8",  fecha:"03 Oct 2026", cancha:"CUBA Fátima",  modalidad:"Individual 1v1",      org:"Elizalde, Juan Pedro + Méndez, Gastón",       estado:"pendiente", nota:"Armado por posición Match" },
+    { f:"F9",  fecha:"04 Nov 2026", cancha:"Gira",         modalidad:"Fourball inverso",    org:"Gira",                                        estado:"pendiente", nota:"Medal ×1,5" },
+    { f:"F10", fecha:"09 Nov 2026", cancha:"Gira final",   modalidad:"Individual 1v1",      org:"Gira",                                        estado:"pendiente", nota:"Medal ×2 · #1 Gris vs #1 Rojo" }
+  ],
+
+  notasUpdate: [
+    "Los puntos Medal de cada fecha se recalcularon desde <b>data/fechas.json</b> con la regla de empates (los puntos de los puestos ocupados se suman y se dividen entre los empatados). Los totales coinciden con el Master.",
+    "La <b>F4</b> figura sin puntos Medal en la matriz: quedó suspendida por niebla y sólo valió el Match Play (Gris 3 – Rojo 1).",
+    "La diferencia de hoyos se computa firmada desde la perspectiva del Gris. Ojo: en el JSON de las fechas 1 y 2 viene con signo y de la 3 en adelante viene siempre positiva con el ganador aparte.",
+    "La columna <b>Avg</b> del Gross es el promedio de <b>todas</b> las tarjetas, no el de las mejores 7. Hasta la F7 da lo mismo; a partir de la F8 hay que cambiar el criterio.",
+    "<b>Zunino, Javier</b> y <b>Scapparone, Nicolás</b> (1 tarjeta) y <b>Gonzalez, Agustín</b> y <b>Fernandez, Lucas</b> (3) ya no llegan al mínimo de 7 tarjetas del premio Gross."
+  ],
+
+  proxima: "Próxima fecha — F7 · 12 de septiembre de 2026 · CUBA Fátima · Fourball 2v2 · Organizan Scapparone, Nicolás + Benegas, Francisco"
+};
+
+/* ================================================================
+   RENDER
+   ================================================================ */
+const TEAM_LABEL = { g:"Gris", r:"Rojo", empate:"Empate" };
+
+// Formato es-AR: miles con punto, decimales con coma.
+function nf(n, max = 2, min = 0){
+  if (n === null || n === undefined || Number.isNaN(n)) return "—";
+  return Number(n).toLocaleString("es-AR", {
+    minimumFractionDigits: min,
+    maximumFractionDigits: max
+  });
+}
+function signed(n, max = 2, min = 0){
+  if (n === null || n === undefined) return "—";
+  const s = n > 0 ? "+" : (n < 0 ? "−" : "");
+  return s + nf(Math.abs(n), max, min);
+}
+function badge(t){ return `<span class="badge ${t}">${TEAM_LABEL[t] || t}</span>`; }
+
+function header(D, cont, titulo){
+  return `
+  <div class="header${cont ? " cont" : ""}">
+    <div class="kicker">${D.meta.kicker}</div>
+    <h1>${titulo || D.meta.titulo}</h1>
+    <div class="meta">
+      <span>${D.meta.subtitulo}</span><span class="sep">|</span>
+      <span>Actualizado al ${D.meta.generado}</span>
+    </div>
+  </div>`;
+}
+
+function footer(D, n, total){
+  return `
+  <div class="footer">
+    <div class="next">${D.proxima}</div>
+    <div style="margin-top:1.2mm">Milicia Golf Tour · Temporada 2026 · Resumen Ejecutivo · Página ${n} de ${total}</div>
+  </div>`;
+}
+
+/* ---------- PÁGINA 1 ---------- */
+function kpis(list){
+  return `<div class="kpis">` + list.map(k => `
+    <div class="kpi">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-val${k.text ? " text" : ""}">${k.val}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join("") + `</div>`;
+}
+
+function topMedal(rows){
+  const filas = rows.slice(0, 8).map((r, i) => `
+    <tr class="${i === 0 ? "winner" : ""}">
+      <td class="pos">${i + 1}°</td>
+      <td class="name">${r.name}</td>
+      <td>${badge(r.team)}</td>
+      <td class="num">${nf(r.total)}</td>
+    </tr>`).join("");
+  return `
+  <div>
+    <div class="col-title">Top Medal acumulado</div>
+    <table>
+      <thead><tr><th>#</th><th>Jugador</th><th>Eq.</th><th style="text-align:right">Puntos</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+  </div>`;
+}
+
+function topGross(rows){
+  const filas = rows.slice(0, 8).map((r, i) => `
+    <tr class="${i === 0 ? "winner" : ""}">
+      <td class="pos">${i + 1}°</td>
+      <td class="name">${r.name}</td>
+      <td>${badge(r.team)}</td>
+      <td class="num">${nf(r.avg, 1, 1)}</td>
+      <td class="num dim">${nf(r.tarjetas)}</td>
+    </tr>`).join("");
+  return `
+  <div>
+    <div class="col-title">Top Gross <small style="font-family:'DM Sans';font-size:7.5px;font-weight:400;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)">promedio</small></div>
+    <table>
+      <thead><tr><th>#</th><th>Jugador</th><th>Eq.</th><th style="text-align:right">Avg</th><th style="text-align:right">Tarj.</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+  </div>`;
+}
+
+function copaBand(c){
+  const favor = c.dif > 0 ? "Ventaja del Gris" : (c.dif < 0 ? "Ventaja del Rojo" : "Igualados");
+  return `
+  <div class="marcador">
+    <div>
+      <div class="m-lbl">Gris</div>
+      <div class="m-val">${nf(c.ptsG, 1)}</div>
+      <div class="m-sub">puntos acumulados</div>
+    </div>
+    <div class="mid">
+      <div class="m-lbl">Diferencia</div>
+      <div class="m-val">${signed(c.dif, 2, 2)}</div>
+      <div class="m-sub">${favor}</div>
+    </div>
+    <div>
+      <div class="m-lbl">Rojo</div>
+      <div class="m-val">${nf(c.ptsR, 1)}</div>
+      <div class="m-sub">puntos acumulados</div>
+    </div>
+  </div>`;
+}
+
+function medalFechaTable(rows, sin){
+  const filas = rows.map(r => `
+    <tr class="${r.pos === 1 ? "winner" : ""}">
+      <td class="pos">${r.pos}°</td>
+      <td class="name">${r.name}</td>
+      <td>${badge(r.team)}</td>
+      <td class="num">${nf(r.gross)}</td>
+      <td class="num">${nf(r.hcp)}</td>
+      <td class="num">${nf(r.neto)}</td>
+      <td class="num">${nf(r.pts)}</td>
+    </tr>`).join("");
+  const nota = sin && sin.length
+    ? `<div style="margin-top:2.5mm;font-size:8.5px;color:var(--muted)">
+         Jugaron el match sin presentar tarjeta, no suman en el Medal: ${sin.join(" · ")}.
+       </div>` : "";
+  return `
+  <div class="section pad">
+    <div class="section-title">Detalle Medal de la fecha</div>
+    <table>
+      <thead><tr>
+        <th>Pos</th><th>Jugador</th><th>Eq.</th>
+        <th style="text-align:right">Gross</th><th style="text-align:right">Hcp</th>
+        <th style="text-align:right">Neto</th><th style="text-align:right">Pts</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    ${nota}
+  </div>`;
+}
+
+function page1(D){
+  return `
+  <div class="page">
+    ${header(D)}
+    <div class="section pad">${kpis(D.kpis)}</div>
+    <div class="section pad">
+      <div class="section-title">Rankings acumulados <small>al cierre de la Fecha ${D.fechasJugadas}</small></div>
+      <div class="cols">${topMedal(D.medalMatriz)}${topGross(D.gross)}</div>
+    </div>
+    <div class="section pad">
+      <div class="section-title">Copa Match Play <small>Gris vs Rojo · acumulado</small></div>
+      ${copaBand(D.copa)}
+    </div>
+    <div class="section pad">
+      <div class="section-title">La crónica</div>
+      <div class="cronica">${D.cronica}</div>
+    </div>
+    ${medalFechaTable(D.medalFecha, D.sinTarjeta)}
+    ${footer(D, 1, 3)}
+  </div>`;
+}
+
+/* ---------- PÁGINA 2 ---------- */
+function matriz(rows, jugadas){
+  const heads = Array.from({ length: 10 }, (_, i) =>
+    `<th${i + 1 > jugadas ? ' style="text-align:right;opacity:.5"' : ""}>F${i + 1}</th>`).join("");
+  const filas = rows.map((r, i) => `
+    <tr class="${i === 0 ? "winner" : ""}">
+      <td class="pos">${i + 1}°</td>
+      <td class="name">${r.name}</td>
+      <td>${badge(r.team)}</td>
+      ${r.f.map(v => `<td class="num${v === null ? " dim" : ""}">${v === null ? "·" : nf(v)}</td>`).join("")}
+      <td class="num tot">${nf(r.total)}</td>
+      <td class="num dim">${nf(r.fechas)}</td>
+    </tr>`).join("");
+  return `
+  <div class="section pad">
+    <div class="section-title">Ranking Medal por fecha y acumulado <small>F4 suspendida: no repartió puntos</small></div>
+    <table class="matriz">
+      <thead><tr>
+        <th>#</th><th>Jugador</th><th>Eq.</th>${heads}
+        <th style="text-align:right">Total</th><th style="text-align:right">Fechas</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+  </div>`;
+}
+
+function movimientos(items){
+  return `
+  <div class="section pad">
+    <div class="section-title">Movimientos que dejó la fecha</div>
+    <ul class="notas">${items.map(i => `<li>${i}</li>`).join("")}</ul>
+  </div>`;
+}
+
+function matchTeamTable(rows, team){
+  const filas = rows.map((r, i) => `
+    <tr class="${i === 0 ? "winner" : ""}">
+      <td class="pos">${i + 1}°</td>
+      <td class="name">${r.name}</td>
+      <td class="num">${nf(r.pts, 2)}</td>
+      <td class="num dim">${nf(r.jugados)}</td>
+    </tr>`).join("");
+  const tot = rows.reduce((a, r) => a + r.pts, 0);
+  return `
+  <div>
+    <div class="col-title">${badge(team)} <span>Match individual</span></div>
+    <table>
+      <thead><tr><th>#</th><th>Jugador</th><th style="text-align:right">Pts</th><th style="text-align:right">Jug.</th></tr></thead>
+      <tbody>${filas}</tbody>
+      <tfoot><tr>
+        <td colspan="2" style="padding:4px 5px;font-size:8px;text-transform:uppercase;letter-spacing:1.1px;color:var(--muted);font-weight:500">Subtotal oficiales</td>
+        <td class="num" style="padding:4px 5px;font-weight:600">${nf(tot, 2)}</td><td></td>
+      </tr></tfoot>
+    </table>
+  </div>`;
+}
+
+function page2(D){
+  return `
+  <div class="page">
+    ${header(D, true, "Medal y Match — detalle acumulado")}
+    ${matriz(D.medalMatriz, D.fechasJugadas)}
+    ${movimientos(D.movimientos)}
+    <div class="section pad">
+      <div class="section-title">Ranking Match individual por equipo <small>puntos personales F1–F${D.fechasJugadas}</small></div>
+      <div class="cols">${matchTeamTable(D.matchGris, "g")}${matchTeamTable(D.matchRojo, "r")}</div>
+      <div style="margin-top:2.2mm;font-size:8.3px;color:var(--muted)">
+        Los subtotales suman sólo a los oficiales (${nf(D.matchGris.reduce((a,r)=>a+r.pts,0),2)} + ${nf(D.matchRojo.reduce((a,r)=>a+r.pts,0),2)}).
+        La diferencia contra la Copa (${nf(D.copa.ptsG,1)} — ${nf(D.copa.ptsR,1)}) son los puntos que aportaron los suplentes.
+      </div>
+    </div>
+    ${footer(D, 2, 3)}
+  </div>`;
+}
+
+/* ---------- PÁGINA 3 ---------- */
+function grossTable(rows, nota){
+  const mejorAnio = Math.min(...rows.map(r => r.mejor));
+  const filas = rows.map((r, i) => `
+    <tr class="${r.mejor === mejorAnio ? "winner" : ""}">
+      <td class="pos">${i + 1}°</td>
+      <td class="name">${r.name}</td>
+      <td>${badge(r.team)}</td>
+      <td class="num">${nf(r.tarjetas)}</td>
+      <td class="num">${nf(r.avg, 1, 1)}</td>
+      <td class="num ${r.mejor === mejorAnio ? "gold" : ""}">${nf(r.mejor)}${r.mejor === mejorAnio ? " ★" : ""}</td>
+      <td class="num ${r.falta > 0 ? "dim" : "gold"}">${r.falta > 0 ? "falta " + nf(r.falta) : "habilitado"}</td>
+    </tr>`).join("");
+  return `
+  <div class="section pad">
+    <div class="section-title">Ranking Gross <small>premio: promedio de las mejores 7 tarjetas</small></div>
+    <table>
+      <thead><tr>
+        <th>#</th><th>Jugador</th><th>Eq.</th>
+        <th style="text-align:right">Tarjetas</th><th style="text-align:right">Avg</th>
+        <th style="text-align:right">Mejor</th><th style="text-align:right">Premio</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    <div style="margin-top:2.5mm;font-size:8.5px;color:var(--muted)">${nota}</div>
+  </div>`;
+}
+
+function matchDetalle(matchs, marc){
+  const filas = matchs.map((m, i) => `
+    <tr>
+      <td class="pos">${i + 1}</td>
+      <td class="num" style="text-align:left">${m.hora}</td>
+      <td class="name">${m.gris.join(" + ")}</td>
+      <td style="text-align:center;color:var(--muted);font-size:7.5px;letter-spacing:1px">VS</td>
+      <td class="name">${m.rojo.join(" + ")}</td>
+      <td>${m.ganador === "empate" ? `<span class="badge e">Empate</span>` : badge(m.ganador)}</td>
+      <td class="num">${m.difHoyos === 0 ? "—" : nf(m.difHoyos)}</td>
+    </tr>`).join("");
+  const favor = marc.difHoyos > 0 ? "Gris" : (marc.difHoyos < 0 ? "Rojo" : "—");
+  return `
+  <div class="section pad">
+    <div class="section-title">Match Play de la fecha <small>Gris ${nf(marc.ptsG, 1)} — Rojo ${nf(marc.ptsR, 1)} · ${signed(marc.difHoyos, 0)} hoyos para el ${favor}</small></div>
+    <table>
+      <thead><tr>
+        <th>#</th><th>Hora</th><th>Gris</th><th></th><th>Rojo</th><th>Ganador</th>
+        <th style="text-align:right">Dif. hoyos</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+  </div>`;
+}
+
+function fixtureTable(rows){
+  const filas = rows.map(r => `
+    <tr class="${r.estado === "proxima" ? "is-next" : ""}">
+      <td class="pos">${r.f}</td>
+      <td class="num" style="text-align:left">${r.fecha}</td>
+      <td class="name">${r.cancha}</td>
+      <td>${r.modalidad}</td>
+      <td class="dim" style="font-size:8px">${r.org}</td>
+      <td><span class="estado ${r.estado}">${r.estado === "proxima" ? "Próxima" : (r.estado === "jugada" ? "Jugada" : "Pendiente")}</span></td>
+      <td class="dim" style="font-size:8px">${r.nota || "—"}</td>
+    </tr>`).join("");
+  return `
+  <div class="section pad">
+    <div class="section-title">Fixture 2026</div>
+    <table>
+      <thead><tr>
+        <th>F</th><th>Fecha</th><th>Cancha</th><th>Modalidad</th>
+        <th>Organizan</th><th>Estado</th><th>Nota</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+  </div>`;
+}
+
+function notasUpdate(items){
+  return `
+  <div class="section pad">
+    <div class="section-title">Notas de esta actualización</div>
+    <ul class="notas">${items.map(i => `<li>${i}</li>`).join("")}</ul>
+  </div>`;
+}
+
+function page3(D){
+  return `
+  <div class="page">
+    ${header(D, true, "Gross, Match Play y calendario")}
+    ${grossTable(D.gross, D.grossNota)}
+    ${matchDetalle(D.matchsFecha, D.marcadorFecha)}
+    ${fixtureTable(D.fixture)}
+    ${notasUpdate(D.notasUpdate)}
+    ${footer(D, 3, 3)}
+  </div>`;
+}
+
+function render(D){
+  document.getElementById("root").innerHTML = page1(D) + page2(D) + page3(D);
+  document.title = `MGT 2026 — ${D.meta.titulo}`;
+}
+
+render(DATA);
+</script>
+</body>
+</html>
