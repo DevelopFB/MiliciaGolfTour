@@ -1,20 +1,38 @@
 # Milicia Golf Tour — Contexto del Proyecto
 
+> ### ⚠️ El equipo Gris se llama **La Cele** desde el 07-Sep-2026
+>
+> Cambió **solo el nombre visible y los colores** (celeste bandera `#75AADB`, y `#1B5E9E`
+> para texto sobre blanco). **El formato de datos NO cambió.** El JSON sigue usando
+> exactamente las mismas claves de siempre:
+>
+> ```json
+> { "equipo": "g", "ganador": "g", "gris": ["benegas","zunino"], "pts_g": 0.5 }
+> ```
+>
+> **Al generar el JSON de una fecha, seguí escribiendo `"gris"` y `"g"`.** Si escribís
+> `"la_cele"` el backoffice no lo va a reconocer y la carga falla. "La Cele" es lo que se
+> muestra en pantalla; `g` es lo que se guarda.
+>
+> El cambio aplica a 2026. Los campeones de 2016-2025 quedan como estaban (el equipo se
+> llamaba **Blanco** en esos años, y Rojo ganó 2025) — no se reescribe la historia.
+
+
 **Leer este archivo antes de cualquier tarea sobre este proyecto.** Acá están las reglas, datos canónicos y convenciones. No asumir conocimiento general de golf ni de cómo "debería" estructurarse — seguir lo que dice este doc.
 
 ---
 
 ## 1. QUÉ ES EL PROYECTO
 
-Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (Gris vs Rojo). **No hay base de datos.** Los datos viven en **archivos JSON versionados en el propio repo** (`data/fechas.json`, `data/fixture.json`, `data/recaudacion.json`, `jugadores_historico.json`), con localStorage sólo como cache de render. Los Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original de 2016-2025.
+Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (La Cele vs Rojo). **No hay base de datos.** Los datos viven en **archivos JSON versionados en el propio repo** (`data/fechas.json`, `data/fixture.json`, `data/recaudacion.json`, `jugadores_historico.json`), con localStorage sólo como cache de render. Los Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original de 2016-2025.
 
 > Supabase se usó hasta jul-2026 y **ya no forma parte de la arquitectura**. Si alguna doc, prompt o instrucción de proyecto lo menciona como algo vivo, está desactualizada. El único rastro es `data/backup-supabase/`, un snapshot congelado de las tablas al migrar.
 
 ### ⚠️ Dos competencias separadas — NO mezclar
 
-1. **Medal** → ranking **individual** de los 16 jugadores. Cada fecha asigna pts por puesto (500/300/200/...). El equipo (Gris/Rojo) en este ranking es solo metadata informativa. **NO existe "ganador medal por equipo"**.
+1. **Medal** → ranking **individual** de los 16 jugadores. Cada fecha asigna pts por puesto (500/300/200/...). El equipo (La Cele/Rojo) en este ranking es solo metadata informativa. **NO existe "ganador medal por equipo"**.
 
-2. **Match Play** → competencia entre **equipos** Gris vs Rojo. Los pts entre equipos **solo** se acumulan por los matchs jugados cada fecha (1v1 individuales o 2v2 fourball). Cada match da 1 pt al equipo ganador o 0.5 en empate. **El medal no aporta NADA al match entre equipos**.
+2. **Match Play** → competencia entre **equipos** La Cele vs Rojo. Los pts entre equipos **solo** se acumulan por los matchs jugados cada fecha (1v1 individuales o 2v2 fourball). Cada match da 1 pt al equipo ganador o 0.5 en empate. **El medal no aporta NADA al match entre equipos**.
 
 Cuando se reporta "estado del torneo" o "líder", siempre aclarar de qué competencia se habla. No combinar pts medal con team match pts.
 
@@ -32,14 +50,14 @@ Desplegado en GitHub Pages desde repo `DevelopFB/MiliciaGolfTour`.
 
 | ID interno | Nombre completo (display) | Sobrenombre | Equipo |
 |---|---|---|---|
-| `gonzalez` | Gonzalez, Agustín | Agus | Gris |
-| `tarasido` | Tarasido, Gonzalo | Gonzalo | Gris |
-| `zunino` | Zunino, Javier | Javi | Gris |
-| `basaldua` | Basaldua, Ignacio | Ignacio | Gris |
-| `pannullo` | Pannullo, Martín | Tincho | Gris |
-| `benegas` | Benegas, Francisco | Pancho | Gris |
-| `guevara` | Guevara, Francisco | Franki | Gris |
-| `dipaola` | Dipaola, Martín | Dipa | Gris |
+| `gonzalez` | Gonzalez, Agustín | Agus | La Cele |
+| `tarasido` | Tarasido, Gonzalo | Gonzalo | La Cele |
+| `zunino` | Zunino, Javier | Javi | La Cele |
+| `basaldua` | Basaldua, Ignacio | Ignacio | La Cele |
+| `pannullo` | Pannullo, Martín | Tincho | La Cele |
+| `benegas` | Benegas, Francisco | Pancho | La Cele |
+| `guevara` | Guevara, Francisco | Franki | La Cele |
+| `dipaola` | Dipaola, Martín | Dipa | La Cele |
 | `gatto` | **Gatto, Mariano** | Gattait | Rojo |
 | `elizalde` | Elizalde, Juan Pedro | Juancho | Rojo |
 | `canonico` | Canónico, Agustín | Kno | Rojo |
@@ -114,10 +132,10 @@ Si en un Excel viejo ves "Gatto" sin primer nombre, mirá la fila completa o pre
 - **10 fechas por temporada** (típicamente Mar-Nov).
 - **F1-F8**: medal + match en cancha propia (CUBA Fátima u otra).
 - **F9**: gira (multiplicador medal **×1.5**), modalidad fourball inverso (1v8, 2v7, ...).
-- **F10**: gira FINAL (multiplicador medal **×2**), individual #1 Gris vs #1 Rojo.
+- **F10**: gira FINAL (multiplicador medal **×2**), individual #1 La Cele vs #1 Rojo.
 
 ### Equipos
-- **Gris vs Rojo**, 8 vs 8.
+- **La Cele vs Rojo**, 8 vs 8.
 - Cada jugador tiene equipo fijo (ver tabla arriba).
 - Match Play acumula pts por equipo a lo largo del año.
 
@@ -174,7 +192,7 @@ Multiplicador F9 = ×1.5, F10 = ×2 (sobre los puntos base).
 ### Sustitutos (no oficiales) — Regla 2026
 
 - Si un oficial no puede jugar una fecha, puede entrar un suplente externo en su lugar.
-- **El suplente suma pts para el COLOR (equipo) que representa**, igual que un oficial. El resultado del match cuenta normalmente para Gris o Rojo.
+- **El suplente suma pts para el COLOR (equipo) que representa**, igual que un oficial. El resultado del match cuenta normalmente para La Cele o Rojo.
 - El suplente NO acumula medal individual personal para el tour.
 - El oficial al que reemplaza tampoco recibe esos pts (jugó otro).
 - **Excepción**: el suplente oficial especial (Gatto, Alejandro) acumula stats individuales en un cuadro separado (no compite con los 16 oficiales en el ranking principal pero sí tiene su propio totalizador).

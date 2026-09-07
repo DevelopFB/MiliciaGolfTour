@@ -1,5 +1,23 @@
 # PROMPT_CARGA_FECHA — Procesamiento de una fecha del MGT (v3 — Jul 2026)
 
+> ### ⚠️ El equipo Gris se llama **La Cele** desde el 07-Sep-2026
+>
+> Cambió **solo el nombre visible y los colores** (celeste bandera `#75AADB`, y `#1B5E9E`
+> para texto sobre blanco). **El formato de datos NO cambió.** El JSON sigue usando
+> exactamente las mismas claves de siempre:
+>
+> ```json
+> { "equipo": "g", "ganador": "g", "gris": ["benegas","zunino"], "pts_g": 0.5 }
+> ```
+>
+> **Al generar el JSON de una fecha, seguí escribiendo `"gris"` y `"g"`.** Si escribís
+> `"la_cele"` el backoffice no lo va a reconocer y la carga falla. "La Cele" es lo que se
+> muestra en pantalla; `g` es lo que se guarda.
+>
+> El cambio aplica a 2026. Los campeones de 2016-2025 quedan como estaban (el equipo se
+> llamaba **Blanco** en esos años, y Rojo ganó 2025) — no se reescribe la historia.
+
+
 **Cómo se usa**: en un chat nuevo del proyecto, pegar el mini-prompt de abajo con los datos de la fecha + las screenshots de las tarjetas (shagolf.com.ar o golf.cuba.org.ar). Claude devuelve los 4 outputs. Diseñado para funcionar desde el teléfono (solo chat, sin Cowork).
 
 ---
@@ -16,8 +34,8 @@ Matchs y resultados: [los paso acá o al final]
 Te adjunto las tarjetas. Seguí PROMPT_CARGA_FECHA.md y devolveme los 4 outputs.
 ```
 
-Contexto que trae la F7: Medal líder Elizalde 1220 · Copa Match Play **Gris 17.5 – Rojo 14.5**
-(tablero: Gris +3 pts, dif hoyos +3) · Fourball 2v2 aleatorio → 4 matchs.
+Contexto que trae la F7: Medal líder Elizalde 1220 · Copa Match Play **La Cele 17.5 – Rojo 14.5**
+(tablero: La Cele +3 pts, dif hoyos +3) · Fourball 2v2 aleatorio → 4 matchs.
 Par CUBA Fátima `[5,3,4,5,4,4,3,4,4, 4,5,4,4,3,4,4,3,5]` = 72.
 
 ---
@@ -71,7 +89,7 @@ Jugadores: N oficiales + N suplentes
 🎯 Ganador de fecha: [nombre] ó VACANTE
 🏌️ Mejor Gross / 📈 Peor Gross
 🦅 Stats: eagles, birdies, pares, bogeys, dobles+ · avg gross · avg neto
-⚔️ MATCH PLAY: resultado por match + total Gris vs Rojo + dif hoyos
+⚔️ MATCH PLAY: resultado por match + total La Cele vs Rojo + dif hoyos
 📝 Narrativa 3-5 oraciones (rioplatense, nombres completos)
 ⚠️ Discrepancias: [lista o "ninguna"]
 ```
@@ -123,7 +141,7 @@ Bloque tabular para la hoja `F[N]` del `MGT_2026_Master.xlsx`. **Dos sub-bloques
 Jugador	Equipo	H1	H2	…	H18
 Gatto, Mariano	ROJO	4	3	…	5
 ```
-- Orden: los 8 Gris primero, después los 8 Rojo, suplentes al final (mismo orden que hojas F1–F3).
+- Orden: los 8 La Cele primero, después los 8 Rojo, suplentes al final (mismo orden que hojas F1–F3).
 - Jugador sin tarjeta: fila con nombre y equipo, hoyos vacíos.
 
 **Bloque B — pegar en `V8` (hdcp del día, columna V, mismo orden de filas):**

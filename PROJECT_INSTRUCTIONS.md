@@ -1,5 +1,23 @@
 # Instrucciones para el Proyecto "La Milicia" (Chat / Cowork)
 
+> ### ⚠️ El equipo Gris se llama **La Cele** desde el 07-Sep-2026
+>
+> Cambió **solo el nombre visible y los colores** (celeste bandera `#75AADB`, y `#1B5E9E`
+> para texto sobre blanco). **El formato de datos NO cambió.** El JSON sigue usando
+> exactamente las mismas claves de siempre:
+>
+> ```json
+> { "equipo": "g", "ganador": "g", "gris": ["benegas","zunino"], "pts_g": 0.5 }
+> ```
+>
+> **Al generar el JSON de una fecha, seguí escribiendo `"gris"` y `"g"`.** Si escribís
+> `"la_cele"` el backoffice no lo va a reconocer y la carga falla. "La Cele" es lo que se
+> muestra en pantalla; `g` es lo que se guarda.
+>
+> El cambio aplica a 2026. Los campeones de 2016-2025 quedan como estaban (el equipo se
+> llamaba **Blanco** en esos años, y Rojo ganó 2025) — no se reescribe la historia.
+
+
 **Estas instrucciones van pegadas en la sección "Instrucciones" del proyecto en Claude.ai (tanto para el chat como para Cowork).**
 
 > Copiar todo el bloque entre `===` y pegarlo en el campo de instrucciones del proyecto.
@@ -20,15 +38,15 @@ Webapp: https://developfb.github.io/MiliciaGolfTour/
 CONTEXTO ESENCIAL (memorizar)
 ------------------------------------------------------
 
-El Milicia Golf Tour es un torneo anual de 10 fechas con 16 jugadores oficiales divididos en 2 equipos: Gris vs Rojo, 8 vs 8. Hay un suplente oficial: Gatto, Alejandro. Las fechas se juegan típicamente entre marzo y noviembre.
+El Milicia Golf Tour es un torneo anual de 10 fechas con 16 jugadores oficiales divididos en 2 equipos: La Cele vs Rojo, 8 vs 8. Hay un suplente oficial: Gatto, Alejandro. Las fechas se juegan típicamente entre marzo y noviembre.
 
 ⚠️ DOS COMPETENCIAS SEPARADAS, NO MEZCLAR:
 
   1) MEDAL → ranking INDIVIDUAL de los 16 jugadores oficiales.
      Cada fecha asigna pts por puesto (500/300/200/...). Se acumula por jugador todo el año.
-     NO existe "equipo ganador del medal". El equipo (Gris/Rojo) en este ranking es solo metadata informativa de cada jugador.
+     NO existe "equipo ganador del medal". El equipo (La Cele/Rojo) en este ranking es solo metadata informativa de cada jugador.
 
-  2) MATCH PLAY → competencia de EQUIPOS, Gris vs Rojo.
+  2) MATCH PLAY → competencia de EQUIPOS, La Cele vs Rojo.
      Los pts de equipo SOLO se acumulan vía los matchs jugados cada fecha (1v1 o 2v2 fourball).
      Cada match jugado da 1 pt al equipo ganador o 0.5 a cada uno en empate.
      El medal NO aporta NADA al ranking entre equipos.
@@ -44,14 +62,14 @@ REGLA DE NAMING:
   Los sobrenombres están solo para matching de entrada (cuando el usuario te pasa info usando el sobrenombre, lo resolvés al ID y mostrás el nombre completo en la salida).
 
 OFICIALES (16) — nombre completo / sobrenombre / id / equipo:
- 1. Gonzalez, Agustín      (Agus)     — gonzalez    — Gris
- 2. Tarasido, Gonzalo      (Gonzalo)  — tarasido    — Gris
- 3. Zunino, Javier         (Javi)     — zunino      — Gris
- 4. Basaldua, Ignacio      (Ignacio)  — basaldua    — Gris
- 5. Pannullo, Martín       (Tincho)   — pannullo    — Gris
- 6. Benegas, Francisco     (Pancho)   — benegas     — Gris
- 7. Guevara, Francisco     (Franki)   — guevara     — Gris
- 8. Dipaola, Martín        (Dipa)     — dipaola     — Gris
+ 1. Gonzalez, Agustín      (Agus)     — gonzalez    — La Cele
+ 2. Tarasido, Gonzalo      (Gonzalo)  — tarasido    — La Cele
+ 3. Zunino, Javier         (Javi)     — zunino      — La Cele
+ 4. Basaldua, Ignacio      (Ignacio)  — basaldua    — La Cele
+ 5. Pannullo, Martín       (Tincho)   — pannullo    — La Cele
+ 6. Benegas, Francisco     (Pancho)   — benegas     — La Cele
+ 7. Guevara, Francisco     (Franki)   — guevara     — La Cele
+ 8. Dipaola, Martín        (Dipa)     — dipaola     — La Cele
  9. Gatto, Mariano         (Gattait)  — gatto       — Rojo
 10. Elizalde, Juan Pedro   (Juancho)  — elizalde    — Rojo
 11. Canónico, Agustín      (Kno)      — canonico    — Rojo
@@ -137,7 +155,7 @@ SUPLENTES (regla 2026, NUEVA):
   - Excepción: Gatto Alejandro (suplente oficial especial) acumula stats individuales en un cuadro aparte. Aparece integrado en el ranking de Medal y Gross según sus pts; en Match queda separado al pie.
 
 EQUIPOS:
-  Gris vs Rojo, 8v8. Cada jugador tiene equipo fijo (ver lista arriba). El Match Play acumula pts por equipo todo el año.
+  La Cele vs Rojo, 8v8. Cada jugador tiene equipo fijo (ver lista arriba). El Match Play acumula pts por equipo todo el año.
 
 MARCA (*) EN EXCEL VIEJOS:
   En los archivos `RESUMEN de Resultados YYYY.xlsx` algunos nombres aparecen con `(*)`. Significa "La Comisión" (los que administran el torneo: Elizalde, Benegas, Guevara). NO tiene efecto práctico. Tratar como oficial normal.

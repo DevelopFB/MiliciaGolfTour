@@ -27,8 +27,8 @@
   --muted: #6b7a99;
   --muted-light: #8a98b8;
   /* Equipos */
-  --gris-color: #5a6a88;
-  --gris-light: #8a9ab8;
+  --cele-color: #1B5E9E;
+  --cele-light: #75AADB;
   --rojo-color: #c0392b;
   --rojo-light: #e04040;
   /* Gold */
@@ -157,7 +157,7 @@ header{
 .pos.p3{color:#a07050;}
 .pname{flex:1;font-size:0.85rem;font-weight:500;}
 .pteam{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.pteam.g{background:var(--gris-color);}
+.pteam.g{background:var(--cele-color);}
 .pteam.r{background:var(--rojo-color);}
 .pval{font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--gold);text-align:right;}
 .pval2{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted-light);text-align:right;min-width:50px;}
@@ -168,20 +168,20 @@ header{
   flex:1;border-radius:12px;padding:18px;text-align:center;
   border:1px solid;
 }
-.team-box.gris{border-color:rgba(90,106,136,0.2);background:rgba(90,106,136,0.04);}
+.team-box.cele{border-color:rgba(117,170,219,0.2);background:rgba(117,170,219,0.04);}
 .team-box.rojo{border-color:rgba(192,57,43,0.2);background:rgba(192,57,43,0.04);}
 .team-box .tlabel{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
-.team-box.gris .tlabel{color:var(--gris-color);}
+.team-box.cele .tlabel{color:var(--cele-color);}
 .team-box.rojo .tlabel{color:var(--rojo-light);}
 .team-box .tpts{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1;}
-.team-box.gris .tpts{color:var(--navy-deep);}
+.team-box.cele .tpts{color:var(--navy-deep);}
 .team-box.rojo .tpts{color:var(--rojo-color);}
 .team-box .tsub{font-size:0.72rem;color:var(--muted-light);margin-top:4px;}
 .team-box .tdif{
   font-family:'DM Mono',monospace;font-size:0.8rem;
   margin-top:8px;padding:4px 10px;border-radius:6px;display:inline-block;
 }
-.team-box.gris .tdif{background:rgba(74,85,104,0.08);color:var(--gris-color);}
+.team-box.cele .tdif{background:rgba(74,85,104,0.08);color:var(--cele-color);}
 .team-box.rojo .tdif{background:rgba(192,57,43,0.08);color:var(--rojo-light);}
 .vs-mid{display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--muted);padding:0 4px;}
 
@@ -205,7 +205,7 @@ header{
 
 .player-name-cell{display:flex;align-items:center;gap:8px;}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.dot.g{background:var(--gris-color);}
+.dot.g{background:var(--cele-color);}
 .dot.r{background:var(--rojo-color);}
 
 .pts-badge{
@@ -267,10 +267,10 @@ header{
 .match-type.fb{color:var(--blue);border-color:rgba(126,184,247,0.35);background:rgba(126,184,247,0.07);}
 .match-type.ind{color:var(--green);border-color:rgba(74,222,128,0.35);background:rgba(74,222,128,0.07);}
 .match-players{flex:1;font-size:0.82rem;}
-.match-players .team-g{color:var(--gris-color);}
+.match-players .team-g{color:var(--cele-color);}
 .match-players .team-r{color:var(--rojo-light);}
 .match-winner{font-family:'DM Mono',monospace;font-size:0.7rem;padding:3px 10px;border-radius:20px;}
-.match-winner.gw{background:rgba(200,205,214,0.12);color:var(--gris-color);}
+.match-winner.gw{background:rgba(117,170,219,0.12);color:var(--cele-color);}
 .match-winner.rw{background:rgba(224,48,48,0.12);color:var(--rojo-light);}
 .match-winner.tie{background:rgba(201,168,76,0.12);color:var(--gold);}
 .match-dif{font-family:'DM Mono',monospace;font-size:0.78rem;}
@@ -317,7 +317,7 @@ header{
   display:inline-block;font-family:'DM Mono',monospace;font-size:0.62rem;
   letter-spacing:1px;padding:3px 9px;border-radius:4px;border:1px solid;
 }
-.badge.gris{color:var(--gris-color);border-color:rgba(90,106,136,0.25);background:rgba(90,106,136,0.06);}
+.badge.cele{color:var(--cele-color);border-color:rgba(117,170,219,0.25);background:rgba(117,170,219,0.06);}
 .badge.rojo{color:var(--rojo-color);border-color:rgba(192,57,43,0.25);background:rgba(192,57,43,0.06);}
 .badge.gold{color:var(--gold-dark);border-color:var(--border-gold);background:var(--gold-dim);}
 
@@ -984,8 +984,8 @@ function buildAccum() {
         <div class="podium" id="top-medal"></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;">
-        <div class="card" style="border-top:3px solid var(--gris-light);flex:1">
-          <div class="kpi-label" style="color:var(--gris-color);letter-spacing:2px">⬜ GRIS — Prov. Final</div>
+        <div class="card" style="border-top:3px solid var(--cele-light);flex:1">
+          <div class="kpi-label" style="color:var(--cele-color);letter-spacing:2px">🟦 LA CELE — Prov. Final</div>
           <div class="podium" id="top-match-g"></div>
         </div>
         <div class="card" style="border-top:3px solid var(--rojo-color);flex:1">
@@ -1006,17 +1006,17 @@ function buildAccum() {
       </div>
     </div>
 
-    <!-- GRIS VS ROJO -->
+    <!-- LA CELE VS ROJO -->
     <div class="sec-head">Copa Match Play — Equipo</div>
     <div id="team-vs-block"></div>
 
     <div class="g2">
       <div class="card">
-        <div class="kpi-label">Evolución puntos — Gris vs Rojo (acumulado)</div>
+        <div class="kpi-label">Evolución puntos — La Cele vs Rojo (acumulado)</div>
         <div class="ch ch-200"><canvas id="chart-team-pts"></canvas></div>
       </div>
       <div class="card">
-        <div class="kpi-label">Evolución diferencial de hoyos (+ Rojo lidera / − Gris lidera)</div>
+        <div class="kpi-label">Evolución diferencial de hoyos (+ Rojo lidera / − La Cele lidera)</div>
         <div class="ch ch-200"><canvas id="chart-team-dif"></canvas></div>
       </div>
     </div>
@@ -1041,7 +1041,7 @@ function buildAccum() {
     <div id="match-team-summary" class="match-team-summary"></div>
     <div class="g2" style="margin-bottom:16px">
       <div>
-        <div class="kpi-label" style="margin-bottom:10px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);">⬜ Equipo GRIS</div>
+        <div class="kpi-label" style="margin-bottom:10px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);">⬜ Equipo LA CELE</div>
         <div class="card"><table class="tbl" id="tbl-match-g"></table></div>
       </div>
       <div>
@@ -1640,7 +1640,7 @@ function buildAccum() {
 // ─── helpers ───
 const byId = id => document.getElementById(id);
 const esc = s => String(s).replace(/</g,'&lt;');
-const teamLabel = t => t==='g'?'<span class="badge gris">GRIS</span>':'<span class="badge rojo">ROJO</span>';
+const teamLabel = t => t==='g'?'<span class="badge cele">LA CELE</span>':'<span class="badge rojo">ROJO</span>';
 const fmtDif = d => d>0?`<span class="diff-pos">+${d}</span>`:d<0?`<span class="diff-neg">${d}</span>`:`<span class="diff-zero">0</span>`;
 const fmtPts = v => typeof v==='number' ? v.toFixed(2).replace('.', ',') : String(v);
 // Puntos de match compactos: decimales solo cuando aportan (3 · 17,5 · 0,25).
@@ -2000,16 +2000,16 @@ function medalDateBadge(entry) {
 }
 function renderMatchTeamSummary(acc) {
   const g = acc.teamMatch.g, r = acc.teamMatch.r;
-  const leader = g.pts===r.pts ? 'EMPATE' : (g.pts > r.pts ? 'GRIS' : 'ROJO');
-  const leaderColor = g.pts===r.pts ? 'var(--gold)' : (g.pts > r.pts ? 'var(--gris-color)' : 'var(--rojo-light)');
+  const leader = g.pts===r.pts ? 'EMPATE' : (g.pts > r.pts ? 'LA CELE' : 'ROJO');
+  const leaderColor = g.pts===r.pts ? 'var(--gold)' : (g.pts > r.pts ? 'var(--cele-color)' : 'var(--rojo-light)');
   // Diferencial absoluto a favor del equipo que lidera (no duplicar negativo en el otro)
-  const difLeader = Math.abs(r.dif); // r.dif > 0 = Rojo lidera, < 0 = Gris lidera
+  const difLeader = Math.abs(r.dif); // r.dif > 0 = Rojo lidera, < 0 = La Cele lidera
   const gDifTxt = r.dif < 0 ? `+${difLeader}` : r.dif > 0 ? '—' : '0';
   const rDifTxt = r.dif > 0 ? `+${difLeader}` : r.dif < 0 ? '—' : '0';
   byId('match-team-summary').innerHTML = `
     <div class="team-vs">
-      <div class="team-box gris">
-        <div class="tlabel">⬜ GRIS</div>
+      <div class="team-box cele">
+        <div class="tlabel">🟦 LA CELE</div>
         <div class="tpts">${fmtPtsC(g.pts)}</div>
         <div class="tsub">puntos acumulados de equipo</div>
         <div class="tdif">Dif. Hoyos: ${gDifTxt}</div>
@@ -2066,15 +2066,15 @@ function renderOverview(acc) {
   // Líder de Match: 1) puntos; 2) desempate por diferencial de hoyos; 3) empate total
   const _gd = acc.teamMatch.g.dif, _rd = acc.teamMatch.r.dif;
   let matchLead, matchLeadColor, matchLeadDif, matchLeadVs;
-  if(totalMatchPts_g>totalMatchPts_r || (totalMatchPts_g===totalMatchPts_r && _gd>_rd)) { matchLead='GRIS'; matchLeadColor='var(--gris-color)'; matchLeadDif=_gd; matchLeadVs='Rojo'; }
-  else if(totalMatchPts_r>totalMatchPts_g || (totalMatchPts_r===totalMatchPts_g && _rd>_gd)) { matchLead='ROJO'; matchLeadColor='var(--rojo-light)'; matchLeadDif=_rd; matchLeadVs='Gris'; }
+  if(totalMatchPts_g>totalMatchPts_r || (totalMatchPts_g===totalMatchPts_r && _gd>_rd)) { matchLead='LA CELE'; matchLeadColor='var(--cele-color)'; matchLeadDif=_gd; matchLeadVs='Rojo'; }
+  else if(totalMatchPts_r>totalMatchPts_g || (totalMatchPts_r===totalMatchPts_g && _rd>_gd)) { matchLead='ROJO'; matchLeadColor='var(--rojo-light)'; matchLeadDif=_rd; matchLeadVs='La Cele'; }
   else { matchLead='EMPATE'; matchLeadColor='var(--muted)'; matchLeadDif=0; matchLeadVs=''; }
   byId('kpi-row').innerHTML = `
     <div class="card"><div class="kpi-label">fechas Jugadas</div><div class="kpi-val">${played}</div><div class="kpi-sub">de 10 en el año</div></div>
     <div class="card"><div class="kpi-label">Líder Medal</div><div class="kpi-name">${lp?.name.split(',')[1]?.trim()||lp?.name}</div><div class="kpi-sub">${leader_medal[1].pts} pts · ${teamLabel(lp?.team||'g')}</div></div>
     <div class="card"><div class="kpi-label">Equipo Lider Match</div><div class="kpi-val" style="font-size:1.8rem;color:${matchLeadColor}">${matchLead}</div><div class="kpi-sub">${matchLead==='EMPATE' ? 'Igualdad total (pts y dif)' : (totalMatchPts_g!==totalMatchPts_r ? ('+'+fmtPtsC(Math.abs(totalMatchPts_g-totalMatchPts_r))+' pts vs '+matchLeadVs+' | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif) : ('Igualan en pts | dif hoyos '+(matchLeadDif>=0?'+':'')+matchLeadDif))}</div></div>
     <div class="card"><div class="kpi-label">Próxima Fecha</div><div class="kpi-val" style="font-size:1.6rem">${fechas.find(f=>f.pendiente)?.fecha||'—'}</div><div class="kpi-sub">F${fechas.findIndex(f=>f.pendiente)+1}</div></div>
-    <div class="card"><div class="kpi-label">Jugadores</div><div class="kpi-val">16</div><div class="kpi-sub">8 Gris · 8 Rojo</div></div>
+    <div class="card"><div class="kpi-label">Jugadores</div><div class="kpi-val">16</div><div class="kpi-sub">8 La Cele · 8 Rojo</div></div>
   `;
 
   // Top Medal
@@ -2097,12 +2097,12 @@ function renderOverview(acc) {
       .filter(m=>PLAYERS.find(p=>p.id===m.id)?.team===team)
       .sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
     const labels = team==='g'
-      ? ['⚔️ Finalista GRIS','Reserva GRIS']
+      ? ['⚔️ Finalista LA CELE','Reserva LA CELE']
       : ['⚔️ Finalista ROJO','Reserva ROJO'];
     byId(`top-match-${team}`).innerHTML = teamRank.slice(0,2).map((m,i)=>{
       const p=PLAYERS.find(x=>x.id===m.id);
       const isFinalist = i===0;
-      return `<div class="podium-row" style="${isFinalist?'border:1px solid '+(team==='g'?'rgba(200,205,214,0.2)':'rgba(224,48,48,0.2)')+'':''};border-radius:8px;padding:8px 10px;margin-bottom:4px">
+      return `<div class="podium-row" style="${isFinalist?'border:1px solid '+(team==='g'?'rgba(117,170,219,0.2)':'rgba(224,48,48,0.2)')+'':''};border-radius:8px;padding:8px 10px;margin-bottom:4px">
         <span class="pos" style="color:${isFinalist?'var(--gold)':'var(--muted)'};font-size:0.85rem">${isFinalist?'⚔️':'↩'}</span>
         <div class="pteam ${team}"></div>
         <span class="pname" style="${isFinalist?'font-weight:600':'color:var(--muted-light)'}">
@@ -2148,8 +2148,8 @@ function renderOverview(acc) {
   const rDifT = r.dif > 0 ? `+${difAbs}` : r.dif < 0 ? '—' : '0';
   byId('team-vs-block').innerHTML = `
     <div class="team-vs">
-      <div class="team-box gris">
-        <div class="tlabel">⬜ GRIS</div>
+      <div class="team-box cele">
+        <div class="tlabel">🟦 LA CELE</div>
         <div class="tpts">${fmtPts(g.pts)}</div>
         <div class="tsub">puntos de equipo</div>
         <div class="tdif">Dif. Hoyos: ${gDifT}</div>
@@ -2188,29 +2188,29 @@ function renderOverview(acc) {
   charts['team-pts'] = new Chart(byId('chart-team-pts'),{
     type:'line',
     data:{labels,datasets:[
-      {label:'GRIS',data:gPtsPerF,borderColor:'rgba(200,205,214,0.8)',backgroundColor:'rgba(200,205,214,0.08)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:'var(--gris-color)'},
+      {label:'LA CELE',data:gPtsPerF,borderColor:'rgba(117,170,219,0.8)',backgroundColor:'rgba(117,170,219,0.08)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:'var(--cele-color)'},
       {label:'ROJO',data:rPtsPerF,borderColor:'rgba(224,48,48,0.8)',backgroundColor:'rgba(224,48,48,0.08)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:'var(--rojo-color)'},
     ]},
     options:{...CHART_BASE,plugins:{legend:{labels:{color:'rgba(26,34,51,0.7)',font:{family:'DM Sans',size:11}}}},scales:CHART_BASE.scales}
   });
 
   destroyChart('team-dif');
-  // Una sola serie: el diferencial. Positivo = Rojo lidera, Negativo = Gris lidera.
+  // Una sola serie: el diferencial. Positivo = Rojo lidera, Negativo = La Cele lidera.
   // Color del bar según signo.
   const difDelta = gDifPerF.map((g, i) => rDifPerF[i] - g >= 0 ? rDifPerF[i] - g : (rDifPerF[i] - g));
   // Simplificado: rDifPerF ya es positivo cuando Rojo gana, así que usar rDif directamente.
-  // Si Rojo lidera por N → +N. Si Gris lidera → -N (lo mismo que rDif que ya viene negativo).
+  // Si Rojo lidera por N → +N. Si La Cele lidera → -N (lo mismo que rDif que ya viene negativo).
   charts['team-dif'] = new Chart(byId('chart-team-dif'),{
     type:'bar',
     data:{labels,datasets:[
       {
-        label:'Diferencial acumulado (+ Rojo / − Gris)',
+        label:'Diferencial acumulado (+ Rojo / − La Cele)',
         data: rDifPerF,
-        backgroundColor: rDifPerF.map(v => v >= 0 ? 'rgba(224,48,48,0.6)' : 'rgba(200,205,214,0.6)'),
+        backgroundColor: rDifPerF.map(v => v >= 0 ? 'rgba(224,48,48,0.6)' : 'rgba(117,170,219,0.6)'),
         borderRadius:4
       },
     ]},
-    options:{...CHART_BASE,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y;return v>0?`Rojo +${v} hoyos`:v<0?`Gris +${Math.abs(v)} hoyos`:'Empate';}}}},scales:CHART_BASE.scales}
+    options:{...CHART_BASE,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y;return v>0?`Rojo +${v} hoyos`:v<0?`La Cele +${Math.abs(v)} hoyos`:'Empate';}}}},scales:CHART_BASE.scales}
   });
 }
 
@@ -2267,7 +2267,7 @@ function renderMedal(acc) {
       datasets:[{
         label:'Puntos Medal',
         data:rank.map(r=>r.pts),
-        backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(r.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)')),
+        backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(r.team==='g'?'rgba(117,170,219,0.7)':'rgba(224,48,48,0.7)')),
         borderRadius:5
       }]
     },
@@ -2327,8 +2327,8 @@ function renderMatch(acc) {
   const isF9done = played >= 9;
 
   byId('finalistas-content').innerHTML = `
-    <div style="flex:1;min-width:200px;background:rgba(200,205,214,0.05);border:1px solid rgba(200,205,214,0.2);border-radius:10px;padding:14px 18px">
-      <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gris-color);margin-bottom:8px">⬜ Finalista GRIS</div>
+    <div style="flex:1;min-width:200px;background:rgba(117,170,219,0.05);border:1px solid rgba(117,170,219,0.2);border-radius:10px;padding:14px 18px">
+      <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--cele-color);margin-bottom:8px">⬜ Finalista LA CELE</div>
       <div style="font-size:1.05rem;font-weight:600;color:var(--white)">${pgris?.name||'—'}</div>
       <div style="font-size:0.75rem;color:var(--muted-light);margin-top:4px">${topG?topG.pts+' pts match · '+( topG.difHoyos>=0?'+':'')+topG.difHoyos+' H':'Sin datos'}</div>
     </div>
@@ -2354,7 +2354,7 @@ function renderMatch(acc) {
       datasets:[{
         label:'Puntos Match',
         data:allRank.map(m=>m.pts),
-        backgroundColor:allRank.map(m=>PLAYERS.find(p=>p.id===m.id)?.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)'),
+        backgroundColor:allRank.map(m=>PLAYERS.find(p=>p.id===m.id)?.team==='g'?'rgba(117,170,219,0.7)':'rgba(224,48,48,0.7)'),
         borderRadius:5
       }]
     },
@@ -2537,15 +2537,15 @@ function renderFechaDetail(num) {
           <span class="team-r">${rNames}</span>
           ${supNota}
         </div>
-        <span class="match-winner ${gw?'gw':rw?'rw':'tie'}">${gw?'GRIS':rw?'ROJO':'EMPATE'}</span>
+        <span class="match-winner ${gw?'gw':rw?'rw':'tie'}">${gw?'LA CELE':rw?'ROJO':'EMPATE'}</span>
         <span class="match-dif">+${Math.abs(m.difHoyos||0)} hoyos</span>
       </div>`;
     }).join('');
     matchHTML = `<div style="margin-bottom:8px">${matchHTML}</div>
     <div style="display:flex;gap:16px;font-size:0.82rem;color:var(--muted-light)">
-      <span>GRIS: <strong style="color:var(--gris-color)">${gPts} pts</strong></span>
+      <span>LA CELE: <strong style="color:var(--cele-color)">${gPts} pts</strong></span>
       <span>ROJO: <strong style="color:var(--rojo-light)">${rPts} pts</strong></span>
-      <span>Dif. Hoyos (Gris): <strong>${fmtDif(gDif)}</strong></span>
+      <span>Dif. Hoyos (La Cele): <strong>${fmtDif(gDif)}</strong></span>
     </div>`;
   }
 
@@ -2560,7 +2560,7 @@ function renderFechaDetail(num) {
             const esEsp = info?.esOficialEspecial;
             const reemplazaName = s.reemplaza ? (PLAYERS.find(p=>p.id===s.reemplaza)?.name || s.reemplaza) : null;
             return `<span style="color:var(--gold);font-weight:600">${nombre}</span>
-              <span style="color:var(--muted-light);font-size:0.75rem"> → equipo ${s.equipo==='g'?'GRIS':'ROJO'}${reemplazaName?' · reemplaza a '+reemplazaName:''}${esEsp?' <span style="color:var(--gold);font-size:0.65rem">SUPLENTE OFICIAL</span>':''}</span>`;
+              <span style="color:var(--muted-light);font-size:0.75rem"> → equipo ${s.equipo==='g'?'LA CELE':'ROJO'}${reemplazaName?' · reemplaza a '+reemplazaName:''}${esEsp?' <span style="color:var(--gold);font-size:0.65rem">SUPLENTE OFICIAL</span>':''}</span>`;
           }).join('<br>')}
         </div>
         ${(f.suplentes||[]).some(s=>!SUPLENTES_CONOCIDOS.find(x=>x.id===s.id)?.esOficialEspecial)
@@ -2590,7 +2590,7 @@ function renderFechaDetail(num) {
               const p = PLAYERS.find(x=>x.id===m.id);
               const nombre = getDisplayName(m.id, f);
               const equipoDisplay = m.esSuplente
-                ? `<span style="color:var(--gold);font-size:0.7rem">${m.equipoRepresenta==='g'?'GRIS*':'ROJO*'}</span>`
+                ? `<span style="color:var(--gold);font-size:0.7rem">${m.equipoRepresenta==='g'?'LA CELE*':'ROJO*'}</span>`
                 : teamLabel(p?.team||'g');
               const ptsDisplay = m.esSuplente
                 ? `<span style="color:var(--muted-light);font-size:0.75rem">(${fmtPts(m.pts)})</span>`
@@ -2612,7 +2612,7 @@ function renderFechaDetail(num) {
               return `<tr style="opacity:0.55;border-top:1px dashed rgba(201,168,76,0.2)">
                 <td><span class="rank-num">—</span></td>
                 <td><span style="color:var(--gold)">${nombre}*</span> <span style="font-size:0.65rem;color:var(--muted)">sin tarjeta cargada</span></td>
-                <td><span style="color:var(--gold);font-size:0.7rem">${s.equipo==='g'?'GRIS*':'ROJO*'}</span></td>
+                <td><span style="color:var(--gold);font-size:0.7rem">${s.equipo==='g'?'LA CELE*':'ROJO*'}</span></td>
                 <td class="num" style="color:var(--muted)">—</td>
                 <td class="num" style="color:var(--muted)">—</td>
                 <td class="num" style="color:var(--muted)">—</td>
@@ -2723,7 +2723,7 @@ function renderGross(acc) {
     type:'bar',
     data:{
       labels:rank.map(r=>(r.esSupOficial?supEspG.name:PLAYERS.find(p=>p.id===r.id)?.name).split(',')[0]),
-      datasets:[{label:`Avg gross (mejores ${BEST_N})`,data:rank.map(r=>r.avgBestN ?? r.avgAll),backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(PLAYERS.find(p=>p.id===r.id)?.team==='g'?'rgba(200,205,214,0.7)':'rgba(224,48,48,0.7)')),borderRadius:5}]
+      datasets:[{label:`Avg gross (mejores ${BEST_N})`,data:rank.map(r=>r.avgBestN ?? r.avgAll),backgroundColor:rank.map(r=>r.esSupOficial?'rgba(201,168,76,0.75)':(PLAYERS.find(p=>p.id===r.id)?.team==='g'?'rgba(117,170,219,0.7)':'rgba(224,48,48,0.7)')),borderRadius:5}]
     },
     options:{...CHART_BASE,plugins:{legend:{display:false}},scales:{...CHART_BASE.scales,y:{...CHART_BASE.scales.y,min:60}}}
   });
@@ -2776,7 +2776,7 @@ function renderEstadisticas() {
   // Build player checkboxes (include suplente especial)
   const allPlayers = [...PLAYERS, ...SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial)];
   container.innerHTML = allPlayers.map(p => {
-    const dotColor = p.team === 'g' ? 'var(--gris-color)' : p.team === 'r' ? 'var(--rojo-color)' : 'var(--gold)';
+    const dotColor = p.team === 'g' ? 'var(--cele-color)' : p.team === 'r' ? 'var(--rojo-color)' : 'var(--gold)';
     return `<label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;cursor:pointer">
       <input type="checkbox" class="stats-player-cb" data-id="${p.id}" checked onchange="updateStatsCharts()">
       <span style="width:8px;height:8px;border-radius:50%;background:${dotColor};flex-shrink:0"></span>
@@ -2988,7 +2988,7 @@ function renderFixture() {
         [7,'Fourball 2v2','100% aleatorio','Scapparone + Benegas'],
         [8,'Individual 1v1','Por posición Match','Elizalde + Mendez'],
         [9,'Fourball 2v2','Match inverso (1v8)(2v7)...','— GIRA —'],
-        [10,'Individual 1v1 FINAL','#1 Gris vs #1 Rojo','— GIRA —'],
+        [10,'Individual 1v1 FINAL','#1 La Cele vs #1 Rojo','— GIRA —'],
       ].find(x=>x[0]===f.num)||[];
       return info;
     }
@@ -3507,7 +3507,7 @@ function adminAddSuplente(data) {
   PLAYERS.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.name;
-    opt.textContent = p.name.split(',')[0] + ' (' + (p.team==='g' ? 'Gris' : 'Rojo') + ')';
+    opt.textContent = p.name.split(',')[0] + ' (' + (p.team==='g' ? 'La Cele' : 'Rojo') + ')';
     if(selReemplaza === p.name) opt.selected = true;
     sel3.appendChild(opt);
   });
@@ -3540,7 +3540,7 @@ function adminAddSuplente(data) {
   const sel4 = document.createElement('select');
   sel4.id = 'sup-equipo-' + idx;
   sel4.style.cssText = 'background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:5px 8px;border-radius:6px;font-size:0.75rem';
-  [['g','⬜ GRIS'],['r','🟥 ROJO']].forEach(([val, label]) => {
+  [['g','🟦 LA CELE'],['r','🟥 ROJO']].forEach(([val, label]) => {
     const opt = document.createElement('option');
     opt.value = val;
     opt.textContent = label;
@@ -3688,8 +3688,8 @@ function adminBuildMatchBlocks(fechaNum) {
   const numMatchs = tipo==='fb'? 4 : 8; // 4 fourballs o 8 individuales (8 vs 8)
 
   // Si es fb, hay 4 matchs de 2v2; si es ind, hay 8 de 1v1
-  // Armar selectores de jugadores Gris y Rojo
-  const grisOpts = PLAYERS.filter(p=>p.team==='g').map(p=>`<option value="${p.id}">${p.name.split(',')[0]}</option>`).join('')
+  // Armar selectores de jugadores La Cele y Rojo
+  const celeOpts = PLAYERS.filter(p=>p.team==='g').map(p=>`<option value="${p.id}">${p.name.split(',')[0]}</option>`).join('')
     + SUPLENTES_CONOCIDOS.map(s=>`<option value="${s.id}" style="color:var(--gold)">★ ${s.name.split(',')[0]}</option>`).join('');
   const rojoOpts = PLAYERS.filter(p=>p.team==='r').map(p=>`<option value="${p.id}">${p.name.split(',')[0]}</option>`).join('')
     + SUPLENTES_CONOCIDOS.map(s=>`<option value="${s.id}" style="color:var(--gold)">★ ${s.name.split(',')[0]}</option>`).join('');
@@ -3703,19 +3703,19 @@ function adminBuildMatchBlocks(fechaNum) {
             <span class="admin-match-title">MATCH ${i+1} — Fourball 2vs2</span>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;align-items:end">
-            <div class="admin-field"><label style="color:var(--gris-color)">Gris 1</label>
-              <select id="adm-m${i}-g1" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${grisOpts}</select></div>
-            <div class="admin-field"><label style="color:var(--gris-color)">Gris 2</label>
-              <select id="adm-m${i}-g2" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${grisOpts}</select></div>
+            <div class="admin-field"><label style="color:var(--cele-color)">La Cele 1</label>
+              <select id="adm-m${i}-g1" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${celeOpts}</select></div>
+            <div class="admin-field"><label style="color:var(--cele-color)">La Cele 2</label>
+              <select id="adm-m${i}-g2" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${celeOpts}</select></div>
             <div class="admin-field"><label style="color:var(--rojo-light)">Rojo 1</label>
               <select id="adm-m${i}-r1" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${rojoOpts}</select></div>
             <div class="admin-field"><label style="color:var(--rojo-light)">Rojo 2</label>
               <select id="adm-m${i}-r2" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${rojoOpts}</select></div>
             <div class="admin-field"><label>Ganador</label>
               <select id="adm-m${i}-gan" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">
-                <option value="g">GRIS</option><option value="r">ROJO</option><option value="empate">EMPATE</option>
+                <option value="g">LA CELE</option><option value="r">ROJO</option><option value="empate">EMPATE</option>
               </select></div>
-            <div class="admin-field"><label>Dif. Hoyos (± Gris)</label>
+            <div class="admin-field"><label>Dif. Hoyos (± La Cele)</label>
               <input type="number" id="adm-m${i}-dif" placeholder="Ej: +3 o -2" min="-18" max="18"
                 style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.82rem;outline:none"></div>
           </div>
@@ -3727,15 +3727,15 @@ function adminBuildMatchBlocks(fechaNum) {
             <span class="admin-match-title">MATCH ${i+1} — Individual 1vs1</span>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;align-items:end">
-            <div class="admin-field"><label style="color:var(--gris-color)">Gris</label>
-              <select id="adm-m${i}-g1" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${grisOpts}</select></div>
+            <div class="admin-field"><label style="color:var(--cele-color)">La Cele</label>
+              <select id="adm-m${i}-g1" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${celeOpts}</select></div>
             <div class="admin-field"><label style="color:var(--rojo-light)">Rojo</label>
               <select id="adm-m${i}-r1" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">${rojoOpts}</select></div>
             <div class="admin-field"><label>Ganador</label>
               <select id="adm-m${i}-gan" style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.78rem">
-                <option value="g">GRIS</option><option value="r">ROJO</option><option value="empate">EMPATE</option>
+                <option value="g">LA CELE</option><option value="r">ROJO</option><option value="empate">EMPATE</option>
               </select></div>
-            <div class="admin-field"><label>Dif. Hoyos (± Gris)</label>
+            <div class="admin-field"><label>Dif. Hoyos (± La Cele)</label>
               <input type="number" id="adm-m${i}-dif" placeholder="Ej: +3 o -2" min="-18" max="18"
                 style="background:var(--navy-mid);border:1px solid var(--border);color:var(--white);padding:6px 8px;border-radius:6px;font-size:0.82rem;outline:none"></div>
           </div>
@@ -4087,8 +4087,8 @@ function getThemeRGB() {
     onNavy: pick('--on-navy',[232,237,245]),
     muted: pick('--muted',[107,122,153]),
     mutedLight: pick('--muted-light',[138,152,184]),
-    gris: pick('--gris-color',[90,106,136]),
-    grisLight: pick('--gris-light',[138,154,184]),
+    cele: pick('--cele-color',[27,94,158]),
+    celeLight: pick('--cele-light',[117,170,219]),
     rojo: pick('--rojo-color',[192,57,43]),
     rojoLight: pick('--rojo-light',[224,64,64]),
     gold: pick('--gold',[201,168,76]),
@@ -4106,6 +4106,11 @@ function sanitizePdfText(s='') {
     .replace(/[–—]/g,'-')
     .replace(/[“”]/g,'"')
     .replace(/[‘’]/g,"'")
+    // Las fuentes estandar de jsPDF son WinAnsi (Latin-1). Cualquier cosa fuera de
+    // ese rango -- emojis, estrellas, flechas -- se dibuja como bytes basura
+    // ("\u{1F7E6} LA CELE" salia "O=ss LA CELE"). Los acentos del castellano estan
+    // dentro de Latin-1, asi que sobreviven.
+    .replace(/[^\x00-\xFF]/g,'')
     .replace(/\s{2,}/g,' ')
     .trim();
 }
@@ -4196,7 +4201,7 @@ function exportFechaPDF() {
     const p = PLAYERS.find(x=>x.id===m.id);
     const isSup = m.esSuplente;
     const dot = isSup ? 'sup' : (p?.team === 'g' ? 'g' : 'r');
-    const teamLabel = isSup ? 'SUP' : (p?.team==='g'?'GRIS':'ROJO');
+    const teamLabel = isSup ? 'SUP' : (p?.team==='g'?'LA CELE':'ROJO');
     const nameDisplay = p?.name || nameOf(m.id);
     return `<tr class="${isSup?'sup':''}">
       <td class="pos">${m.pos}°</td>
@@ -4216,7 +4221,7 @@ function exportFechaPDF() {
     const winLbl = gw?`G · ${mag}`:rw?`R · ${mag}`:`EMP`;
     return `<li class="match-row">
       <div class="mr-g ${gw?'win':rw?'lose':''}">${gris}</div>
-      <div class="mr-mid ${gw?'gris':rw?'rojo':''}">${winLbl}</div>
+      <div class="mr-mid ${gw?'cele':rw?'rojo':''}">${winLbl}</div>
       <div class="mr-r ${rw?'win':gw?'lose':''}">${rojo}</div>
     </li>`;
   }).join('');
@@ -4260,7 +4265,7 @@ function exportFechaPDF() {
     --navy:#0B1F3A;--navy-deep:#06152A;--navy-light:#15315A;
     --gold:#C5A572;--gold-soft:#E4D4B0;--gold-deep:#9E8052;
     --paper:#FAF7F1;--ink:#1B2333;--muted:#6B7585;
-    --gris:#5E6B7A;--rojo:#A33C3C;
+    --cele:#1B5E9E;--cele-light:#75AADB;--rojo:#A33C3C;
     --line:rgba(11,31,58,.10);
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -4296,7 +4301,7 @@ function exportFechaPDF() {
   .ranking tr.sup td{background:rgba(197,165,114,.10);color:var(--gold-deep);font-style:italic}
   .ranking .pos{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold-deep);width:34px}
   .team-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
-  .team-dot.g{background:var(--gris)}
+  .team-dot.g{background:var(--cele-light);border:1px solid var(--cele)}
   .team-dot.r{background:var(--rojo)}
   .team-dot.sup{background:var(--gold)}
   .tag{display:inline-block;font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:1px 5px;background:var(--gold-soft);color:var(--gold-deep);border-radius:2px;margin-left:5px;font-weight:600}
@@ -4321,7 +4326,7 @@ function exportFechaPDF() {
   .mr-g.win,.mr-r.win{font-weight:700;color:var(--navy)}
   .mr-g.lose,.mr-r.lose{color:var(--muted)}
   .mr-mid{text-align:center;font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:var(--gold-deep);letter-spacing:.1em}
-  .mr-mid.gris{color:var(--gris)} .mr-mid.rojo{color:var(--rojo)}
+  .mr-mid.cele{color:var(--cele)} .mr-mid.rojo{color:var(--rojo)}
   .narrative{background:#fff;border-left:3px solid var(--gold);padding:14px 18px;font-size:12px;line-height:1.65;color:var(--ink)}
   .narrative p+p{margin-top:8px}
   .footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
@@ -4378,15 +4383,15 @@ function exportFechaPDF() {
 
   ${(f.matchs && f.matchs.length) ? `
   <div class="section">
-    <div class="section-title">Match Play · Gris vs Rojo</div>
+    <div class="section-title">Match Play · La Cele vs Rojo</div>
     <div class="grid-2">
       <div>
         <ul class="match-list">${matchRowsHtml}</ul>
       </div>
       <div class="match-summary">
-        <div class="ms-row"><div class="label">Puntos GRIS</div><div class="val" style="color:#fff">${fmtPts(gPts)}</div></div>
+        <div class="ms-row"><div class="label">Puntos LA CELE</div><div class="val" style="color:#fff">${fmtPts(gPts)}</div></div>
         <div class="ms-row"><div class="label">Puntos ROJO</div><div class="val" style="color:#fff">${fmtPts(rPts)}</div></div>
-        <div class="ms-row"><div class="label">Dif Hoyos</div><div class="val">${gDif>0?'GRIS +'+gDif:gDif<0?'ROJO +'+Math.abs(gDif):'EMP'}</div></div>
+        <div class="ms-row"><div class="label">Dif Hoyos</div><div class="val">${gDif>0?'LA CELE +'+gDif:gDif<0?'ROJO +'+Math.abs(gDif):'EMP'}</div></div>
       </div>
     </div>
   </div>` : ''}
@@ -4455,7 +4460,7 @@ function exportConsolidadoPDF() {
   const white = T.onNavy;
   const muted = T.muted;
   const mutedL= T.mutedLight;
-  const grisC = T.grisLight;
+  const celeC = T.cele;
   const red   = T.rojo;
   const redL  = T.rojoLight;
   const green = T.green;
@@ -4522,9 +4527,9 @@ function exportConsolidadoPDF() {
 
   fr(M, 185, col/2-4, 30, [18,30,50]);
   fr(M+col/2+4, 185, col/2-4, 30, [35,12,12]);
-  sf(8,'bold',grisC); doc.text('⬜  GRIS', M + col/4, 193, {align:'center'});
+  sf(8,'bold',celeC); doc.text('LA CELE', M + col/4, 193, {align:'center'});
   sf(12,'bold',white); doc.text(String(gTot) + ' pts', M + col/4, 207, {align:'center'});
-  sf(8,'bold',redL); doc.text('🟥  ROJO', M + col/4*3 + 4, 193, {align:'center'});
+  sf(8,'bold',redL); doc.text('ROJO', M + col/4*3 + 4, 193, {align:'center'});
   sf(12,'bold',white); doc.text(String(rTot) + ' pts', M + col/4*3 + 4, 207, {align:'center'});
 
   sf(7,'normal',muted); doc.text('Dif. Hoyos acum: ' + (gDifTot>=0?'+':'')+gDifTot, W/2, 223, {align:'center'});
@@ -4574,8 +4579,8 @@ function exportConsolidadoPDF() {
     const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:mutedL;
     sf(6,'bold',posC);   doc.text(String(i+1), M+3, y+5);
     sf(6.5,'normal',white); doc.text(m.p?.name||m.id, M+13, y+5);
-    const tc = m.p?.team==='g'?grisC:red;
-    sf(6,'bold',tc);     doc.text(m.p?.team==='g'?'GRIS':'ROJO', M+92, y+5);
+    const tc = m.p?.team==='g'?celeC:red;
+    sf(6,'bold',tc);     doc.text(m.p?.team==='g'?'LA CELE':'ROJO', M+92, y+5);
     sf(6,'normal',mutedL); doc.text(String(m.fechas||0), M+122, y+5, {align:'right'});
     sf(6.5,'bold',gold); doc.text(String(m.pts), W-M-2, y+5, {align:'right'});
     y += 7;
@@ -4611,8 +4616,8 @@ function exportConsolidadoPDF() {
       const posC = i===0?gold:i===1?[195,200,210]:i===2?[170,120,85]:mutedL;
       sf(6,'bold',posC);   doc.text(String(i+1), M+3, y+5);
       sf(6.5,'normal',white); doc.text(m.p?.name||m.id, M+13, y+5);
-      const tc = m.p?.team==='g'?grisC:red;
-      sf(6,'bold',tc);     doc.text(m.p?.team==='g'?'GRIS':'ROJO', M+92, y+5);
+      const tc = m.p?.team==='g'?celeC:red;
+      sf(6,'bold',tc);     doc.text(m.p?.team==='g'?'LA CELE':'ROJO', M+92, y+5);
       sf(6,'normal',mutedL); doc.text(String(m.count||0), M+130, y+5, {align:'right'});
       sf(6.5,'bold',gold); doc.text(String(m.avg||'—'), W-M-2, y+5, {align:'right'});
       y += 7;
@@ -4628,8 +4633,8 @@ function exportConsolidadoPDF() {
   // Sección match sobre fondo claro (texto oscuro, filas blancas/gris suave)
   const ink = T.white; // color de texto principal del tema
   ['g','r'].forEach(team => {
-    const teamName = team==='g' ? 'EQUIPO GRIS' : 'EQUIPO ROJO';
-    const tc = team==='g' ? T.gris : red;
+    const teamName = team==='g' ? 'EQUIPO LA CELE' : 'EQUIPO ROJO';
+    const tc = team==='g' ? T.cele : red;
     const teamRank = Object.entries(acc.match)
       .map(([id,v])=>({id,...v, p:PLAYERS.find(x=>x.id===id)}))
       .filter(m=>m.p?.team===team)
@@ -4714,8 +4719,8 @@ function exportConsolidadoPDF() {
     const fJugadas = jugadas.filter(f=>!(f.ausentes||[]).includes(p.name)).length;
     const ausColor = p.aus===0?green:p.aus<=1?gold:p.aus<=2?[220,140,50]:red;
     sf(6.5,'normal',white); doc.text(p.name, M+13, y+5);
-    const tc = p.team==='g'?grisC:red;
-    sf(6,'bold',tc); doc.text(p.team==='g'?'GRIS':'ROJO', M+92, y+5);
+    const tc = p.team==='g'?celeC:red;
+    sf(6,'bold',tc); doc.text(p.team==='g'?'LA CELE':'ROJO', M+92, y+5);
     sf(6,'normal',mutedL); doc.text(String(fJugadas) + ' / ' + jugadas.length, M+140, y+5, {align:'right'});
     sf(6.5,'bold',ausColor); doc.text(p.aus===0?'—':String(p.aus), W-M-2, y+5, {align:'right'});
     y += 7;
@@ -4829,7 +4834,7 @@ function exportConsolidadoPDF() {
     sf(6.5,'bold',white);  doc.text(winnerName.split(',')[0], M+22, y+5.5);
 
     fr(M+col/2+2, y, col/2-2, 8, [14,22,36]);
-    sf(6,'normal',grisC);  doc.text('GRIS ' + gPts, M+col/2+6, y+5.5);
+    sf(6,'normal',celeC);  doc.text('LA CELE ' + gPts, M+col/2+6, y+5.5);
     sf(6,'normal',muted);  doc.text('·', M+col/2+30, y+5.5);
     sf(6,'normal',redL);   doc.text('ROJO ' + rPts, M+col/2+35, y+5.5);
     y += 9;
@@ -4890,11 +4895,11 @@ function exportDashboardSummaryPDF() {
   // ── Paleta optimizada para impresión (alto contraste) ──
   const C = {
     ink:[26,34,51], muted:[94,106,130], navy:[13,27,46], navyMid:[26,40,62],
-    gold:[168,132,52], goldOnNavy:[214,176,86], gris:[70,86,116], rojo:[178,50,40],
+    gold:[168,132,52], goldOnNavy:[214,176,86], cele:[27,94,158], celeSolid:[117,170,219], rojo:[178,50,40],
     green:[22,140,86], zebra:[244,246,250], line:[212,219,229], white:[255,255,255],
-    grisBg:[236,239,245], rojoBg:[250,237,237], mutedNavy:[196,206,222]
+    celeBg:[223,236,249], rojoBg:[250,237,237], mutedNavy:[196,206,222]
   };
-  const teamColor = t => t==='g' ? C.gris : C.rojo;
+  const teamColor = t => t==='g' ? C.cele : C.rojo;
   const S = s => sanitizePdfText(String(s==null?'':s));
   const fmt2 = v => (typeof v==='number' ? v.toFixed(2).replace('.', ',') : String(v));
 
@@ -4998,7 +5003,7 @@ function exportDashboardSummaryPDF() {
   const g=acc.teamMatch.g, r=acc.teamMatch.r;
   // Líder de equipo: 1) puntos; 2) desempate por diferencial de hoyos; 3) empate total
   let teamLead, teamLeadColor, difLead;
-  if(g.pts>r.pts || (g.pts===r.pts && g.dif>r.dif)) { teamLead='GRIS'; teamLeadColor=C.gris; difLead=g.dif; }
+  if(g.pts>r.pts || (g.pts===r.pts && g.dif>r.dif)) { teamLead='LA CELE'; teamLeadColor=C.cele; difLead=g.dif; }
   else if(r.pts>g.pts || (r.pts===g.pts && r.dif>g.dif)) { teamLead='ROJO'; teamLeadColor=C.rojo; difLead=r.dif; }
   else { teamLead='EMPATE'; teamLeadColor=C.muted; difLead=0; }
   const ptsGap=Math.abs(g.pts-r.pts);
@@ -5006,10 +5011,10 @@ function exportDashboardSummaryPDF() {
   const proxNum = fechas.findIndex(f=>f.pendiente)+1;
   const kpis=[
     {l:'Fechas jugadas', v:String(jugadas.length), s:'de 10 en el año', c:C.ink, sz:16},
-    {l:'Líder Medal', v:(lp?lp.name:'—'), s:fmt2(leader.pts)+' pts · '+(lp&&lp.team==='g'?'GRIS':'ROJO'), c:C.ink, sz:9.5},
+    {l:'Líder Medal', v:(lp?lp.name:'—'), s:fmt2(leader.pts)+' pts · '+(lp&&lp.team==='g'?'LA CELE':'ROJO'), c:C.ink, sz:9.5},
     {l:'Equipo líder Match', v:teamLead, s:(teamLead==='EMPATE'?'Igualdad total (pts y dif)':(ptsGap>0?'+'+fmt2(ptsGap)+' pts · dif '+(difLead>=0?'+':'')+difLead+' H':'Igualan en pts · dif '+(difLead>=0?'+':'')+difLead+' H')), c:teamLeadColor, sz:(teamLead==='EMPATE'?13:16)},
     {l:'Próxima fecha', v:(prox?prox.fecha:'—'), s:'F'+proxNum, c:C.ink, sz:12},
-    {l:'Jugadores', v:'16', s:'8 Gris · 8 Rojo', c:C.ink, sz:16},
+    {l:'Jugadores', v:'16', s:'8 La Cele · 8 Rojo', c:C.ink, sz:16},
   ];
   const kpiW=(W-2*M-4*3)/5;
   kpis.forEach((k,i)=>{
@@ -5044,11 +5049,11 @@ function exportDashboardSummaryPDF() {
   ], grossRank.slice(0,6), {x:xR, rowH:6.2});
   y=Math.max(yLeftEnd, y)+3;
 
-  // Team GRIS vs ROJO
+  // Team LA CELE vs ROJO
   blockTitle('MATCH PLAY — EQUIPOS');
   const boxW=(W-2*M-8)/2;
-  rect(M,y,boxW,20,C.grisBg); rect(M,y,2,20,C.gris);
-  text('GRIS', M+5, y+8, C.gris, 13, 'bold');
+  rect(M,y,boxW,20,C.celeBg); rect(M,y,2,20,C.celeSolid);
+  text('LA CELE', M+5, y+8, C.cele, 13, 'bold');
   text(fmt2(g.pts)+' pts', M+boxW-5, y+8, C.ink, 12, 'bold', 'right');
   text('Diferencial de hoyos: '+(g.dif>0?'+'+g.dif:String(g.dif)), M+5, y+15, C.muted, 7);
   const xr2=M+boxW+8;
@@ -5086,13 +5091,13 @@ function exportDashboardSummaryPDF() {
   text('Puntos Medal por fecha. El dorado marca la mejor fecha de cada jugador. "Total" = acumulado del torneo.', mX, y+3, C.muted, 6, 'italic'); y+=4;
 
   // ════════ RANKING MATCH ════════
-  page('RANKING MATCH — INDIVIDUAL POR EQUIPO', 'GRIS '+fmt2(g.pts)+' pts  ·  ROJO '+fmt2(r.pts)+' pts', 'Ranking Match');
+  page('RANKING MATCH — INDIVIDUAL POR EQUIPO', 'LA CELE '+fmt2(g.pts)+' pts  ·  ROJO '+fmt2(r.pts)+' pts', 'Ranking Match');
   const colW=[10,66,24,20]; const twM=colW.reduce((a,b)=>a+b,0);
   const gapM=14; const x1=(W-(twM*2+gapM))/2; const x2=x1+twM+gapM;
-  [['g',x1,'⬜ GRIS',C.gris,C.grisBg],['r',x2,'ROJO',C.rojo,C.rojoBg]].forEach(([team,xx,lbl,col,bg])=>{
+  [['g',x1,'LA CELE',C.cele,C.celeBg],['r',x2,'ROJO',C.rojo,C.rojoBg]].forEach(([team,xx,lbl,col,bg])=>{
     const yStart=y;
     rect(xx,y,twM,7.5,bg); rect(xx,y,2,7.5,col);
-    text(lbl.replace('⬜ ',''), xx+5, y+5.3, col, 9, 'bold');
+    text(lbl, xx+5, y+5.3, col, 9, 'bold');
     text('Total: '+fmt2(acc.teamMatch[team].pts)+' pts', xx+twM-3, y+5.3, C.ink, 7.5, 'bold', 'right');
     y+=9.5;
     table([
@@ -5160,8 +5165,8 @@ function exportDashboardSummaryPDF() {
       const tipo = mm.tipo==='fb'?'2v2':'1v1';
       const gris=(mm.gris||[]).map(id=>{const pp=findPlayerOrSuplente(id);return pp&&pp.name?pp.name.split(',')[0]:id;}).join(' + ');
       const rojo=(mm.rojo||[]).map(id=>{const pp=findPlayerOrSuplente(id);return pp&&pp.name?pp.name.split(',')[0]:id;}).join(' + ');
-      const gan=mm.ganador==='g'?'GRIS':mm.ganador==='r'?'ROJO':'EMPATE';
-      const gc=mm.ganador==='g'?C.gris:mm.ganador==='r'?C.rojo:C.muted;
+      const gan=mm.ganador==='g'?'LA CELE':mm.ganador==='r'?'ROJO':'EMPATE';
+      const gc=mm.ganador==='g'?C.cele:mm.ganador==='r'?C.rojo:C.muted;
       text('['+tipo+']', colRX+2, y+3.4, C.muted, 5.8);
       text(gris+'  vs  '+rojo, colRX+13, y+3.4, C.ink, 6.5);
       text(gan+(mm.difHoyos?' +'+Math.abs(mm.difHoyos)+'H':''), colRX+colRW-2.5, y+3.4, gc, 6.5, 'bold', 'right');
@@ -5172,7 +5177,7 @@ function exportDashboardSummaryPDF() {
     let gg=0, rr=0; (f.matchs||[]).forEach(mm=>{ if(mm.ganador==='g')gg++; else if(mm.ganador==='r')rr++; else {gg+=0.5;rr+=0.5;} });
     y+=1; rect(colRX,y,colRW,7,C.zebra);
     text('Resultado fecha:', colRX+2.5, y+4.6, C.muted, 6.5, 'bold');
-    text('GRIS '+fmt2(gg)+'  -  '+fmt2(rr)+' ROJO', colRX+colRW-2.5, y+4.6, C.ink, 7, 'bold', 'right');
+    text('LA CELE '+fmt2(gg)+'  -  '+fmt2(rr)+' ROJO', colRX+colRW-2.5, y+4.6, C.ink, 7, 'bold', 'right');
     y=Math.max(medalBottom,y)+4;
     // ── Cancha + crónica escrita de la fecha ──
     if(f.comentario){
@@ -5198,7 +5203,7 @@ function exportDashboardSummaryPDF() {
     [7,'Fourball 2v2','100% aleatorio','Scapparone + Benegas'],
     [8,'Individual 1v1','Por posición Match','Elizalde + Mendez'],
     [9,'Fourball 2v2','Match inverso (1v8)(2v7)...','— GIRA —'],
-    [10,'Individual 1v1 FINAL','#1 Gris vs #1 Rojo','— GIRA —'],
+    [10,'Individual 1v1 FINAL','#1 La Cele vs #1 Rojo','— GIRA —'],
   ];
   const fxRows = fechas.map(f=>{
     const info=fxInfo.find(x=>x[0]===f.num)||[];
@@ -5246,7 +5251,7 @@ function exportExcelBackup() {
   const medalData = [['#','Jugador','Equipo','HDC','Puntos Acum','fechas Jugadas']];
   medalRank.forEach((m,i)=>{
     const p=PLAYERS.find(x=>x.id===m.id);
-    medalData.push([i+1, p?.name||m.id, p?.team==='g'?'GRIS':'ROJO', p?.hdc, m.pts, m.positions.length]);
+    medalData.push([i+1, p?.name||m.id, p?.team==='g'?'LA CELE':'ROJO', p?.hdc, m.pts, m.positions.length]);
   });
   const wsM = XLSX.utils.aoa_to_sheet(medalData);
   wsM['!cols']=[{wch:4},{wch:22},{wch:8},{wch:6},{wch:14},{wch:14}];
@@ -5257,7 +5262,7 @@ function exportExcelBackup() {
   const allMatch = Object.entries(acc.match).map(([id,v])=>({id,...v})).sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
   allMatch.forEach((m,i)=>{
     const p=PLAYERS.find(x=>x.id===m.id);
-    matchData.push([i+1, p?.name||m.id, p?.team==='g'?'GRIS':'ROJO', m.pts, m.difHoyos]);
+    matchData.push([i+1, p?.name||m.id, p?.team==='g'?'LA CELE':'ROJO', m.pts, m.difHoyos]);
   });
   const wsMatch = XLSX.utils.aoa_to_sheet(matchData);
   wsMatch['!cols']=[{wch:4},{wch:22},{wch:8},{wch:12},{wch:12}];
@@ -5266,7 +5271,7 @@ function exportExcelBackup() {
   // ── Sheet 3: Team Summary ──
   const teamData = [
     ['Equipo','Puntos','Dif Hoyos'],
-    ['GRIS', acc.teamMatch.g.pts, acc.teamMatch.g.dif],
+    ['LA CELE', acc.teamMatch.g.pts, acc.teamMatch.g.dif],
     ['ROJO', acc.teamMatch.r.pts, acc.teamMatch.r.dif],
   ];
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(teamData), 'Equipos');
@@ -5285,16 +5290,16 @@ function exportExcelBackup() {
     ];
     [...mpts].sort((a,b)=>a.pos-b.pos).forEach(m=>{
       const p=PLAYERS.find(x=>x.id===m.id);
-      rows.push([m.pos, p?.name||m.id, p?.team==='g'?'GRIS':'ROJO', m.hdcp??'', m.neto, m.gross, m.pts]);
+      rows.push([m.pos, p?.name||m.id, p?.team==='g'?'LA CELE':'ROJO', m.hdcp??'', m.neto, m.gross, m.pts]);
     });
     if(f.matchs?.length) {
       rows.push([]);
       rows.push(['MATCHS']);
-      rows.push(['Tipo','Gris','Rojo','Ganador','Dif Hoyos']);
+      rows.push(['Tipo','La Cele','Rojo','Ganador','Dif Hoyos']);
       f.matchs.forEach(m=>{
         const gN=(m.gris||[]).map(id=>PLAYERS.find(p=>p.id===id)?.name.split(',')[0]||id).join('+');
         const rN=(m.rojo||[]).map(id=>PLAYERS.find(p=>p.id===id)?.name.split(',')[0]||id).join('+');
-        rows.push([m.tipo==='fb'?'2vs2':'1vs1', gN, rN, m.ganador==='g'?'GRIS':m.ganador==='r'?'ROJO':'EMPATE', m.difHoyos||0]);
+        rows.push([m.tipo==='fb'?'2vs2':'1vs1', gN, rN, m.ganador==='g'?'LA CELE':m.ganador==='r'?'ROJO':'EMPATE', m.difHoyos||0]);
       });
     }
     if(f.stats) {
@@ -5419,7 +5424,7 @@ const FIXTURE_INFO = {
   7:{fecha:'12-sep-2026',formato:'Fourball 2v2',criterio:'100% aleatorio',org:'Scapparone, Nico · Benegas, Pancho'},
   8:{fecha:'03-oct-2026',formato:'Individual 1v1',criterio:'Por posición Match acumulada',org:'Elizalde, Juancho · Mendez, Pato'},
   9:{fecha:'Nov-2026',formato:'Fourball 2v2',criterio:'GIRA · Match inverso: (1v8)(2v7)(3v6)(4v5)',org:'GIRA'},
-  10:{fecha:'Nov-2026',formato:'Individual 1v1',criterio:'GIRA · FINAL: #1 GRIS vs #1 ROJO',org:'GIRA'},
+  10:{fecha:'Nov-2026',formato:'Individual 1v1',criterio:'GIRA · FINAL: #1 LA CELE vs #1 ROJO',org:'GIRA'},
 };
 const MEDAL_PTS_PROMPT = {1:500,2:300,3:200,4:150,5:120,6:100,7:90,8:80,9:75,10:70,11:20,12:20,13:20,14:20,15:0,16:0};
 
@@ -5435,8 +5440,8 @@ function buildPrompt() {
     return `  Puesto ${pos.padStart(2,'0')}:  ${p} pts`;
   }).join('\n');
 
-  const grisLines = PLAYERS.filter(p=>p.team==='g').map(p=>
-    `  ${p.name.padEnd(24)} | GRIS | HDC index: ${p.hdc}${p.hdc>=26?' → juega con 26':''}`
+  const celeLines = PLAYERS.filter(p=>p.team==='g').map(p=>
+    `  ${p.name.padEnd(24)} | LA CELE | HDC index: ${p.hdc}${p.hdc>=26?' → juega con 26':''}`
   ).join('\n');
   const rojoLines = PLAYERS.filter(p=>p.team==='r').map(p=>
     `  ${p.name.padEnd(24)} | ROJO | HDC index: ${p.hdc}${p.hdc>=26?' → juega con 26':''}`
@@ -5470,8 +5475,8 @@ JUGADORES Y HANDICAPS DE REFERENCIA
 ⚠ HDC index son referencia. Los HDCPs reales de juego se leen de la tarjeta AAG.
   Si difieren del índice, usá los de la tarjeta. Tope máximo: 26.
 
-EQUIPO GRIS:
-${grisLines}
+EQUIPO LA CELE:
+${celeLines}
 
 EQUIPO ROJO:
 ${rojoLines}
@@ -5540,7 +5545,7 @@ const FIXTURE_DEFAULTS = [
   {num:7, fecha:'12 Sep 2026', modalidad:'Fourball 2v2', criterio:'100% aleatorio', organizadores:'Scapparone + Benegas'},
   {num:8, fecha:'03 Oct 2026', modalidad:'Individual 1v1', criterio:'Por posición Match', organizadores:'Elizalde + Mendez'},
   {num:9, fecha:'Nov 2026', modalidad:'Fourball 2v2', criterio:'Match inverso (1v8)(2v7)...', organizadores:'GIRA'},
-  {num:10, fecha:'Nov 2026', modalidad:'Individual 1v1 FINAL', criterio:'#1 Gris vs #1 Rojo', organizadores:'GIRA'},
+  {num:10, fecha:'Nov 2026', modalidad:'Individual 1v1 FINAL', criterio:'#1 La Cele vs #1 Rojo', organizadores:'GIRA'},
 ];
 
 let fixtureData = [];
@@ -5743,7 +5748,7 @@ function scBuildGrid() {
   let rows = '';
   allPlayers.forEach(p => {
     const isAusente = ausentes.includes(p.id);
-    const teamColor = p.team==='g'?'var(--gris-color)':p.team==='r'?'var(--rojo-color)':'var(--gold)';
+    const teamColor = p.team==='g'?'var(--cele-color)':p.team==='r'?'var(--rojo-color)':'var(--gold)';
     rows += `<tr data-pid="${p.id}" style="${isAusente?'opacity:0.3':''}">`;
     rows += `<td style="text-align:left;white-space:nowrap"><span style="color:${teamColor};font-weight:700">●</span> ${p.name}</td>`;
     rows += `<td><input type="number" class="sc-input sc-hdc" data-pid="${p.id}" value="${Math.round(p.hdc)}" min="0" max="36" style="width:36px" onchange="scRecalc()"></td>`;
@@ -5761,7 +5766,7 @@ function scBuildGrid() {
     rows += '<tr><td colspan="23" style="padding-top:10px;color:var(--gold);font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:2px;text-align:left;border-top:1px dashed rgba(201,168,76,0.3)">★ SUPLENTES EXTERNOS</td></tr>';
     window._scExtraSuplentes.forEach(sup => {
       rows += `<tr data-pid="${sup.id}" data-sup-ext="1">`;
-      rows += `<td style="text-align:left;white-space:nowrap"><span style="color:var(--gold);font-weight:700">★</span> <input type="text" class="sc-sup-name" data-pid="${sup.id}" value="${sup.name||''}" placeholder="Nombre completo" style="background:none;border:none;border-bottom:1px dotted var(--gold);color:var(--gold);font-size:0.78rem;padding:1px 3px;min-width:140px"> <span style="font-size:0.6rem;color:var(--muted);margin-left:4px">→ ${sup.equipo==='g'?'GRIS':'ROJO'} · reemplaza ${sup.reemplaza||'—'}</span> <button onclick="scRemoveSuplente('${sup.id}')" style="background:none;border:none;color:var(--rojo-light);cursor:pointer;font-size:0.75rem;margin-left:4px" title="Quitar">✕</button></td>`;
+      rows += `<td style="text-align:left;white-space:nowrap"><span style="color:var(--gold);font-weight:700">★</span> <input type="text" class="sc-sup-name" data-pid="${sup.id}" value="${sup.name||''}" placeholder="Nombre completo" style="background:none;border:none;border-bottom:1px dotted var(--gold);color:var(--gold);font-size:0.78rem;padding:1px 3px;min-width:140px"> <span style="font-size:0.6rem;color:var(--muted);margin-left:4px">→ ${sup.equipo==='g'?'LA CELE':'ROJO'} · reemplaza ${sup.reemplaza||'—'}</span> <button onclick="scRemoveSuplente('${sup.id}')" style="background:none;border:none;color:var(--rojo-light);cursor:pointer;font-size:0.75rem;margin-left:4px" title="Quitar">✕</button></td>`;
       rows += `<td><input type="number" class="sc-input sc-hdc" data-pid="${sup.id}" value="${sup.hdcp||''}" min="0" max="36" style="width:36px" onchange="scRecalc()"></td>`;
       for(let h=1;h<=18;h++) {
         const val = sup.hoyos?.[h-1] ?? '';
@@ -5802,11 +5807,11 @@ function scRemoveSuplente(id) {
 function scAddSuplenteExtPrompt() {
   const nombre = prompt('Nombre completo del suplente (formato "Apellido, Nombre"):');
   if(!nombre || !nombre.trim()) return;
-  const equipo = prompt('Equipo que representa (G = Gris, R = Rojo):', 'R');
+  const equipo = prompt('Equipo que representa (G = La Cele, R = Rojo):', 'R');
   if(!equipo) return;
   const eq = equipo.toLowerCase().startsWith('g') ? 'g' : 'r';
   const reemplOpts = PLAYERS.filter(p => p.team === eq).map(p => `${p.id}: ${p.name.split(',')[0]}`).join('\n');
-  const reempl = prompt(`A quién reemplaza? (escribí el ID de la lista)\n\nOficiales ${eq==='g'?'Gris':'Rojo'}:\n${reemplOpts}`);
+  const reempl = prompt(`A quién reemplaza? (escribí el ID de la lista)\n\nOficiales ${eq==='g'?'La Cele':'Rojo'}:\n${reemplOpts}`);
   if(!reempl) return;
   const id = 'sup_' + nombre.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-z]/g,'').slice(0,12);
   scAddSuplenteExt({
@@ -5890,7 +5895,7 @@ function scAddMatch() {
       <option value="ind">1v1 Ind</option>
     </select>
     <div>
-      <div style="font-size:0.6rem;color:var(--gris-color);font-weight:700;margin-bottom:2px">GRIS</div>
+      <div style="font-size:0.6rem;color:var(--cele-color);font-weight:700;margin-bottom:2px">LA CELE</div>
       <input type="text" class="sc-match-gris" placeholder="id1, id2" style="width:100%;font-size:0.7rem;padding:4px">
     </div>
     <div>
@@ -5898,7 +5903,7 @@ function scAddMatch() {
       <input type="text" class="sc-match-rojo" placeholder="id1, id2" style="width:100%;font-size:0.7rem;padding:4px">
     </div>
     <select class="sc-match-ganador" style="font-size:0.72rem;padding:4px">
-      <option value="g">Gana GRIS</option>
+      <option value="g">Gana LA CELE</option>
       <option value="r">Gana ROJO</option>
       <option value="empate">Empate</option>
     </select>
@@ -6048,7 +6053,7 @@ function _construirPromptCargaFecha() {
   const orgTxt = byId('sc-org')?.value || fxData?.organizadores || '(completar)';
   const modTxt = fxData?.modalidad || '(completar)';
 
-  const oficiales = PLAYERS.map(p => `- ${p.id}: ${p.name} (nick: ${p.nick}, equipo ${p.team==='g'?'Gris':'Rojo'})`).join('\n');
+  const oficiales = PLAYERS.map(p => `- ${p.id}: ${p.name} (nick: ${p.nick}, equipo ${p.team==='g'?'La Cele':'Rojo'})`).join('\n');
   const supEsp = SUPLENTES_CONOCIDOS.filter(s=>s.esOficialEspecial).map(s => `- ${s.id}: ${s.name} (nick: ${s.nick||'Ale'}, suplente oficial)`).join('\n');
 
   return `Antes de responder, leé el archivo CLAUDE.md del proyecto para contexto completo (jugadores canónicos, reglas, formato).
@@ -6115,9 +6120,9 @@ Par total cancha: [N], Jugadores oficiales: [N], Suplentes: [N]
 Eagles: [N] · Birdies: [N] · Pares: [N] · Bogeys: [N] · Dobles+: [N]
 Avg Gross: [N.N] · Avg Neto: [N.N]
 
-⚔️ MATCH PLAY (Gris vs Rojo)
+⚔️ MATCH PLAY (La Cele vs Rojo)
 [lista de matchs: jugador1 vs jugador2 → ganador (dif hoyos)]
-GRIS: [N] pts · ROJO: [N] pts · Dif Hoyos acumulado: [+/-N]
+LA CELE: [N] pts · ROJO: [N] pts · Dif Hoyos acumulado: [+/-N]
 
 📝 NARRATIVA DEL DÍA (3-5 oraciones — cómo se dio la fecha,
    quién brilló, sorpresas, batallas cerradas, momentos destacados,
@@ -6866,7 +6871,7 @@ function renderRecaudacionPublica() {
     totInsc+=insc;totMult+=multas;totTot+=total;
     for(let i=1;i<=10;i++) totF[i-1]+=parseFloat(r[`f${i}`])||0;
     const badge=p.team==='g'
-      ?'<span class="badge gris" style="font-size:0.55rem;padding:2px 6px">GRIS</span>'
+      ?'<span class="badge cele" style="font-size:0.55rem;padding:2px 6px">LA CELE</span>'
       :'<span class="badge rojo" style="font-size:0.55rem;padding:2px 6px">ROJO</span>';
     const fCells=Array.from({length:10},(_,i)=>{
       const v=parseFloat(r[`f${i+1}`])||0;
@@ -7061,7 +7066,7 @@ function renderJugadoresStats() {
       ? `<img src="${foto}" class="jug-foto" alt="${nombre}">`
       : `<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:var(--navy-light);text-align:center;line-height:28px;font-size:0.65rem;color:var(--muted);margin-right:6px;vertical-align:middle">👤</span>`;
     const team = PLAYERS.find(p => p.id === id)?.team;
-    const teamDot = team ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${team==='g'?'var(--gris-color)':'var(--rojo-color)'};margin-right:4px;vertical-align:middle"></span>` : '';
+    const teamDot = team ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${team==='g'?'var(--cele-color)':'var(--rojo-color)'};margin-right:4px;vertical-align:middle"></span>` : '';
 
     tbody += `<tr><td class="jug-name" onclick="renderFichaJugador('${id}')">${fotoTag}${teamDot}${nombre}</td>`;
 
@@ -7155,7 +7160,7 @@ function renderFichaJugador(playerId) {
     ? `<img src="${foto}" class="ficha-foto" alt="${nombre}">`
     : `<div class="ficha-foto" style="display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--muted)">👤</div>`;
 
-  const teamLabel = team === 'g' ? '<span style="color:var(--gris-color)">Equipo GRIS</span>' :
+  const teamLabel = team === 'g' ? '<span style="color:var(--cele-color)">Equipo LA CELE</span>' :
                     team === 'r' ? '<span style="color:var(--rojo-color)">Equipo ROJO</span>' : '';
 
   let html = `

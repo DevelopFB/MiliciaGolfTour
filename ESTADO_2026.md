@@ -1,5 +1,23 @@
 # MGT 2026 — Estado del Torneo (snapshot al 07-Sep-2026, post F6 / pre F7)
 
+> ### ⚠️ El equipo Gris se llama **La Cele** desde el 07-Sep-2026
+>
+> Cambió **solo el nombre visible y los colores** (celeste bandera `#75AADB`, y `#1B5E9E`
+> para texto sobre blanco). **El formato de datos NO cambió.** El JSON sigue usando
+> exactamente las mismas claves de siempre:
+>
+> ```json
+> { "equipo": "g", "ganador": "g", "gris": ["benegas","zunino"], "pts_g": 0.5 }
+> ```
+>
+> **Al generar el JSON de una fecha, seguí escribiendo `"gris"` y `"g"`.** Si escribís
+> `"la_cele"` el backoffice no lo va a reconocer y la carga falla. "La Cele" es lo que se
+> muestra en pantalla; `g` es lo que se guarda.
+>
+> El cambio aplica a 2026. Los campeones de 2016-2025 quedan como estaban (el equipo se
+> llamaba **Blanco** en esos años, y Rojo ganó 2025) — no se reescribe la historia.
+
+
 > **Para el Project Knowledge del proyecto de chat.** Da contexto acumulado a Claude cuando procesa
 > una fecha desde el teléfono (sin acceso al repo).
 > Fuente: `MGT_2026_Master.xlsx` (F1–F6, fórmulas recalculadas) + `data/fechas.json` del repo.
@@ -21,7 +39,7 @@ Stroke index: `[5,15,1,7,11,3,17,13,9, 14,10,2,6,16,4,12,18,8]`
 | 1 | 14-Mar | CUBA Fátima | Fourball 2v2 | Jugada |
 | 2 | 11-Abr | CUBA Fátima | Fourball 2v2 | Jugada |
 | 3 | 09-May | SHA Hebraica | Individual 1v1 | Jugada |
-| 4 | 06-Jun | CUBA Fátima | Fourball 2v2 | Jugada — **suspendida por niebla**, solo valió Match Play (Gris 3 – Rojo 1). Sin medal ni tarjetas. |
+| 4 | 06-Jun | CUBA Fátima | Fourball 2v2 | Jugada — **suspendida por niebla**, solo valió Match Play (La Cele 3 – Rojo 1). Sin medal ni tarjetas. |
 | 5 | 04-Jul | **La Orquídea** | Fourball 2v2 | Jugada — org. reales: Basaldua + Canónico. Salida demorada 1 h por helada. |
 | 6 | 08-Ago | CUBA Fátima | Individual 1v1 | Jugada — **los 16 oficiales presentes**, sin suplentes ni multas. |
 | 7 | 12-Sep | CUBA Fátima | Fourball 2v2 | **PRÓXIMA** — org. Scapparone + Benegas |
@@ -38,19 +56,19 @@ Par SHA Hebraica (F3): `[5,5,4,4,3,4,5,3,4, 4,3,5,3,5,3,4,4,4]` = 69
 |---|---|---|---|
 | 1 | Elizalde, Juan Pedro | Rojo | 1220 |
 | 2 | Vogelius, Nicolás | Rojo | 933.33 |
-| 3 | Guevara, Francisco | Gris | 873.34 |
-| 4 | Benegas, Francisco | Gris | 846.66 |
+| 3 | Guevara, Francisco | La Cele | 873.34 |
+| 4 | Benegas, Francisco | La Cele | 846.66 |
 | 5 | Fernandez, Lucas | Rojo | 795 |
 | 6 | Gatto, Mariano | Rojo | 771.67 |
-| 7 | Tarasido, Gonzalo | Gris | 577.5 |
+| 7 | Tarasido, Gonzalo | La Cele | 577.5 |
 | 8 | Méndez, Gastón | Rojo | 441.67 |
-| 9 | Pannullo, Martín | Gris | 367.5 |
+| 9 | Pannullo, Martín | La Cele | 367.5 |
 | 10 | Canónico, Agustín | Rojo | 340.83 |
 | 11 | Molinario, Andrés | Rojo | 331.67 |
-| 12 | Dipaola, Martín | Gris | 320 |
-| 12 | Basaldua, Ignacio | Gris | 320 |
-| 14 | Gonzalez, Agustín | Gris | 221.67 |
-| 15 | Zunino, Javier | Gris | 95 |
+| 12 | Dipaola, Martín | La Cele | 320 |
+| 12 | Basaldua, Ignacio | La Cele | 320 |
+| 14 | Gonzalez, Agustín | La Cele | 221.67 |
+| 15 | Zunino, Javier | La Cele | 95 |
 | 16 | Scapparone, Nicolás | Rojo | 72.5 |
 | — | Gatto, Alejandro (sup) | — | 20 (cuadro aparte) |
 
@@ -59,7 +77,7 @@ F4 sin ganador (suspendida) · F5 Elizalde (74) · **F6 Benegas (69)**.
 
 ## Match Play — acumulado equipos (F1–F6)
 
-| Fecha | Gris | Rojo |
+| Fecha | La Cele | Rojo |
 |---|---|---|
 | F1 | 1 | 3 |
 | F2 | 2 | 2 |
@@ -69,8 +87,8 @@ F4 sin ganador (suspendida) · F5 Elizalde (74) · **F6 Benegas (69)**.
 | F6 | 5.5 | 2.5 |
 | **TOTAL** | **17.5** | **14.5** |
 
-**Gris pasa al frente por primera vez en el año** tras ganar la F6 por 5.5 a 2.5 (cinco de ocho cruces,
-un empate). Dif de hoyos de la F6: Gris +15.
+**La Cele pasa al frente por primera vez en el año** tras ganar la F6 por 5.5 a 2.5 (cinco de ocho cruces,
+un empate). Dif de hoyos de la F6: La Cele +15.
 
 ## Gross — historial 2026 (premio = promedio mejores 7 tarjetas)
 
@@ -123,7 +141,7 @@ Sin tarjeta en F6 (jugaron solo el match): Zunino, Gatto Mariano, Scapparone.
 - `sin_suplente`: placeholder para matchs 2v1 — no romper el formato fourball.
 - Jugador que juega el match pero no entrega tarjeta → scorecard con `hoyos/gross/neto/hdcp: null`.
   NO es un ausente y NO paga multa.
-- En la hoja `Match` del Master, Gatto Alejandro tiene **dos filas** ("(Rojo)" F1–F2 y "(Gris)" F3–F4)
+- En la hoja `Match` del Master, Gatto Alejandro tiene **dos filas** ("(Rojo)" F1–F2 y "(La Cele)" F3–F4)
   porque el color que representa cambia por fecha; los totales SUMIF requieren equipo fijo por fila.
 - ⚠️ Al agregar una fecha al Master hay que **limpiar** las columnas de la fecha nueva en las filas de
   suplentes que no jugaron: si quedan las fórmulas viejas de TOT, se suman como puntos de esa fecha.
