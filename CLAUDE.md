@@ -6,7 +6,9 @@
 
 ## 1. QUÉ ES EL PROYECTO
 
-Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (Gris vs Rojo). Los datos viven en **archivos JSON del propio repo** (`data/fechas.json`, `data/fixture.json`, `data/recaudacion.json`, `jugadores_historico.json`) + localStorage como cache; archivos Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original para 2016-2025. **Supabase fue eliminado (jul-2026)** — backup completo en `data/backup-supabase/`.
+Webapp single-file (`index.html`) que administra el torneo anual **Milicia Golf Tour**: 10 fechas, 16 jugadores oficiales divididos en 2 equipos (Gris vs Rojo). **No hay base de datos.** Los datos viven en **archivos JSON versionados en el propio repo** (`data/fechas.json`, `data/fixture.json`, `data/recaudacion.json`, `jugadores_historico.json`), con localStorage sólo como cache de render. Los Excel históricos (`RESUMEN de Resultados YYYY.xlsx`) son la fuente original de 2016-2025.
+
+> Supabase se usó hasta jul-2026 y **ya no forma parte de la arquitectura**. Si alguna doc, prompt o instrucción de proyecto lo menciona como algo vivo, está desactualizada. El único rastro es `data/backup-supabase/`, un snapshot congelado de las tablas al migrar.
 
 ### ⚠️ Dos competencias separadas — NO mezclar
 
@@ -250,7 +252,7 @@ Cambiar `_version` cada vez que se actualiza para forzar re-sync en clientes.
 | `data/fixture.json` | fecha/modalidad/criterio/organizadores editables (clave `num`) |
 | `data/recaudacion.json` | inscripción + multas por fecha por jugador (clave `id`) |
 | `jugadores_historico.json` | foto + años por jugador, con `_version` |
-| `data/backup-supabase/` | snapshot de las tablas Supabase al momento de la migración (solo histórico) |
+| `data/backup-supabase/` | snapshot congelado de las tablas al migrar (jul-2026). Archivo histórico: no se lee ni se escribe |
 
 **Escritura desde el backoffice**: GitHub Contents API con token fine-grained (solo repo MiliciaGolfTour, permiso Contents RW) guardado en localStorage del navegador del admin (tab Admin → 🔑 Publicación). El guardado es read-modify-write (lee sha + contenido fresco, mergea, publica) y GitHub Pages republica en ~1 min. Sin token, los cambios quedan solo en localStorage.
 
@@ -321,8 +323,9 @@ La idea: cargar fecha = sólo llenar scores por hoyo. Todo lo demás se calcula 
 
 ## 9. HISTORIAL DE DECISIONES IMPORTANTES
 
+- **2026-09-07**: Cierre de la desconexión. Se sacó `.github/workflows/keep-supabase-alive.yml` del repo (pingueaba el Supabase de Portfolio Analyst, otro proyecto; el archivo quedó en `MGT historia/_archivo/para-repo-portfolio/` para moverlo a su repo). `index.html` tiene 0 referencias a Supabase. Publicados los commits de la F6 que habían quedado sin push.
 - **2026-07-30**: Migración completa de Supabase a JSON del repo (data/fechas.json, data/fixture.json, data/recaudacion.json). Escritura vía GitHub Contents API con token fine-grained en localStorage del admin. Motivo: free tier de Supabase pausaba el proyecto por inactividad; el repo versiona la historia gratis. Backup de las 4 tablas en data/backup-supabase/. Multas por ausencia automatizadas al cargar fecha.
 - **2026-04-14**: Rebuild completo del JSON histórico desde hojas Fecha de cada Excel (2017-2025). 2016 procesado aparte por formato distinto.
 - **2026-04-14**: Confirmado que `(*)` = La Comisión, no invitado. Aliases nuevos: Julian→Miceli, Juani Alonso→Alfonso. Altas: Basaldua Javi, Tomas Vigil.
-- **2026-04-14**: Fixture sincronizado via tabla Supabase `fixture`.
+- **2026-04-14**: Fixture sincronizado desde el fixture central del torneo.
 - **2026-04-14**: JSON del repo como fuente de verdad con versionado (`_version` field).

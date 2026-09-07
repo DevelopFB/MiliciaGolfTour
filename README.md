@@ -5,8 +5,9 @@ Webapp single-file (`index.html`) del torneo Milicia Golf Tour, desplegada en
 
 ## Arquitectura (plana, sin base de datos)
 
-Desde jul-2026 **no hay Supabase**. La fuente de verdad son archivos JSON versionados
-en este mismo repo:
+**No hay base de datos.** La fuente de verdad son archivos JSON versionados en este mismo
+repo, y la web se arma leyéndolos. Supabase se usó hasta jul-2026 y ya no forma parte de
+la arquitectura:
 
 | Archivo | Contenido |
 |---|---|
@@ -14,7 +15,7 @@ en este mismo repo:
 | `data/fixture.json` | fecha, modalidad, criterio y organizadores de las 10 fechas |
 | `data/recaudacion.json` | inscripción + multas por fecha por jugador |
 | `jugadores_historico.json` | histórico 2016-2025 por jugador (`_version` fuerza re-sync) |
-| `data/backup-supabase/` | snapshot de las tablas Supabase al migrar (sólo histórico) |
+| `data/backup-supabase/` | snapshot congelado al migrar (jul-2026). Archivo histórico: no se lee ni se escribe |
 
 **Lectura**: el navegador pinta primero desde localStorage (cache) y después hace
 `fetch` de los JSON del repo, que mandan.

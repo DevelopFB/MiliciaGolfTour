@@ -65,8 +65,12 @@ Fuera: el reglamento genérico de golf, los ~20 `.xlsx` históricos y el `index.
 
 Viven en `COCKPITS/MGT/core/decisions-pending.md`. Al 18-Ago-2026, los que importan:
 
-- **#10 — La F6 (08-Ago) está validada pero SIN publicar.** El repo y la web llegan a F5.
-- **#11** — `keep-supabase-alive.yml` sigue en este repo pero pinguea el Supabase de otro proyecto.
+- ~~**#10** — F6 validada pero sin publicar~~ · **CERRADA 07-Sep-2026**: los commits estaban
+  hechos en local pero nunca se hizo `git push`. Publicados.
+- ~~**#11** — `keep-supabase-alive.yml` en este repo~~ · **CERRADA 07-Sep-2026**: sacado del repo;
+  el archivo quedó en `MGT historia/_archivo/para-repo-portfolio/` para moverlo al repo de Portfolio Analyst.
 - **#12** — Token GitHub y API key de Anthropic viven en el localStorage del navegador.
-- **#14** — `ESTADO_2026.md` queda desactualizado hasta publicar la F6.
+- **#15 / #16 / #18** — Deuda del Master: sobrenombres en los lookups, `Avg` de Gross promedia
+  todas las tarjetas (desde la F8 tiene que ser las mejores 7), y la dif de hoyos acumulada no
+  coincide entre la web (+3 Gris) y el Master (Gris 4 / Rojo 3).
 - **#8 / #9** — Historia: falta confirmar ruta y formato del manuscrito, y el perfil de voz del cronista.

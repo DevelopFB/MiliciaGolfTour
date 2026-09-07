@@ -1,4 +1,4 @@
-# MGT 2026 — Estado del Torneo (snapshot al 18-Ago-2026, post F6)
+# MGT 2026 — Estado del Torneo (snapshot al 07-Sep-2026, post F6 / pre F7)
 
 > **Para el Project Knowledge del proyecto de chat.** Da contexto acumulado a Claude cuando procesa
 > una fecha desde el teléfono (sin acceso al repo).
@@ -105,9 +105,18 @@ Sin tarjeta en F6 (jugaron solo el match): Zunino, Gatto Mariano, Scapparone.
 
 ## Notas operativas (learnings vigentes)
 
-- **Publicar ≠ guardar.** Si el navegador no tiene el token de GitHub cargado (Admin → 🔑 Publicación),
-  el backoffice guarda solo en localStorage y la web se ve igual. Así se perdió una semana con la F6.
-  Desde el 18-Ago la web muestra un aviso persistente "⚠ Sin publicar" con botón para publicar.
+- **Publicar ≠ guardar (desde el teléfono).** Si el navegador no tiene el token de GitHub cargado
+  (Admin → 🔑 Publicación), el backoffice guarda solo en localStorage y la web se ve igual. Así se
+  perdió una semana con la F6. Desde el 18-Ago la web muestra un aviso persistente "⚠ Sin publicar"
+  con botón para publicar. **PASO 0 antes de cada fecha: abrir el backoffice y confirmar que el token
+  está cargado, con el mismo navegador de siempre.**
+- **Commitear ≠ publicar (desde Cowork).** El 07-Sep se descubrió que la F6 llevaba 3 semanas fuera de
+  la web por un motivo distinto: los commits estaban hechos en el repo local de la Mac pero nunca se
+  hizo `git push`. **Después de cualquier sesión de Cowork que toque el repo: `git push origin main` y
+  verificar que `git log origin/main..HEAD` sale vacío.** El bash del agente tiene red pero no tiene
+  credenciales de git, así que el push lo hace Pancho o se hace por Terminal.
+- **Verificación real de que algo está online:** abrir la web en incógnito, o mirar
+  `data/fechas.json` en GitHub. Nunca confiar en el navegador de siempre — su localStorage miente.
 - Suplentes usados en 2026: `sup_shaw` (F2) · `sup_alfonso` = Alfonso, Juan Ignacio (F3, F5) ·
   `sup_nissen` = Nissen, Germán (F4) · `hector_gatto` (F4) · `sup_diazdelfino` = Díaz Delfino, Pablo (F5) ·
   `sup_gascon` = Gascon, Alejo (F5). Convención de ID externo: `sup_apellido`. **F6 no tuvo suplentes.**

@@ -166,7 +166,8 @@ TUS TAREAS PRINCIPALES
    `data/recaudacion.json`, `jugadores_historico.json`) + localStorage como cache de render.
    Escritura: el backoffice comitea vía GitHub Contents API (token fine-grained, Contents RW,
    guardado en el localStorage del navegador del admin). Pages republica en ~1 min.
-   Supabase fue eliminado en jul-2026 (backup en `data/backup-supabase/`).
+   NO hay base de datos. Supabase se eliminó en jul-2026; `data/backup-supabase/` es un
+   snapshot congelado, no una fuente. Si algo menciona tablas de Supabase, está stale.
 
 ------------------------------------------------------
 REGLAS DE COMUNICACIÓN
