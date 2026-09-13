@@ -3547,5 +3547,755 @@
         "holes": null
       }
     ]
+  },
+  {
+    "num": 7,
+    "fecha": "12 Sep 2026",
+    "cancha": "CUBA Fátima",
+    "par": [
+      5,
+      3,
+      4,
+      5,
+      4,
+      4,
+      3,
+      4,
+      4,
+      4,
+      5,
+      4,
+      4,
+      3,
+      4,
+      4,
+      3,
+      5
+    ],
+    "organizadores": "Scapparone + Benegas",
+    "pendiente": false,
+    "comentario": "Fecha 7 en Fátima, organizada por Scapparone, Nicolás y Benegas, Francisco, con la sede en lo de Scapparone. Otro día de scoring alto: promedio gross de 96.2, ningún eagle y apenas tres birdies en once tarjetas —Elizalde, Juan Pedro en el 3, Guevara, Francisco en el 2 y Méndez, Gastón en el 11—. Benegas, Francisco firmó 98 gross para un neto de 73 y se quedó con la fecha por un golpe sobre Guevara, Francisco y Méndez, Gastón, los dos en 74; con esos 500 puntos pasa a liderar el medal por primera vez en el año y desplaza a Elizalde, Juan Pedro, que venía adelante desde marzo. Méndez, Gastón fue el mejor gross del día con 90. En el match play La Cele se llevó la jornada 2.5 a 1.5: ganaron Tarasido, Gonzalo y Benegas, Francisco por seis y Basaldua, Ignacio con Guevara, Francisco por cuatro, empataron Pannullo, Martín y Zunino, Javier ante Elizalde, Juan Pedro y Scapparone, Nicolás, y se les escapó el último por un hoyo. La Cele estira a 20 - 16 y a doce hoyos de ventaja. Faltó Gonzalez, Agustín y lo reemplazó Gatto, Hector. Zunino, Javier, Pannullo, Martín, Molinario, Andrés, Fernandez, Lucas y Gatto, Hector jugaron sus matchs pero no presentaron tarjeta, así que no suman en el medal.",
+    "ausentes": [
+      "Gonzalez, Agustín"
+    ],
+    "suplentes": [
+      {
+        "id": "hector_gatto",
+        "name": "Gatto, Hector",
+        "equipo": "g",
+        "reemplaza": "gonzalez"
+      }
+    ],
+    "medal": [
+      {
+        "id": "benegas",
+        "hdcp": 25,
+        "neto": 73,
+        "gross": 98
+      },
+      {
+        "id": "guevara",
+        "hdcp": 20,
+        "neto": 74,
+        "gross": 94
+      },
+      {
+        "id": "mendez",
+        "hdcp": 16,
+        "neto": 74,
+        "gross": 90
+      },
+      {
+        "id": "basaldua",
+        "hdcp": 17,
+        "neto": 77,
+        "gross": 94
+      },
+      {
+        "id": "dipaola",
+        "hdcp": 26,
+        "neto": 78,
+        "gross": 104
+      },
+      {
+        "id": "elizalde",
+        "hdcp": 14,
+        "neto": 78,
+        "gross": 92
+      },
+      {
+        "id": "canonico",
+        "hdcp": 16,
+        "neto": 78,
+        "gross": 94
+      },
+      {
+        "id": "vogelius",
+        "hdcp": 16,
+        "neto": 78,
+        "gross": 94
+      },
+      {
+        "id": "tarasido",
+        "hdcp": 12,
+        "neto": 80,
+        "gross": 92
+      },
+      {
+        "id": "gatto",
+        "hdcp": 10,
+        "neto": 87,
+        "gross": 97
+      },
+      {
+        "id": "scapparone",
+        "hdcp": 21,
+        "neto": 88,
+        "gross": 109
+      }
+    ],
+    "scorecard": [
+      {
+        "id": "tarasido",
+        "hdcp": 12,
+        "hoyos": [
+          7,
+          3,
+          6,
+          6,
+          5,
+          7,
+          4,
+          5,
+          6,
+          5,
+          6,
+          4,
+          5,
+          4,
+          5,
+          5,
+          4,
+          5
+        ],
+        "gross": 92,
+        "neto": 80,
+        "holes": [
+          7,
+          3,
+          6,
+          6,
+          5,
+          7,
+          4,
+          5,
+          6,
+          5,
+          6,
+          4,
+          5,
+          4,
+          5,
+          5,
+          4,
+          5
+        ]
+      },
+      {
+        "id": "zunino",
+        "hdcp": null,
+        "hoyos": null,
+        "gross": null,
+        "neto": null,
+        "holes": null
+      },
+      {
+        "id": "basaldua",
+        "hdcp": 17,
+        "hoyos": [
+          6,
+          5,
+          6,
+          5,
+          5,
+          6,
+          5,
+          6,
+          5,
+          6,
+          6,
+          6,
+          5,
+          3,
+          5,
+          4,
+          3,
+          7
+        ],
+        "gross": 94,
+        "neto": 77,
+        "holes": [
+          6,
+          5,
+          6,
+          5,
+          5,
+          6,
+          5,
+          6,
+          5,
+          6,
+          6,
+          6,
+          5,
+          3,
+          5,
+          4,
+          3,
+          7
+        ]
+      },
+      {
+        "id": "pannullo",
+        "hdcp": null,
+        "hoyos": null,
+        "gross": null,
+        "neto": null,
+        "holes": null
+      },
+      {
+        "id": "benegas",
+        "hdcp": 25,
+        "hoyos": [
+          6,
+          6,
+          8,
+          6,
+          5,
+          6,
+          3,
+          7,
+          4,
+          5,
+          5,
+          5,
+          6,
+          4,
+          5,
+          6,
+          5,
+          6
+        ],
+        "gross": 98,
+        "neto": 73,
+        "holes": [
+          6,
+          6,
+          8,
+          6,
+          5,
+          6,
+          3,
+          7,
+          4,
+          5,
+          5,
+          5,
+          6,
+          4,
+          5,
+          6,
+          5,
+          6
+        ]
+      },
+      {
+        "id": "guevara",
+        "hdcp": 20,
+        "hoyos": [
+          6,
+          2,
+          4,
+          5,
+          4,
+          6,
+          4,
+          5,
+          7,
+          4,
+          8,
+          6,
+          5,
+          4,
+          5,
+          6,
+          6,
+          7
+        ],
+        "gross": 94,
+        "neto": 74,
+        "holes": [
+          6,
+          2,
+          4,
+          5,
+          4,
+          6,
+          4,
+          5,
+          7,
+          4,
+          8,
+          6,
+          5,
+          4,
+          5,
+          6,
+          6,
+          7
+        ]
+      },
+      {
+        "id": "dipaola",
+        "hdcp": 26,
+        "hoyos": [
+          7,
+          5,
+          8,
+          6,
+          6,
+          4,
+          5,
+          5,
+          5,
+          7,
+          6,
+          6,
+          6,
+          6,
+          6,
+          5,
+          4,
+          7
+        ],
+        "gross": 104,
+        "neto": 78,
+        "holes": [
+          7,
+          5,
+          8,
+          6,
+          6,
+          4,
+          5,
+          5,
+          5,
+          7,
+          6,
+          6,
+          6,
+          6,
+          6,
+          5,
+          4,
+          7
+        ]
+      },
+      {
+        "id": "gatto",
+        "hdcp": 10,
+        "hoyos": [
+          6,
+          4,
+          4,
+          6,
+          4,
+          7,
+          5,
+          5,
+          5,
+          5,
+          11,
+          5,
+          4,
+          6,
+          4,
+          6,
+          4,
+          6
+        ],
+        "gross": 97,
+        "neto": 87,
+        "holes": [
+          6,
+          4,
+          4,
+          6,
+          4,
+          7,
+          5,
+          5,
+          5,
+          5,
+          11,
+          5,
+          4,
+          6,
+          4,
+          6,
+          4,
+          6
+        ]
+      },
+      {
+        "id": "elizalde",
+        "hdcp": 14,
+        "hoyos": [
+          5,
+          4,
+          3,
+          6,
+          4,
+          5,
+          5,
+          5,
+          5,
+          6,
+          7,
+          6,
+          5,
+          4,
+          5,
+          6,
+          3,
+          8
+        ],
+        "gross": 92,
+        "neto": 78,
+        "holes": [
+          5,
+          4,
+          3,
+          6,
+          4,
+          5,
+          5,
+          5,
+          5,
+          6,
+          7,
+          6,
+          5,
+          4,
+          5,
+          6,
+          3,
+          8
+        ]
+      },
+      {
+        "id": "canonico",
+        "hdcp": 16,
+        "hoyos": [
+          6,
+          4,
+          4,
+          7,
+          4,
+          5,
+          4,
+          6,
+          5,
+          8,
+          6,
+          6,
+          7,
+          3,
+          4,
+          5,
+          4,
+          6
+        ],
+        "gross": 94,
+        "neto": 78,
+        "holes": [
+          6,
+          4,
+          4,
+          7,
+          4,
+          5,
+          4,
+          6,
+          5,
+          8,
+          6,
+          6,
+          7,
+          3,
+          4,
+          5,
+          4,
+          6
+        ]
+      },
+      {
+        "id": "vogelius",
+        "hdcp": 16,
+        "hoyos": [
+          7,
+          5,
+          6,
+          6,
+          5,
+          4,
+          3,
+          7,
+          4,
+          5,
+          6,
+          6,
+          6,
+          3,
+          5,
+          6,
+          4,
+          6
+        ],
+        "gross": 94,
+        "neto": 78,
+        "holes": [
+          7,
+          5,
+          6,
+          6,
+          5,
+          4,
+          3,
+          7,
+          4,
+          5,
+          6,
+          6,
+          6,
+          3,
+          5,
+          6,
+          4,
+          6
+        ]
+      },
+      {
+        "id": "mendez",
+        "hdcp": 16,
+        "hoyos": [
+          7,
+          3,
+          6,
+          5,
+          5,
+          5,
+          4,
+          6,
+          6,
+          5,
+          4,
+          6,
+          5,
+          3,
+          4,
+          6,
+          3,
+          7
+        ],
+        "gross": 90,
+        "neto": 74,
+        "holes": [
+          7,
+          3,
+          6,
+          5,
+          5,
+          5,
+          4,
+          6,
+          6,
+          5,
+          4,
+          6,
+          5,
+          3,
+          4,
+          6,
+          3,
+          7
+        ]
+      },
+      {
+        "id": "molinario",
+        "hdcp": null,
+        "hoyos": null,
+        "gross": null,
+        "neto": null,
+        "holes": null
+      },
+      {
+        "id": "scapparone",
+        "hdcp": 21,
+        "hoyos": [
+          6,
+          5,
+          7,
+          7,
+          6,
+          6,
+          7,
+          9,
+          4,
+          5,
+          5,
+          7,
+          7,
+          5,
+          5,
+          6,
+          3,
+          9
+        ],
+        "gross": 109,
+        "neto": 88,
+        "holes": [
+          6,
+          5,
+          7,
+          7,
+          6,
+          6,
+          7,
+          9,
+          4,
+          5,
+          5,
+          7,
+          7,
+          5,
+          5,
+          6,
+          3,
+          9
+        ]
+      },
+      {
+        "id": "fernandez",
+        "hdcp": null,
+        "hoyos": null,
+        "gross": null,
+        "neto": null,
+        "holes": null
+      },
+      {
+        "id": "hector_gatto",
+        "hdcp": null,
+        "hoyos": null,
+        "gross": null,
+        "neto": null,
+        "holes": null
+      }
+    ],
+    "matchs": [
+      {
+        "tipo": "fb",
+        "gris": [
+          "tarasido",
+          "benegas"
+        ],
+        "rojo": [
+          "vogelius",
+          "molinario"
+        ],
+        "ganador": "g",
+        "difHoyos": 6,
+        "pts_g": {
+          "tarasido": 0.5,
+          "benegas": 0.5
+        },
+        "pts_r": {
+          "vogelius": 0.0,
+          "molinario": 0.0
+        }
+      },
+      {
+        "tipo": "fb",
+        "gris": [
+          "pannullo",
+          "zunino"
+        ],
+        "rojo": [
+          "elizalde",
+          "scapparone"
+        ],
+        "ganador": "empate",
+        "difHoyos": 0,
+        "pts_g": {
+          "pannullo": 0.25,
+          "zunino": 0.25
+        },
+        "pts_r": {
+          "elizalde": 0.25,
+          "scapparone": 0.25
+        }
+      },
+      {
+        "tipo": "fb",
+        "gris": [
+          "basaldua",
+          "guevara"
+        ],
+        "rojo": [
+          "canonico",
+          "fernandez"
+        ],
+        "ganador": "g",
+        "difHoyos": 4,
+        "pts_g": {
+          "basaldua": 0.5,
+          "guevara": 0.5
+        },
+        "pts_r": {
+          "canonico": 0.0,
+          "fernandez": 0.0
+        }
+      },
+      {
+        "tipo": "fb",
+        "gris": [
+          "dipaola",
+          "hector_gatto"
+        ],
+        "rojo": [
+          "gatto",
+          "mendez"
+        ],
+        "ganador": "r",
+        "difHoyos": 1,
+        "pts_g": {
+          "dipaola": 0.0,
+          "hector_gatto": 0.0
+        },
+        "pts_r": {
+          "gatto": 0.5,
+          "mendez": 0.5
+        }
+      }
+    ],
+    "stats": {
+      "avgGross": 96.2,
+      "avgNeto": 78.6,
+      "eagles": 0,
+      "birdies": 3,
+      "pares": 38,
+      "bogeys": 78,
+      "dobles": 79
+    }
   }
 ]
