@@ -22,11 +22,11 @@
 
 ---
 
-## ▶️ PRÓXIMA FECHA — F7 (listo para copiar)
+## ▶️ PRÓXIMA FECHA — F9 · GIRA Punta Cana (listo para copiar)
 
 ```
-Fecha 7 MGT — 12/09/2026 — CUBA Fátima — Fourball 2v2
-Organizadores: Scapparone + Benegas
+Fecha 9 MGT — [DD/MM/AAAA] — [Cancha de la gira] — Fourball 2v2 (match inverso)
+Organizadores: GIRA
 Ausentes: [lista o "ninguno"]
 Suplentes: [Nombre completo, equipo, a quién reemplaza — o "ninguno"]
 Matchs y resultados: [los paso acá o al final]
@@ -34,9 +34,9 @@ Matchs y resultados: [los paso acá o al final]
 Te adjunto las tarjetas. Seguí PROMPT_CARGA_FECHA.md y devolveme los 4 outputs.
 ```
 
-Contexto que trae la F7: Medal líder Elizalde 1220 · Copa Match Play **La Cele 17.5 – Rojo 14.5**
-(tablero: La Cele +3 pts, dif hoyos +3) · Fourball 2v2 aleatorio → 4 matchs.
-Par CUBA Fátima `[5,3,4,5,4,4,3,4,4, 4,5,4,4,3,4,4,3,5]` = 72.
+Contexto que trae la F9: Medal líder Benegas 1481 (Elizalde 1388) · Copa Match Play **La Cele 24.5 – Rojo 17.5**
+(dif hoyos La Cele +23) · Medal ×1.5 · Fourball inverso (1v8)(2v7)(3v6)(4v5) → 4 matchs.
+⚠️ **Cancha nueva: leer el par y el stroke index de la tarjeta.** No asumir Fátima.
 
 ---
 

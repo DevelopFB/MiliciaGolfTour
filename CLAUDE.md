@@ -296,6 +296,7 @@ Cambiar `_version` cada vez que se actualiza para forzar re-sync en clientes.
 
 ### Multas por ausencia
 - **USD 12 por fecha no jugada**, sin importar el motivo (haya mandado suplente o no). Constante `MULTA_AUSENCIA_USD` en `index.html`.
+- **Excepción: fechas reprogramadas oficialmente no generan multa** (decidido por Pancho el 2026-10-10 con la F8, reprogramada por clima). `sugerirMultasFecha()` igual las sugiere: no aceptarlas.
 - Al aplicar una fecha desde el backoffice, `sugerirMultasFecha()` detecta los oficiales ausentes (sin scorecard/medal ni match) y ofrece cargar la multa en `data/recaudacion.json` con un click. No pisa montos ya cargados.
 - `gatto_ale` no entra en la detección automática (multas manuales si corresponde).
 
@@ -341,6 +342,7 @@ La idea: cargar fecha = sólo llenar scores por hoyo. Todo lo demás se calcula 
 
 ## 9. HISTORIAL DE DECISIONES IMPORTANTES
 
+- **2026-10-10**: F8 reprogramada (03-Oct → 10-Oct por clima): sin multas para los 5 ausentes. Regla: las fechas reprogramadas oficialmente no generan multa.
 - **2026-09-07**: Cierre de la desconexión. Se sacó `.github/workflows/keep-supabase-alive.yml` del repo (pingueaba el Supabase de Portfolio Analyst, otro proyecto; el archivo quedó en `MGT historia/_archivo/para-repo-portfolio/` para moverlo a su repo). `index.html` tiene 0 referencias a Supabase. Publicados los commits de la F6 que habían quedado sin push.
 - **2026-07-30**: Migración completa de Supabase a JSON del repo (data/fechas.json, data/fixture.json, data/recaudacion.json). Escritura vía GitHub Contents API con token fine-grained en localStorage del admin. Motivo: free tier de Supabase pausaba el proyecto por inactividad; el repo versiona la historia gratis. Backup de las 4 tablas en data/backup-supabase/. Multas por ausencia automatizadas al cargar fecha.
 - **2026-04-14**: Rebuild completo del JSON histórico desde hojas Fecha de cada Excel (2017-2025). 2016 procesado aparte por formato distinto.
