@@ -90,9 +90,9 @@ F5 Elizalde · F6 Benegas · F7 Benegas (73) · **F8 Pannullo (68)**.
 | F8 | 4.5 | 1.5 | +11 |
 | **TOTAL** | **24.5** | **17.5** | **+23** |
 
-Ventaja La Cele: 7 pts. La F9 reparte 4 pts. Si la F10 es solo el cruce final (1 pt), La Cele ya es
-campeona matemáticamente; si en la F10 se juegan 8 individuales, Rojo necesita 9.5 de 12 para empatar
-(desempata dif hoyos). **[A CONFIRMAR con Pancho: cuántos matchs tiene la F10.]**
+Ventaja La Cele: 7 pts. **La Copa se juega hasta el final**: hay matchs en las dos fechas de la gira.
+F9 = 4 fourball (4 pts); F10 = individuales [SUPUESTO: 8 cruces, 8 pts] → 12 pts en juego.
+La Cele asegura la Copa con 3 pts; Rojo necesita 10 para darla vuelta (9.5 empata y desempata la dif de hoyos).
 
 ## Match individual — finalistas provisorios de la F10
 
@@ -124,7 +124,7 @@ Gatto, Alejandro (sup): 1.5 pts, −12.
 
 ## Últimos hdcp vistos (SOLO referencia — usar SIEMPRE el de la tarjeta del día)
 
-F8 (10-Oct, CUBA Fátima, "HCP Medal" = 85% del hdcp jugado): Gonzalez 7 · Zunino 15 · Pannullo 16 ·
+F8 (10-Oct, CUBA Fátima, "HCP Medal" de la tarjeta: depende de las bochas de salida de cada jugador): Gonzalez 7 · Zunino 15 · Pannullo 16 ·
 Benegas 25 · Guevara 20 · Dipaola 26 · Gatto Mariano 8 · Elizalde 14 · Méndez 16 · Molinario 17 ·
 Fernandez 15 · Gatto Alejandro 25.
 
@@ -149,12 +149,9 @@ Fernandez 15 · Gatto Alejandro 25.
 - `sin_suplente`: placeholder para matchs 2v1 — no romper el formato fourball.
 - Jugador que juega el match pero no entrega tarjeta → scorecard con `hoyos/gross/neto/hdcp: null`.
   NO es un ausente y NO paga multa.
-- En la hoja `Match` del Master, Gatto Alejandro tiene **dos filas** ("(Rojo)" F1–F2 y "(La Cele)" F3–F4)
-  porque el color que representa cambia por fecha; los totales SUMIF requieren equipo fijo por fila.
-- ⚠️ Al agregar una fecha al Master hay que **limpiar** las columnas de la fecha nueva en las filas de
-  suplentes que no jugaron: si quedan las fórmulas viejas de TOT, se suman como puntos de esa fecha.
-- ⚠️ La columna `Avg` de `Gross_Historial` es el promedio de TODAS las tarjetas, no el de las mejores 7.
-  Hasta 7 fechas da lo mismo; a partir de la F8 hay que cambiar la fórmula.
-- ⚠️ El Master usa sobrenombres en la columna Jugador ("Benegas, Pancho"). Los lookups de
-  `Gross_Historial`, `Medal_Fechas` y `Medal_Consolidado` dependen de ese texto: no renombrar a canónico
-  sin actualizar las tres hojas a la vez.
+- **Master Excel regenerado el 10-Oct-2026** desde `data/fechas.json` con `scripts/build_master.py`
+  (`python3 scripts/build_master.py MGT_2026_Master.xlsx data/fechas.json data/fixture.json MGT_2026_Master.xlsx`).
+  Todo con fórmulas: hojas FN (hoyos + hdcp como input → gross, neto, puesto, pts con reparto de empates),
+  `Match_Log` (un match por fila → Match individual y Copa), Medal, Gross (mejores 7 reales), Supuestos.
+  Cuadra exacto con la web. Se conservó la hoja `Historico`. Las trampas viejas (Gatto, Alejandro en dos filas,
+  sobrenombres en los lookups, Avg de todas las tarjetas) dejaron de existir: ahora todo se busca por ID.
