@@ -14,3 +14,13 @@ __pycache__/
 .env
 *.token
 token*.txt
+
+# Nada de credenciales, nunca (agregado 2026-09-14)
+*CLAVE*
+*.env
+.env
+.env.*
+*TOTP*
+*SECRET*
+*.pem
+*.key

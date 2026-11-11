@@ -5082,5 +5082,1081 @@
       "bogeys": 79,
       "dobles": 77
     }
+  },
+  {
+    "num": 9,
+    "fecha": "05 Nov 2026",
+    "cancha": "The Lakes (Barceló, Punta Cana)",
+    "par": [
+      4,
+      3,
+      4,
+      5,
+      4,
+      5,
+      4,
+      4,
+      3,
+      4,
+      4,
+      3,
+      5,
+      3,
+      4,
+      5,
+      4,
+      4
+    ],
+    "organizadores": "GIRA",
+    "pendiente": false,
+    "comentario": "Primera fecha de la gira, en The Lakes del Barceló Bávaro. Benegas, Francisco firmó 72 neto justo y ganó su tercera fecha del año, dos golpes por delante de Zunino, Javier (89 gross, su mejor tarjeta del año) y Vogelius, Nicolás. Gatto, Mariano hizo el mejor gross del día con 87. En el match La Cele ganó 2.5 a 1.5: Benegas y Zunino le ganaron por seis a Elizalde y Scapparone, Pannullo y Basaldua por dos a Fernandez y Díaz Andrade, Vogelius y Molinario ganaron por cinco a Guevara y Gonzalez, y Tarasido y Dipaola empataron con los Gatto. Guevara, Francisco y Scapparone, Nicolás jugaron el match sin entregar tarjeta. Faltaron Canónico, Agustín y Méndez, Gastón; la gira no genera multas.",
+    "ausentes": [
+      "Canónico, Agustín",
+      "Méndez, Gastón"
+    ],
+    "suplentes": [
+      {
+        "id": "gatto_ale",
+        "name": "Gatto, Alejandro",
+        "equipo": "r",
+        "reemplaza": "Méndez, Gastón",
+        "acumulaPuntos": true
+      },
+      {
+        "id": "sup_diazandrade",
+        "name": "Díaz Andrade, Juampi",
+        "equipo": "r",
+        "reemplaza": "Canónico, Agustín",
+        "acumulaPuntos": true,
+        "matricula": "116949"
+      }
+    ],
+    "stats": {
+      "eagles": 0,
+      "birdies": 7,
+      "pares": 51,
+      "bogeys": 86,
+      "dobles": 108,
+      "avgGross": 100.1,
+      "avgNeto": 82.1
+    },
+    "medal": [
+      {
+        "id": "benegas",
+        "hdcp": 25,
+        "neto": 72,
+        "gross": 97
+      },
+      {
+        "id": "zunino",
+        "hdcp": 15,
+        "neto": 74,
+        "gross": 89
+      },
+      {
+        "id": "vogelius",
+        "hdcp": 16,
+        "neto": 74,
+        "gross": 90
+      },
+      {
+        "id": "pannullo",
+        "hdcp": 20,
+        "neto": 78,
+        "gross": 98
+      },
+      {
+        "id": "gatto_ale",
+        "hdcp": 26,
+        "neto": 78,
+        "gross": 104
+      },
+      {
+        "id": "gatto",
+        "hdcp": 8,
+        "neto": 79,
+        "gross": 87
+      },
+      {
+        "id": "basaldua",
+        "hdcp": 17,
+        "neto": 80,
+        "gross": 97
+      },
+      {
+        "id": "sup_diazandrade",
+        "hdcp": 26,
+        "neto": 81,
+        "gross": 107
+      },
+      {
+        "id": "tarasido",
+        "hdcp": 12,
+        "neto": 83,
+        "gross": 95
+      },
+      {
+        "id": "molinario",
+        "hdcp": 21,
+        "neto": 87,
+        "gross": 108
+      },
+      {
+        "id": "gonzalez",
+        "hdcp": 7,
+        "neto": 88,
+        "gross": 95
+      },
+      {
+        "id": "elizalde",
+        "hdcp": 14,
+        "neto": 91,
+        "gross": 105
+      },
+      {
+        "id": "dipaola",
+        "hdcp": 26,
+        "neto": 91,
+        "gross": 117
+      },
+      {
+        "id": "fernandez",
+        "hdcp": 19,
+        "neto": 94,
+        "gross": 113
+      }
+    ],
+    "scorecard": [
+      {
+        "id": "benegas",
+        "hdcp": 25,
+        "hoyos": [
+          4,
+          3,
+          5,
+          9,
+          6,
+          5,
+          5,
+          4,
+          4,
+          5,
+          6,
+          7,
+          8,
+          3,
+          5,
+          5,
+          8,
+          5
+        ],
+        "gross": 97,
+        "neto": 72,
+        "holes": [
+          4,
+          3,
+          5,
+          9,
+          6,
+          5,
+          5,
+          4,
+          4,
+          5,
+          6,
+          7,
+          8,
+          3,
+          5,
+          5,
+          8,
+          5
+        ]
+      },
+      {
+        "id": "zunino",
+        "hdcp": 15,
+        "hoyos": [
+          5,
+          5,
+          5,
+          4,
+          4,
+          8,
+          5,
+          4,
+          5,
+          5,
+          6,
+          4,
+          6,
+          4,
+          5,
+          4,
+          5,
+          5
+        ],
+        "gross": 89,
+        "neto": 74,
+        "holes": [
+          5,
+          5,
+          5,
+          4,
+          4,
+          8,
+          5,
+          4,
+          5,
+          5,
+          6,
+          4,
+          6,
+          4,
+          5,
+          4,
+          5,
+          5
+        ]
+      },
+      {
+        "id": "vogelius",
+        "hdcp": 16,
+        "hoyos": [
+          5,
+          4,
+          5,
+          8,
+          5,
+          5,
+          5,
+          4,
+          3,
+          5,
+          6,
+          3,
+          9,
+          2,
+          5,
+          6,
+          6,
+          4
+        ],
+        "gross": 90,
+        "neto": 74,
+        "holes": [
+          5,
+          4,
+          5,
+          8,
+          5,
+          5,
+          5,
+          4,
+          3,
+          5,
+          6,
+          3,
+          9,
+          2,
+          5,
+          6,
+          6,
+          4
+        ]
+      },
+      {
+        "id": "pannullo",
+        "hdcp": 20,
+        "hoyos": [
+          6,
+          4,
+          5,
+          7,
+          4,
+          5,
+          5,
+          6,
+          3,
+          7,
+          5,
+          3,
+          9,
+          3,
+          9,
+          6,
+          7,
+          4
+        ],
+        "gross": 98,
+        "neto": 78,
+        "holes": [
+          6,
+          4,
+          5,
+          7,
+          4,
+          5,
+          5,
+          6,
+          3,
+          7,
+          5,
+          3,
+          9,
+          3,
+          9,
+          6,
+          7,
+          4
+        ]
+      },
+      {
+        "id": "gatto_ale",
+        "hdcp": 26,
+        "hoyos": [
+          5,
+          7,
+          7,
+          6,
+          6,
+          6,
+          5,
+          5,
+          4,
+          6,
+          5,
+          4,
+          7,
+          4,
+          4,
+          10,
+          7,
+          6
+        ],
+        "gross": 104,
+        "neto": 78,
+        "holes": [
+          5,
+          7,
+          7,
+          6,
+          6,
+          6,
+          5,
+          5,
+          4,
+          6,
+          5,
+          4,
+          7,
+          4,
+          4,
+          10,
+          7,
+          6
+        ]
+      },
+      {
+        "id": "gatto",
+        "hdcp": 8,
+        "hoyos": [
+          4,
+          5,
+          6,
+          4,
+          4,
+          7,
+          5,
+          4,
+          4,
+          5,
+          6,
+          5,
+          6,
+          3,
+          4,
+          5,
+          6,
+          4
+        ],
+        "gross": 87,
+        "neto": 79,
+        "holes": [
+          4,
+          5,
+          6,
+          4,
+          4,
+          7,
+          5,
+          4,
+          4,
+          5,
+          6,
+          5,
+          6,
+          3,
+          4,
+          5,
+          6,
+          4
+        ]
+      },
+      {
+        "id": "basaldua",
+        "hdcp": 17,
+        "hoyos": [
+          5,
+          2,
+          7,
+          6,
+          5,
+          7,
+          5,
+          5,
+          3,
+          6,
+          6,
+          4,
+          8,
+          4,
+          8,
+          6,
+          5,
+          5
+        ],
+        "gross": 97,
+        "neto": 80,
+        "holes": [
+          5,
+          2,
+          7,
+          6,
+          5,
+          7,
+          5,
+          5,
+          3,
+          6,
+          6,
+          4,
+          8,
+          4,
+          8,
+          6,
+          5,
+          5
+        ]
+      },
+      {
+        "id": "sup_diazandrade",
+        "hdcp": 26,
+        "hoyos": [
+          7,
+          3,
+          8,
+          7,
+          7,
+          5,
+          6,
+          5,
+          5,
+          5,
+          5,
+          10,
+          7,
+          3,
+          4,
+          5,
+          9,
+          6
+        ],
+        "gross": 107,
+        "neto": 81,
+        "holes": [
+          7,
+          3,
+          8,
+          7,
+          7,
+          5,
+          6,
+          5,
+          5,
+          5,
+          5,
+          10,
+          7,
+          3,
+          4,
+          5,
+          9,
+          6
+        ]
+      },
+      {
+        "id": "tarasido",
+        "hdcp": 12,
+        "hoyos": [
+          5,
+          5,
+          7,
+          4,
+          4,
+          8,
+          6,
+          4,
+          5,
+          6,
+          5,
+          4,
+          8,
+          2,
+          6,
+          5,
+          6,
+          5
+        ],
+        "gross": 95,
+        "neto": 83,
+        "holes": [
+          5,
+          5,
+          7,
+          4,
+          4,
+          8,
+          6,
+          4,
+          5,
+          6,
+          5,
+          4,
+          8,
+          2,
+          6,
+          5,
+          6,
+          5
+        ]
+      },
+      {
+        "id": "molinario",
+        "hdcp": 21,
+        "hoyos": [
+          4,
+          6,
+          5,
+          9,
+          7,
+          9,
+          5,
+          5,
+          6,
+          7,
+          5,
+          6,
+          6,
+          3,
+          4,
+          9,
+          7,
+          5
+        ],
+        "gross": 108,
+        "neto": 87,
+        "holes": [
+          4,
+          6,
+          5,
+          9,
+          7,
+          9,
+          5,
+          5,
+          6,
+          7,
+          5,
+          6,
+          6,
+          3,
+          4,
+          9,
+          7,
+          5
+        ]
+      },
+      {
+        "id": "gonzalez",
+        "hdcp": 7,
+        "hoyos": [
+          5,
+          7,
+          5,
+          9,
+          5,
+          5,
+          6,
+          6,
+          4,
+          5,
+          4,
+          3,
+          6,
+          4,
+          7,
+          5,
+          5,
+          4
+        ],
+        "gross": 95,
+        "neto": 88,
+        "holes": [
+          5,
+          7,
+          5,
+          9,
+          5,
+          5,
+          6,
+          6,
+          4,
+          5,
+          4,
+          3,
+          6,
+          4,
+          7,
+          5,
+          5,
+          4
+        ]
+      },
+      {
+        "id": "elizalde",
+        "hdcp": 14,
+        "hoyos": [
+          6,
+          4,
+          5,
+          7,
+          6,
+          8,
+          5,
+          5,
+          8,
+          5,
+          4,
+          4,
+          6,
+          4,
+          4,
+          6,
+          9,
+          9
+        ],
+        "gross": 105,
+        "neto": 91,
+        "holes": [
+          6,
+          4,
+          5,
+          7,
+          6,
+          8,
+          5,
+          5,
+          8,
+          5,
+          4,
+          4,
+          6,
+          4,
+          4,
+          6,
+          9,
+          9
+        ]
+      },
+      {
+        "id": "dipaola",
+        "hdcp": 26,
+        "hoyos": [
+          4,
+          5,
+          8,
+          8,
+          8,
+          7,
+          8,
+          6,
+          3,
+          6,
+          6,
+          3,
+          10,
+          5,
+          6,
+          10,
+          6,
+          8
+        ],
+        "gross": 117,
+        "neto": 91,
+        "holes": [
+          4,
+          5,
+          8,
+          8,
+          8,
+          7,
+          8,
+          6,
+          3,
+          6,
+          6,
+          3,
+          10,
+          5,
+          6,
+          10,
+          6,
+          8
+        ]
+      },
+      {
+        "id": "fernandez",
+        "hdcp": 19,
+        "hoyos": [
+          8,
+          4,
+          8,
+          10,
+          4,
+          8,
+          6,
+          6,
+          6,
+          5,
+          6,
+          4,
+          8,
+          6,
+          4,
+          7,
+          8,
+          5
+        ],
+        "gross": 113,
+        "neto": 94,
+        "holes": [
+          8,
+          4,
+          8,
+          10,
+          4,
+          8,
+          6,
+          6,
+          6,
+          5,
+          6,
+          4,
+          8,
+          6,
+          4,
+          7,
+          8,
+          5
+        ]
+      },
+      {
+        "id": "guevara",
+        "hdcp": null,
+        "hoyos": null,
+        "gross": null,
+        "neto": null,
+        "holes": null
+      },
+      {
+        "id": "scapparone",
+        "hdcp": null,
+        "hoyos": null,
+        "gross": null,
+        "neto": null,
+        "holes": null
+      }
+    ],
+    "matchs": [
+      {
+        "tipo": "fb",
+        "gris": [
+          "benegas",
+          "zunino"
+        ],
+        "rojo": [
+          "elizalde",
+          "scapparone"
+        ],
+        "ganador": "g",
+        "difHoyos": 6,
+        "pts_g": {
+          "benegas": 0.5,
+          "zunino": 0.5
+        },
+        "pts_r": {
+          "elizalde": 0,
+          "scapparone": 0
+        }
+      },
+      {
+        "tipo": "fb",
+        "gris": [
+          "guevara",
+          "gonzalez"
+        ],
+        "rojo": [
+          "vogelius",
+          "molinario"
+        ],
+        "ganador": "r",
+        "difHoyos": 5,
+        "pts_g": {
+          "guevara": 0,
+          "gonzalez": 0
+        },
+        "pts_r": {
+          "vogelius": 0.5,
+          "molinario": 0.5
+        }
+      },
+      {
+        "tipo": "fb",
+        "gris": [
+          "pannullo",
+          "basaldua"
+        ],
+        "rojo": [
+          "fernandez",
+          "sup_diazandrade"
+        ],
+        "ganador": "g",
+        "difHoyos": 2,
+        "pts_g": {
+          "pannullo": 0.5,
+          "basaldua": 0.5
+        },
+        "pts_r": {
+          "fernandez": 0,
+          "sup_diazandrade": 0
+        }
+      },
+      {
+        "tipo": "fb",
+        "gris": [
+          "tarasido",
+          "dipaola"
+        ],
+        "rojo": [
+          "gatto",
+          "gatto_ale"
+        ],
+        "ganador": "empate",
+        "difHoyos": 0,
+        "pts_g": {
+          "tarasido": 0.25,
+          "dipaola": 0.25
+        },
+        "pts_r": {
+          "gatto": 0.25,
+          "gatto_ale": 0.25
+        }
+      }
+    ]
+  },
+  {
+    "num": 10,
+    "fecha": "Nov 2026 (GIRA)",
+    "cancha": "Iberostar Bávaro Golf Club",
+    "par": [
+      4,
+      3,
+      4,
+      4,
+      5,
+      4,
+      4,
+      3,
+      5,
+      4,
+      3,
+      4,
+      5,
+      4,
+      4,
+      3,
+      5,
+      4
+    ],
+    "organizadores": "GIRA",
+    "pendiente": false,
+    "suspendidaMedal": true,
+    "comentario": "La final de la gira, en el Iberostar Bávaro, se suspendió por tormenta eléctrica. Por decisión del grupo la Fecha 10 no cuenta para el Medal ni para el Gross: las posiciones finales quedan como estaban después de la Fecha 9. Solo terminaron Gatto, Mariano (86), Elizalde, Juan Pedro (93) y Benegas, Francisco (100), asumiendo el riesgo; sus tarjetas quedan como registro histórico. La final individual de match sí se definió: Guevara, Francisco y Molinario, Andrés esperaron que pasara la tormenta y la cerraron en el hoyo 17. Guevara, Francisco es el campeón del Match Play individual 2026 y Molinario, Andrés el subcampeón. Los demás cruces de la fecha no se jugaron.",
+    "ausentes": [],
+    "suplentes": [],
+    "stats": {
+      "pares": 0,
+      "bogeys": 0,
+      "dobles": 0,
+      "eagles": 0,
+      "avgNeto": 0,
+      "birdies": 0,
+      "avgGross": 0
+    },
+    "medal": [],
+    "scorecard": [],
+    "matchs": [
+      {
+        "tipo": "ind",
+        "gris": [
+          "guevara"
+        ],
+        "rojo": [
+          "molinario"
+        ],
+        "ganador": "g",
+        "difHoyos": 2,
+        "final": true,
+        "pts_g": {
+          "guevara": 1
+        },
+        "pts_r": {
+          "molinario": 0
+        }
+      }
+    ],
+    "registroHistorico": {
+      "nota": "Tarjetas completadas bajo tormenta. No cuentan para Medal ni Gross (decisión del grupo, Nov-2026).",
+      "stroke_index": [
+        16,
+        6,
+        12,
+        2,
+        18,
+        4,
+        14,
+        10,
+        8,
+        9,
+        3,
+        11,
+        15,
+        1,
+        13,
+        7,
+        17,
+        5
+      ],
+      "tarjetas": [
+        {
+          "id": "gatto",
+          "hoyos": [
+            8,
+            3,
+            5,
+            5,
+            5,
+            6,
+            3,
+            4,
+            7,
+            4,
+            4,
+            3,
+            6,
+            5,
+            3,
+            4,
+            5,
+            6
+          ],
+          "gross": 86
+        },
+        {
+          "id": "elizalde",
+          "hoyos": [
+            5,
+            5,
+            6,
+            5,
+            6,
+            4,
+            5,
+            4,
+            6,
+            5,
+            4,
+            3,
+            7,
+            6,
+            6,
+            4,
+            7,
+            5
+          ],
+          "gross": 93
+        },
+        {
+          "id": "benegas",
+          "hoyos": [
+            7,
+            5,
+            8,
+            6,
+            5,
+            3,
+            5,
+            4,
+            6,
+            6,
+            4,
+            6,
+            6,
+            6,
+            6,
+            4,
+            8,
+            5
+          ],
+          "gross": 100
+        },
+        {
+          "id": "dipaola",
+          "hoyos": [
+            5,
+            3,
+            8,
+            6,
+            7,
+            7,
+            5,
+            9,
+            7,
+            6,
+            8,
+            7,
+            7,
+            5,
+            7,
+            null,
+            null,
+            null
+          ],
+          "gross": null,
+          "nota": "Incompleta: dejó en el hoyo 15"
+        }
+      ]
+    }
   }
 ]

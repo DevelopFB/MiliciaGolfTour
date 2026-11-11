@@ -57,16 +57,68 @@
   },
   {
     "num": 9,
-    "fecha": "04-09 Nov 2026 (GIRA)",
+    "fecha": "05 Nov 2026 (GIRA)",
     "modalidad": "Fourball 2v2",
-    "criterio": "Match inverso (1v8)(2v7)...",
-    "organizadores": "GIRA"
+    "criterio": "Fourball (1y8)(2y7)(3y6)(4y5) por posición Medal de cada equipo post F8 · M1 Benegas+Zunino vs Elizalde+Scapparone · M2 Guevara+Gonzalez vs Vogelius+Molinario · M3 Pannullo+Basaldua vs Fernandez+Díaz Andrade (sup. de Canonico) · M4 Tarasido+Dipaola vs Gatto M.+Gatto A. (sup. de Mendez)",
+    "organizadores": "GIRA",
+    "cruces": [
+      {
+        "match": 1,
+        "gris": [
+          "benegas",
+          "zunino"
+        ],
+        "rojo": [
+          "elizalde",
+          "scapparone"
+        ],
+        "seeds": "Cele 1+8 vs Rojo 1+8 (Medal)"
+      },
+      {
+        "match": 2,
+        "gris": [
+          "guevara",
+          "gonzalez"
+        ],
+        "rojo": [
+          "vogelius",
+          "molinario"
+        ],
+        "seeds": "Cele 2+7 vs Rojo 2+7 (Medal)"
+      },
+      {
+        "match": 3,
+        "gris": [
+          "pannullo",
+          "basaldua"
+        ],
+        "rojo": [
+          "fernandez",
+          "sup_diazandrade"
+        ],
+        "seeds": "Cele 3+6 vs Rojo 3+6 (Medal)",
+        "nota": "sup_diazandrade (Díaz Andrade, Juan Pablo) reemplaza a canonico (#6 Rojo, lesión); acumula match, no Medal/Gross"
+      },
+      {
+        "match": 4,
+        "gris": [
+          "tarasido",
+          "dipaola"
+        ],
+        "rojo": [
+          "gatto",
+          "gatto_ale"
+        ],
+        "seeds": "Cele 4+5 vs Rojo 4+5 (Medal)",
+        "nota": "gatto_ale reemplaza a mendez (#5 Rojo, no viaja)"
+      }
+    ]
   },
   {
     "num": 10,
-    "fecha": "04-09 Nov 2026 (GIRA)",
+    "fecha": "Nov 2026 (GIRA)",
     "modalidad": "Individual 1v1 FINAL",
-    "criterio": "#1 Gris vs #1 Rojo",
+    "criterio": "FINAL: #1 La Cele vs #1 Rojo (Guevara vs Molinario) · fecha suspendida por tormenta: no cuenta para Medal ni Gross",
     "organizadores": "GIRA"
   }
 ]

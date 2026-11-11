@@ -797,6 +797,15 @@ function calcMedalPts(fecha) {
   return finalResult;
 }
 
+// ── Cierre de temporada (F10) ──
+// La final individual de match se marca con matchs[].final = true en la F10.
+// Si existe, la temporada se considera cerrada: se muestran campeones en vez de "provisorio".
+function getFinalMatch() {
+  const f10 = fechas.find(f => f.num === 10 && !f.pendiente);
+  return f10 ? (f10.matchs || []).find(m => m.final) || null : null;
+}
+function isTemporadaCerrada() { return !!getFinalMatch(); }
+
 let _accumCache = null;
 let _accumDirty = true;
 function invalidateAccum() { _accumDirty = true; _accumCache = null; }
@@ -974,6 +983,9 @@ function buildAccum() {
       ">⬇ Resumen PDF</button>
     </div>
 
+    <!-- Campeones (solo con la temporada cerrada) -->
+    <div id="campeones-block"></div>
+
     <!-- KPIs rápidos -->
     <div class="g5" id="kpi-row"></div>
 
@@ -1052,7 +1064,7 @@ function buildAccum() {
 
     <!-- FINALISTAS -->
     <div class="card gold-border" style="margin-bottom:16px" id="finalistas-block">
-      <div class="kpi-label">⚔️ Final Individual de Match — F10 · Se define al terminar F9</div>
+      <div class="kpi-label">⚔️ Final Individual de Match — F10</div>
       <div id="finalistas-content" style="margin-top:12px;display:flex;gap:20px;align-items:center;flex-wrap:wrap"></div>
     </div>
     <div class="card">
@@ -2077,6 +2089,37 @@ function renderOverview(acc) {
     <div class="card"><div class="kpi-label">Jugadores</div><div class="kpi-val">16</div><div class="kpi-sub">8 La Cele · 8 Rojo</div></div>
   `;
 
+  // Campeones 2026 (temporada cerrada)
+  const cerrada = isTemporadaCerrada();
+  if(cerrada) {
+    const fm = getFinalMatch();
+    const campId = fm.ganador==='g' ? fm.gris[0] : fm.rojo[0];
+    const subId  = fm.ganador==='g' ? fm.rojo[0] : fm.gris[0];
+    const nm = id => PLAYERS.find(p=>p.id===id)?.name || id;
+    const tm = id => PLAYERS.find(p=>p.id===id)?.team || 'g';
+    const medalTop = Object.entries(acc.medal).sort((a,b)=>b[1].pts-a[1].pts);
+    const grossTop = Object.entries(acc.gross).filter(([id,v])=>!v.isSupEspecial && v.count>=7).sort((a,b)=>a[1].avg-b[1].avg);
+    const tg = acc.teamMatch.g, tr = acc.teamMatch.r;
+    const copa = (tg.pts>tr.pts || (tg.pts===tr.pts && tg.dif>tr.dif)) ? 'g' : 'r';
+    const cell = (label, name, sub, team) => `<div style="flex:1;min-width:180px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.35);border-radius:10px;padding:12px 14px">
+        <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px">${label}</div>
+        <div style="display:flex;align-items:center;gap:8px"><div class="pteam ${team}"></div><span style="font-size:1.02rem;font-weight:600;color:#fff">${name}</span></div>
+        <div style="font-size:0.74rem;color:var(--muted-light);margin-top:4px">${sub}</div></div>`;
+    byId('campeones-block').innerHTML = `<div class="card navy-card gold-border" style="margin-bottom:16px">
+      <div class="kpi-label on-navy" style="color:var(--gold)">🏆 Campeones 2026 · Temporada cerrada</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">
+        ${cell('🏅 Medal', nm(medalTop[0][0]), Math.round(medalTop[0][1].pts).toLocaleString('es-AR')+' pts · 2° '+nm(medalTop[1][0]), tm(medalTop[0][0]))}
+        ${cell('⚔️ Match individual', nm(campId), 'Ganó la final en el hoyo 17 · Subcampeón '+nm(subId), tm(campId))}
+        ${cell('🏆 Copa Match Play', copa==='g'?'LA CELE':'ROJO', (copa==='g'?tg.pts+' a '+tr.pts:tr.pts+' a '+tg.pts)+' · '+fmtDif(copa==='g'?tg.dif:tr.dif)+' hoyos', copa)}
+        ${grossTop.length ? cell('🏌️ Gross', nm(grossTop[0][0]), grossTop[0][1].avg+' promedio mejores 7', tm(grossTop[0][0])) : ''}
+      </div>
+      <div style="font-size:0.7rem;color:var(--muted-light);margin-top:10px">F10 suspendida por tormenta: no cuenta para Medal ni Gross. Solo se jugó la final individual de match.</div>
+    </div>`;
+    const kp = byId('kpi-row').children[3];
+    if(kp) kp.innerHTML = `<div class="kpi-label">Temporada</div><div class="kpi-val" style="font-size:1.6rem">Cerrada</div><div class="kpi-sub">F10 suspendida · final de match jugada</div>`;
+    document.querySelectorAll('#sec-overview .kpi-label').forEach(el=>{ el.innerHTML = el.innerHTML.replace('Prov. Final','Final'); });
+  } else if(byId('campeones-block')) byId('campeones-block').innerHTML = '';
+
   // Top Medal
   const medalRank = Object.entries(acc.medal).map(([id,v])=>({id,...v})).sort((a,b)=>b.pts-a.pts||0);
   byId('top-medal').innerHTML = medalRank.slice(0,6).map((m,i)=>{
@@ -2096,6 +2139,7 @@ function renderOverview(acc) {
       .map(([id,v])=>({id,...v}))
       .filter(m=>PLAYERS.find(p=>p.id===m.id)?.team===team)
       .sort((a,b)=>b.pts-a.pts||b.difHoyos-a.difHoyos);
+    const _fm = cerrada ? getFinalMatch() : null;
     const labels = team==='g'
       ? ['⚔️ Finalista LA CELE','Reserva LA CELE']
       : ['⚔️ Finalista ROJO','Reserva ROJO'];
@@ -2107,7 +2151,7 @@ function renderOverview(acc) {
         <div class="pteam ${team}"></div>
         <span class="pname" style="${isFinalist?'font-weight:600':'color:var(--muted-light)'}">
           ${p?.name}
-          ${isFinalist?`<span style="font-size:0.65rem;color:var(--gold);margin-left:6px;font-family:'DM Mono',monospace;letter-spacing:1px">PROVISORIO</span>`:''}
+          ${isFinalist?`<span style="font-size:0.65rem;color:var(--gold);margin-left:6px;font-family:'DM Mono',monospace;letter-spacing:1px">${_fm ? (_fm.ganador===team ? '🏆 CAMPEÓN' : 'SUBCAMPEÓN') : 'PROVISORIO'}</span>`:''}
         </span>
         <span class="pval">${fmtPts(m.pts)} pts</span>
         <span class="pval2">${fmtDif(m.difHoyos)} H</span>
@@ -2122,7 +2166,8 @@ function renderOverview(acc) {
     f.medal.forEach(m=>{ if(grossMap[m.id]) grossMap[m.id].scores.push(m.gross); });
   });
   const grossRank = Object.entries(grossMap).map(([id,v])=>{
-    const avg = v.scores.length ? (v.scores.reduce((a,b)=>a+b,0)/v.scores.length).toFixed(1) : null;
+    const best = [...v.scores].filter(x=>x!=null).sort((a,b)=>a-b).slice(0,7);
+    const avg = best.length ? (best.reduce((a,b)=>a+b,0)/best.length).toFixed(1) : null;
     return {id, avg, tarjetas:v.scores.length};
   }).filter(x=>x.avg!==null).sort((a,b)=>a.avg-b.avg);
   byId('top-gross').innerHTML = grossRank.slice(0,6).map((m,i)=>{
@@ -2340,7 +2385,9 @@ function renderMatch(acc) {
     </div>
     <div style="flex:1;min-width:160px;text-align:center">
       <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Estado</div>
-      ${isF9done
+      ${getFinalMatch()
+        ? `<span style="color:var(--gold);font-weight:600;font-size:0.9rem">🏆 Campeón: ${PLAYERS.find(p=>p.id===(getFinalMatch().ganador==='g'?getFinalMatch().gris[0]:getFinalMatch().rojo[0]))?.name||'—'}</span><div style="font-size:0.72rem;color:var(--muted-light);margin-top:4px">Final F10 · definida en el hoyo 17</div>`
+        : isF9done
         ? `<span style="color:var(--gold);font-weight:600;font-size:0.9rem">⚔️ Final confirmada</span><div style="font-size:0.72rem;color:var(--muted-light);margin-top:4px">Se juega en F10 · Gira Nov</div>`
         : `<span style="font-size:0.8rem;color:var(--muted-light);font-style:italic">Provisorio — faltan ${9-played} fecha${9-played!==1?'s':''} para confirmar</span>`
       }
@@ -2578,6 +2625,14 @@ function renderFechaDetail(num) {
 
     ${f.comentario?`<div class="comment-card"><div class="comment-tag">★ Momento del día</div><div class="comment-text">${f.comentario}</div></div>`:''}
 
+    ${f.registroHistorico ? `<div class="card" style="margin-bottom:16px;overflow-x:auto">
+      <div class="kpi-label">📜 Registro histórico — no cuenta para Medal ni Gross</div>
+      <div style="font-size:0.75rem;color:var(--muted-light);margin:4px 0 8px">${f.registroHistorico.nota||''}</div>
+      <table class="tbl"><thead><tr><th>Jugador</th>${(f.par||[]).map((_,i)=>`<th class="num">${i+1}</th>`).join('')}<th class="num">Gross</th></tr>
+      <tr><td style="color:var(--muted)">Par</td>${(f.par||[]).map(x=>`<td class="num" style="color:var(--muted)">${x}</td>`).join('')}<td class="num" style="color:var(--muted)">${(f.par||[]).reduce((a,b)=>a+b,0)}</td></tr></thead>
+      <tbody>${f.registroHistorico.tarjetas.map(t=>`<tr><td>${PLAYERS.find(p=>p.id===t.id)?.name||t.id}</td>${t.hoyos.map(h=>`<td class="num">${h??'—'}</td>`).join('')}<td class="num"><strong>${t.gross??'—'}</strong></td></tr>`).join('')}</tbody></table>
+    </div>` : ''}
+
     ${statsHTML}
 
     <div class="g2" style="margin-bottom:16px">
@@ -2739,7 +2794,8 @@ const HISTORICOS = [
   {year:2022, medal:['Nicolas Vogelius','Javier Zunino','Juan Pedro Elizalde'], match:['Nicolas Vogelius','Agustin Gonzalez'], gross:['Agustin Gonzalez','Javier Zunino','Juan Pedro Elizalde'], team:'Blanco (Cordoba)'},
   {year:2023, medal:['Pannullo, Tincho','Elizalde, Juancho','Molinario, Andy'], match:['Gatto, Mariano','Guevara, Franki'], gross:['Elizalde, Juancho','Gatto, Mariano','Gonzalez, Agus'], team:'Blanco (Cordoba)'},
   {year:2024, medal:['Tarasido, Gonzalo','Basaldua, Ignacio','Benegas, Pancho'], match:['Mendez, Pato','Gatto, Mariano'], gross:['Gatto, Mariano','Tarasido, Gonzalo','Zunino, Javi'], team:'Blanco (Mdq)'},
-  {year:2025, medal:['Vogelius, Nico','Zunino, Javi','Basaldua, Ignacio'], match:['Fernandez, Lucas','Basaldua, Ignacio'], gross:['Gatto, Mariano','Tarasido, Gonzalo','Zunino, Javi'], team:'Rojo (Mdq)'}
+  {year:2025, medal:['Vogelius, Nico','Zunino, Javi','Basaldua, Ignacio'], match:['Fernandez, Lucas','Basaldua, Ignacio'], gross:['Gatto, Mariano','Tarasido, Gonzalo','Zunino, Javi'], team:'Rojo (Mdq)'},
+  {year:2026, medal:['Benegas, Francisco','Elizalde, Juan Pedro','Vogelius, Nicolás'], match:['Guevara, Francisco','Molinario, Andrés'], gross:['Gatto, Mariano','Elizalde, Juan Pedro','Tarasido, Gonzalo'], team:'La Cele (Punta Cana)'}
 ];
 
 function renderHistoricos() {

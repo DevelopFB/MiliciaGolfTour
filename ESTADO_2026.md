@@ -18,67 +18,83 @@
 > llamaba **Blanco** en esos años, y Rojo ganó 2025) — no se reescribe la historia.
 
 
-> **Para el Project Knowledge del proyecto de chat.** Da contexto acumulado a Claude cuando procesa
-> una fecha desde el teléfono (sin acceso al repo).
-> Fuente: `data/fechas.json` del repo (F1–F8), con la misma lógica de cálculo que la web
-> (`calcMedalPts` / `buildAccum`, verificado en render headless el 10-Oct-2026).
-> Regenerar después de cada fecha.
+> **Para el Project Knowledge del proyecto de chat.** Snapshot FINAL de la temporada 2026.
+> Fuente: `data/fechas.json` del repo (F1–F10), misma lógica que la web (`calcMedalPts` / `buildAccum`,
+> verificado en render headless el 11-Nov-2026) y cuadrado contra el Master Excel.
 
 ---
 
-## Próxima fecha
+# MGT 2026 — TEMPORADA CERRADA (11-Nov-2026)
 
-**FECHA 9 — GIRA Punta Cana (04-09 Nov 2026, día exacto a confirmar) — Fourball 2v2 inverso — Medal ×1.5**
-Después, **FECHA 10 — GIRA — FINAL — Medal ×2 — Final individual #1 La Cele vs #1 Rojo.**
-⚠️ Cancha distinta: el par y el stroke index se leen de la tarjeta. No asumir Fátima.
+## Campeones 2026
 
-## Fixture y estado
+| Competencia | Campeón | Detalle |
+|---|---|---|
+| Medal #1 | **Benegas, Francisco** | 2231 pts |
+| Medal #2 | Elizalde, Juan Pedro | 1418 pts |
+| Medal #3 | Vogelius, Nicolás | 1406 pts |
+| Medal #4 | Guevara, Francisco | 1259 pts |
+| Match individual #1 | **Guevara, Francisco** | Ganó la final F10 a Molinario en el hoyo 17 |
+| Match individual #2 | Molinario, Andrés | Finalista Rojo |
+| Gross #1 | **Gatto, Mariano** | 86.7 promedio de las mejores 7 |
+| Copa Match Play | **La Cele** | 28 a 19 · +28 hoyos |
+
+## Decisiones de cierre (Nov-2026)
+
+- **F10 suspendida por tormenta eléctrica** (Iberostar Bávaro). Por decisión del grupo **no cuenta para Medal
+  ni para Gross**: las posiciones finales son las de después de la F9. Solo terminaron Gatto, Mariano (86),
+  Elizalde, Juan Pedro (93) y Benegas, Francisco (100), asumiendo el riesgo; sus tarjetas quedan en
+  `registroHistorico` de la F10 (la web las muestra, no suman). Dipaola, Martín dejó en el hoyo 15.
+- **La final individual de match sí se jugó**: Guevara, Francisco vs Molinario, Andrés, definida en el hoyo 17
+  (cargada como 2 hoyos [SUPUESTO: 2&1]). En `data/fechas.json` es el único match de la F10, con `final: true`.
+- **El punto de la final suma a la Copa** (La Cele 27 → 28). No cambia al campeón: sin ese punto queda 27 a 19.
+  Los demás cruces individuales de la F10 no se jugaron.
+- **La gira (F9 y F10) no genera multas por ausencia.**
+- Suplente F9: `sup_diazandrade` = Díaz Andrade, Juampi (mat. 116949), Rojo por Canónico. Gatto, Alejandro, Rojo por Méndez.
+
+## Fixture final
 
 | F# | Fecha | Cancha | Modalidad | Estado |
 |---|---|---|---|---|
 | 1 | 14-Mar | CUBA Fátima | Fourball 2v2 | Jugada |
 | 2 | 11-Abr | CUBA Fátima | Fourball 2v2 | Jugada |
 | 3 | 09-May | SHA Hebraica | Individual 1v1 | Jugada |
-| 4 | 06-Jun | CUBA Fátima | Fourball 2v2 | Jugada — **suspendida por niebla**, solo valió Match Play. |
+| 4 | 06-Jun | CUBA Fátima | Fourball 2v2 | Suspendida por niebla: solo match |
 | 5 | 04-Jul | La Orquídea | Fourball 2v2 | Jugada |
-| 6 | 08-Ago | CUBA Fátima | Individual 1v1 | Jugada — 16 presentes |
-| 7 | 12-Sep | CUBA Fátima | Fourball 2v2 | Jugada — ausente Gonzalez (sup. Gatto, Hector) |
-| 8 | **10-Oct** | CUBA Fátima | Individual 1v1 | Jugada — **reprogramada** del 03-Oct por clima. 5 ausentes, **sin multas** (fecha reprogramada). 6 matchs. |
-| 9 | Nov (GIRA) | Punta Cana | Fourball inverso (×1.5) | Pendiente |
-| 10 | Nov (GIRA) | Punta Cana | Individual FINAL (×2) | Pendiente |
+| 6 | 08-Ago | CUBA Fátima | Individual 1v1 | Jugada |
+| 7 | 12-Sep | CUBA Fátima | Fourball 2v2 | Jugada |
+| 8 | 10-Oct | CUBA Fátima | Individual 1v1 | Jugada (reprogramada, sin multas) |
+| 9 | 05-Nov | The Lakes (Barceló, Punta Cana) | Fourball 2v2 ×1.5 | Jugada (sin multas) |
+| 10 | Nov (GIRA) | Iberostar Bávaro | Final individual ×2 | Suspendida por tormenta: solo la final de match |
 
-## Medal — acumulado individual (F1–F8; F4 no dio pts)
+## Medal — final
 
-Puntos como los calcula la web (redondeo por grupo de empate).
+| # | Jugador | Equipo | Pts |
+|---|---|---|---|
+| 1 | Benegas, Francisco | La Cele | 2231 |
+| 2 | Elizalde, Juan Pedro | Rojo | 1418 |
+| 3 | Vogelius, Nicolás | Rojo | 1406 |
+| 4 | Guevara, Francisco | La Cele | 1259 |
+| 5 | Pannullo, Martín | La Cele | 1071 |
+| 6 | Gatto, Mariano | Rojo | 1012 |
+| 7 | Fernandez, Lucas | Rojo | 915 |
+| 8 | Tarasido, Gonzalo | La Cele | 766 |
+| 9 | Méndez, Gastón | Rojo | 712 |
+| 10 | Basaldua, Ignacio | La Cele | 605 |
+| 11 | Zunino, Javier | La Cele | 570 |
+| 12 | Dipaola, Martín | La Cele | 526 |
+| 13 | Molinario, Andrés | Rojo | 515 |
+| 14 | Gonzalez, Agustín | La Cele | 452 |
+| 15 | Canónico, Agustín | Rojo | 439 |
+| 16 | Scapparone, Nicolás | Rojo | 93 |
+| — | Gatto, Alejandro (sup) | — | 523 (cuadro aparte) |
 
-| # | Jugador | Equipo | Total pts | F8 |
-|---|---|---|---|---|
-| 1 | Benegas, Francisco | La Cele | 1481 | +135 |
-| 2 | Elizalde, Juan Pedro | Rojo | 1388 | +70 |
-| 3 | Guevara, Francisco | La Cele | 1259 | +135 |
-| 4 | Vogelius, Nicolás | Rojo | 1031 | ausente |
-| 5 | Fernandez, Lucas | Rojo | 885 | +90 |
-| 6 | Pannullo, Martín | La Cele | 868 | +500 |
-| 7 | Gatto, Mariano | Rojo | 862 | +20 |
-| 8 | Méndez, Gastón | Rojo | 712 | +20 |
-| 9 | Tarasido, Gonzalo | La Cele | 653 | ausente |
-| 10 | Dipaola, Martín | La Cele | 496 | +78 |
-| 11 | Basaldua, Ignacio | La Cele | 470 | ausente |
-| 12 | Canónico, Agustín | Rojo | 439 | ausente |
-| 13 | Gonzalez, Agustín | La Cele | 422 | +200 |
-| 14 | Molinario, Andrés | Rojo | 410 | +78 |
-| 15 | Zunino, Javier | La Cele | 195 | +100 |
-| 16 | Scapparone, Nicolás | Rojo | 93 | ausente |
-| — | Gatto, Alejandro (sup) | — | 320 | +300 (cuadro aparte) |
+Fechas ganadas: Benegas 3 (F6, F7, F9) · Guevara y Vogelius (F1) · Gatto Mariano (F2) · Fernandez (F3) ·
+Elizalde (F5) · Pannullo (F8). F4 y F10 sin medal.
 
-Quedan en juego: F9 (1° = 750) y F10 (1° = 1000).
+## Copa Match Play — final
 
-Fechas ganadas: F1 Guevara y Vogelius · F2 Gatto Mariano · F3 Fernandez · F4 sin ganador ·
-F5 Elizalde · F6 Benegas · F7 Benegas (73) · **F8 Pannullo (68)**.
-
-## Match Play — Copa por equipos (F1–F8)
-
-| Fecha | La Cele | Rojo | Dif hoyos (La Cele) |
+| Fecha | La Cele | Rojo | Dif (La Cele) |
 |---|---|---|---|
 | F1 | 1 | 3 | −2 |
 | F2 | 2 | 2 | −2 |
@@ -88,70 +104,43 @@ F5 Elizalde · F6 Benegas · F7 Benegas (73) · **F8 Pannullo (68)**.
 | F6 | 5.5 | 2.5 | +15 |
 | F7 | 2.5 | 1.5 | +9 |
 | F8 | 4.5 | 1.5 | +11 |
-| **TOTAL** | **24.5** | **17.5** | **+23** |
+| F9 | 2.5 | 1.5 | +3 |
+| F10 | 1 | 0 | +2 (final) |
+| **TOTAL** | **28** | **19** | **+28** |
 
-Ventaja La Cele: 7 pts. **La Copa se juega hasta el final**: hay matchs en las dos fechas de la gira.
-F9 = 4 fourball (4 pts); F10 = individuales [SUPUESTO: 8 cruces, 8 pts] → 12 pts en juego.
-La Cele asegura la Copa con 3 pts; Rojo necesita 10 para darla vuelta (9.5 empata y desempata la dif de hoyos).
+## Match individual — final
 
-## Match individual — finalistas provisorios de la F10
+La Cele: Guevara 6.0 (+19) · Pannullo 4.25 (0) · Benegas 3.5 (+8) · Dipaola 3.0 (+8) · Gonzalez 2.5 (+3) ·
+Tarasido 2.25 (+1) · Basaldua 2.25 (+3) · Zunino 2.0 (+3)
+Rojo: Molinario 4.0 (+14) · Méndez 3.25 (+13) · Elizalde 3.25 (+2) · Gatto Mariano 3.0 (−2) · Canónico 1.25 (−4) ·
+Vogelius 1.25 (−9) · Fernandez 1.0 (−19) · Scapparone 0.25 (−17)
+Gatto, Alejandro (sup): 1.75, −12.
 
-La Cele: Guevara 5.0 (+22) · Pannullo 3.75 · Benegas 3.0 · Dipaola 2.75 · Gonzalez 2.5 · Tarasido 2.0 · Basaldua 1.75 · Zunino 1.5
-Rojo: Molinario 3.5 (+11) · Méndez 3.25 (+13) · Elizalde 3.25 (+8) · Gatto Mariano 2.75 · Canónico 1.25 · Fernandez 1.0 · Vogelius 0.75 · Scapparone 0.25
-Gatto, Alejandro (sup): 1.5 pts, −12.
+## Gross — final (promedio mejores 7, mínimo 7 tarjetas)
 
-## Gross — historial 2026 (premio = promedio mejores 7 tarjetas)
+| # | Jugador | Tarjetas | Prom. mejores 7 |
+|---|---|---|---|
+| 1 | Gatto, Mariano | 7 | 86.7 |
+| 2 | Elizalde, Juan Pedro | 8 | 88.6 |
+| 3 | Tarasido, Gonzalo | 7 | 91.0 |
+| 4 | Vogelius, Nicolás | 7 | 91.6 |
+| 5 | Guevara, Francisco | 7 | 95.6 |
+| 6 | Benegas, Francisco | 8 | 97.4 |
+| 7 | Dipaola, Martín | 8 | 104.3 |
 
-| Jugador | Tarjetas | Avg (mejores ≤7) | Mejor | ¿Llega a 7? |
-|---|---|---|---|---|
-| Gatto, Mariano | 6 | 86.7 | 75 | con 1 más |
-| Elizalde, Juan Pedro | 7 | 88.6 | 83 | ✓ |
-| Tarasido, Gonzalo | 6 | 90.3 | 86 | con 1 más |
-| Vogelius, Nicolás | 6 | 91.8 | 84 | con 1 más |
-| Pannullo, Martín | 5 | 92.6 | 84 | necesita F9 y F10 |
-| Méndez, Gastón | 6 | 93.7 | 86 | con 1 más |
-| Basaldua, Ignacio | 5 | 94.6 | 91 | necesita F9 y F10 |
-| Molinario, Andrés | 5 | 94.8 | 86 | necesita F9 y F10 |
-| Guevara, Francisco | 7 | 95.6 | 87 | ✓ |
-| Canónico, Agustín | 6 | 95.8 | 91 | con 1 más |
-| Benegas, Francisco | 7 | 99.4 | 92 | ✓ |
-| Dipaola, Martín | 7 | 104.3 | 93 | ✓ |
-| Gonzalez, Agustín | 4 | 84.2 | 80 | no llega |
-| Fernandez, Lucas | 4 | 93.0 | 90 | no llega |
-| Zunino, Javier | 2 | 89.0 | 87 | no llega |
-| Scapparone, Nicolás | 2 | 102.0 | 95 | no llega |
-| Gatto, Alejandro | 4 | 110.2 | 97 | no compite |
+No llegaron a 7: Gonzalez 5 · Zunino 3 · Basaldua 6 · Pannullo 6 · Canónico 6 · Méndez 6 · Molinario 6 ·
+Scapparone 2 · Fernandez 5.
 
-## Últimos hdcp vistos (SOLO referencia — usar SIEMPRE el de la tarjeta del día)
+## Pozo y premios (USD, Master → Recaudación)
 
-F8 (10-Oct, CUBA Fátima, "HCP Medal" de la tarjeta: depende de las bochas de salida de cada jugador): Gonzalez 7 · Zunino 15 · Pannullo 16 ·
-Benegas 25 · Guevara 20 · Dipaola 26 · Gatto Mariano 8 · Elizalde 14 · Méndez 16 · Molinario 17 ·
-Fernandez 15 · Gatto Alejandro 25.
+Pozo 832: Medal 174.72 / 108.16 / 74.88 / 49.92 · Match ind. 108.16 / 66.56 · Gross 24.96 · Copa 224.64.
 
 ## Notas operativas (learnings vigentes)
 
-- **Publicar ≠ guardar (desde el teléfono).** Si el navegador no tiene el token de GitHub cargado
-  (Admin → 🔑 Publicación), el backoffice guarda solo en localStorage y la web se ve igual. Así se
-  perdió una semana con la F6. Desde el 18-Ago la web muestra un aviso persistente "⚠ Sin publicar"
-  con botón para publicar. **PASO 0 antes de cada fecha: abrir el backoffice y confirmar que el token
-  está cargado, con el mismo navegador de siempre.**
-- **Commitear ≠ publicar (desde Cowork).** El 07-Sep se descubrió que la F6 llevaba 3 semanas fuera de
-  la web por un motivo distinto: los commits estaban hechos en el repo local de la Mac pero nunca se
-  hizo `git push`. **Después de cualquier sesión de Cowork que toque el repo: `git push origin main` y
-  verificar que `git log origin/main..HEAD` sale vacío.** El bash del agente tiene red pero no tiene
-  credenciales de git, así que el push lo hace Pancho o se hace por Terminal.
-- **Verificación real de que algo está online:** abrir la web en incógnito, o mirar
-  `data/fechas.json` en GitHub. Nunca confiar en el navegador de siempre — su localStorage miente.
-- **Fechas reprogramadas oficialmente no generan multa** (F8, decisión del 10-Oct-2026).
-- Suplentes usados en 2026: `sup_shaw` (F2) · `sup_alfonso` = Alfonso, Juan Ignacio (F3, F5) ·
-  `sup_nissen` = Nissen, Germán (F4) · `hector_gatto` (F4) · `sup_diazdelfino` = Díaz Delfino, Pablo (F5) ·
-  `sup_gascon` = Gascon, Alejo (F5). Convención de ID externo: `sup_apellido`. **F6 no tuvo suplentes.** F7: `hector_gatto`. F8: `gatto_ale` (Rojo).
-- `sin_suplente`: placeholder para matchs 2v1 — no romper el formato fourball.
-- Jugador que juega el match pero no entrega tarjeta → scorecard con `hoyos/gross/neto/hdcp: null`.
-  NO es un ausente y NO paga multa.
-- **Master Excel regenerado el 10-Oct-2026** desde `data/fechas.json` con `scripts/build_master.py`
-  (`python3 scripts/build_master.py MGT_2026_Master.xlsx data/fechas.json data/fixture.json MGT_2026_Master.xlsx`).
-  Todo con fórmulas: hojas FN (hoyos + hdcp como input → gross, neto, puesto, pts con reparto de empates),
-  `Match_Log` (un match por fila → Match individual y Copa), Medal, Gross (mejores 7 reales), Supuestos.
-  Cuadra exacto con la web. Se conservó la hoja `Historico`. Las trampas viejas (Gatto, Alejandro en dos filas,
-  sobrenombres en los lookups, Avg de todas las tarjetas) dejaron de existir: ahora todo se busca por ID.
+- **Publicar ≠ guardar (teléfono):** sin el token en Admin → 🔑 Publicación, el backoffice guarda solo en localStorage.
+- **Commitear ≠ publicar (Cowork):** después de tocar el repo, `git push origin main` y `git log origin/main..HEAD` vacío.
+- Verificación real: incógnito o `data/fechas.json` en GitHub.
+- Jugador que juega el match sin entregar tarjeta → scorecard con `null`. No es ausente.
+- Fecha sin medal (F4, F10) → `medal: []`, `scorecard: []`. Tarjetas que no suman → `registroHistorico`.
+- Final de match → `matchs[].final = true` en la F10. La web lo usa para mostrar los campeones (`isTemporadaCerrada()`).
+- Master: `python3 scripts/build_master.py MGT_2026_Master.xlsx data/fechas.json data/fixture.json MGT_2026_Master.xlsx`.
